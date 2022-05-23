@@ -15,3 +15,13 @@ Les fonctionnalités seront les suivantes  :
     - Menu du jour à la cafétéria
     - Lien vers les notes officielles de GAPS
     - Lien vers les absences et vers le formulaire d’absence
+
+## Installation
+Voici les différentes étapes d'installation à suivre pour exécuter le projet :
+1. Faire un "git pull" du projet
+2. Se rendre dans le répertoire /laravel/
+3. Lancer la commmande "composer install"
+4. Lancer la commmande "npm install"
+5. Dupliquer le fichier ".env.example" et renommer en ".env"
+6. Lancer la commande "php artisan key:generate"
+7. Vérifier que tout fonctionne en lançant le serveur grâce à la commande "php artisan serve"
