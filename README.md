@@ -5,7 +5,7 @@ Projet du groupe N°5 fromneibaf pour le module ProjArt de la classe M49-2 de la
 Le but de l’application est d’être un compagnon pour les étudiants, en leur mettant à disposition, de manière facilement accessible, toutes les fonctionnalités utilisées fréquemment.
 
 ## Fonctionnalités
-Ces fonctionnalités seront les suivantes  : 
+Les fonctionnalités seront les suivantes  : 
 
 - Horaire des différentes classes accessible à tous, sous forme de liste ou de calendrier.
 - Journal de classe des différents rendus et examens à venir, sous forme de liste ou de calendrier. Un utilisateur connecté à son compte peut ajouter ou supprimer les éléments, et biffer un rendu qu’il aurait déjà terminé
