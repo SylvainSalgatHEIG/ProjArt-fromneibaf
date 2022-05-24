@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->timestamps();
             
-            $table->string('name', 25);
+            $table->string('name', 100);
             $table->string('shortname', 12);
             $table->string('description', 250);
             $table->integer('weighting');
