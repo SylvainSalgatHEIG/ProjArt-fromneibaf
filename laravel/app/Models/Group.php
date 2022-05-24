@@ -28,4 +28,13 @@ class Group extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class);
+    }
+
+    public function deadlines() {
+        return $this->hasMany(Deadline::class);
+    } 
 }

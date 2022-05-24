@@ -57,4 +57,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Group::class);
     }
+
+    public function deadlines()
+    {
+        return $this->belongsToMany(Deadline::class);
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
 }

@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
+            $table->timestamps();
+
             $table->string('name', 25);
             $table->string('password', 250);
-            $table->timestamps();
+
         });
     }
 
