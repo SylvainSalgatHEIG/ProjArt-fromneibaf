@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Models\Group;
 
 class UsersTableSeeder extends Seeder
 {
@@ -25,5 +26,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('password' . $i)
             ]);
         }
+
+
     }
 }
