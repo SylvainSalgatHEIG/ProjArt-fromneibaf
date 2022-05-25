@@ -27,20 +27,23 @@ class GradeController extends Controller
 
             if ($course->name != $lastCourse) {
                 $lastCourse = $course->name;
+
                 if ($module->name != $lastModule) {
                     $gradesArray[$module->name] = [];
                     $lastModule = $module->name;
                 }
+
+                $gradesArray[$module->name][$course->name]['weighting'] = $course->weighting;
                 $gradesArray[$module->name][$course->name]['grades'] = [];
             }
 
             array_push($gradesArray[$module->name][$course->name]['grades'], ['grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
             $gradesArray[$module->name][$course->name]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->name]);
+            $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray);
         }
 
         echo '<pre>';
         print_r($gradesArray);
-        // print_r($gradesArray[$module->name][$course->name]);
         echo '</pre>';
 
         // return view('view_grades', compact('grades'));
@@ -52,14 +55,34 @@ class GradeController extends Controller
         $gradeCounter = 0;
         echo '<pre>';
         foreach ($courseGrades['grades'] as $grade) {
-            // print_r($grade);
-            $sum += $grade['grade']*$grade['coefficient'];
+            $sum += $grade['grade'] * $grade['coefficient'];
             $gradeCounter += $grade['coefficient'];
-        }   
+        }
         $average = $sum / $gradeCounter;
-        // print_r($courseGrades);
         echo '</pre>';
-        return $average;
+        return round($average, 1);
+    }
+
+    public function getModuleAverage($moduleData)
+    {
+        $sum = 0;
+        $gradeCounter = 0;
+        echo '<pre>';
+        foreach ($moduleData as $key => $value) {
+            // print_r($value);
+            foreach ($value as $label => $data) {
+                if ($label != 'average') {
+                    $sum += $data['average'] * $data['weighting'];
+                    $gradeCounter += $data['weighting'];
+                }
+            }
+        }
+        $average = $sum / $gradeCounter;
+        // print_r($moduleData);
+        // echo '<br>-------------------------------------';
+        echo '</pre>';
+        return round($average * 2) / 2;
+        // return $average;
     }
 
     /**
