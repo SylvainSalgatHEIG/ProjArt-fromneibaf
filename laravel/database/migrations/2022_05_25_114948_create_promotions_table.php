@@ -13,11 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 25);
-            $table->string('password', 250);
             $table->timestamps();
+
+            $table->string('name', 100);
+            $table->date('start_year');
+            $table->date('end_year');
+
+            $table->integer('orientation_id')->unsigned();
+            $table->foreign('orientation_id')->references('id')->on('orientations')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
         });
     }
 
@@ -28,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('promotions');
     }
 };
