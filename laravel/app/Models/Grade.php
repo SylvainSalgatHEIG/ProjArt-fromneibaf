@@ -14,7 +14,7 @@ class Grade extends Model
         'coefficient',
     ];
 
-    public function cours()
+    public function course()
     {
         return $this->belongsTo(Course::class);
     }

@@ -13,12 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
 
             $table->string('name', 100);
-            $table->string('description', 250);
+            $table->date('start_year');
+            $table->date('end_year');
+
+            $table->integer('orientation_id')->unsigned();
+            $table->foreign('orientation_id')->references('id')->on('orientations')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
         });
     }
 
@@ -29,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('promotions');
     }
 };

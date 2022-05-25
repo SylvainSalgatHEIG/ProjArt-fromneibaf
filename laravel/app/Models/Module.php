@@ -22,4 +22,9 @@ class Module extends Model
     {
         return $this->belongsToMany(Group::class);
     }
+
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class);
+    }
 }

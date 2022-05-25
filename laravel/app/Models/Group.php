@@ -34,6 +34,11 @@ class Group extends Model
         return $this->belongsToMany(Module::class);
     }
 
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class);
+    }
+
     public function deadlines() {
         return $this->hasMany(Deadline::class);
     } 

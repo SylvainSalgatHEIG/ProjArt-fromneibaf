@@ -12,7 +12,6 @@ class Course extends Model
     protected $fillable = [
         'name',
         'shortname',
-        'description',
         'weighting',
     ];
 
