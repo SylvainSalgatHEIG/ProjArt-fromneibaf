@@ -80,6 +80,7 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
+        $groups = Group::with('promotion')->get();
         $listGroups = DB::table('groups')
             ->select('id', 'name')
             ->get();
