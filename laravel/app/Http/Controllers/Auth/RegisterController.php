@@ -56,8 +56,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'firstname' => ['required', 'string', 'max:30'],
             'lastname'  => ['required', 'string', 'max:25'],
-            'email'     => ['required', 'string', 'email', 'max:30', 'unique:users'],
-            'groupName' => ['required', 'numeric', 'exists:groups,id'],
+            'email'     => ['required', 'string', 'email', 'max:30', 'unique:users', 'regex:/^[\w\-\.]+@heig-vd.ch$/i'],
+            'groupName' => ['required', 'numeric', 'exists:App\Models\Group,id'],
             'groupPwd'  => ['required', 'numeric', new GroupPwd],
             'password'  => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -82,9 +82,6 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $groups = Group::with('promotion')->get();
-        $listGroups = DB::table('groups')
-            ->select('id', 'name')
-            ->get();
-        return view('auth.register')->with('listGroups', $listGroups);
+        return view('auth.register')->with('groups', $groups);
     }
 }

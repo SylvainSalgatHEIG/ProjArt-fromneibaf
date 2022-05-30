@@ -59,8 +59,8 @@
                             <div class="col-md-6">
                                 <!-- <input id="group-name" type="text" class="form-control @error('groupName') is-invalid @enderror" name="groupName" value="{{ old('groupName') }}" required autocomplete="groupName" autofocus> -->
                                 <select name="groupName" id="group-name">
-                                    @foreach ($listGroups as $group)
-                                        <option value="{{$group->id}}" {{ old('groupName') == $group->id ? "selected":""}}>{{$group->name}}</option>
+                                    @foreach ($groups as $group)
+                                        <option value="{{$group->id}}" {{ old('groupName') == $group->id ? "selected":""}}>{{$group->promotion->name}}-{{$group->name}}</option>
                                     @endforeach 
                                 </select>
                                 @error('groupName')
