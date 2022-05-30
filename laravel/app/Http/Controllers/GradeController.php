@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Grade;
 use App\Models\Module;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GradeController extends Controller
 {
@@ -17,14 +18,16 @@ class GradeController extends Controller
      */
     public function index()
     {
+
+        echo '<pre>';
+
         $gradesArray = [];
-        $grades = Grade::get();
+        $grades = Grade::where('user_id', Auth::id())->get();
         $lastModule = '';
         $lastCourse = '';
         foreach ($grades as $grade) {
             $course = Course::where('id', $grade->course_id)->first();
             $module = Module::where('id', $course->module_id)->first();
-
             if ($course->name != $lastCourse) {
                 $lastCourse = $course->name;
 
@@ -42,7 +45,6 @@ class GradeController extends Controller
             $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray);
         }
 
-        echo '<pre>';
         print_r($gradesArray);
         echo '</pre>';
 
