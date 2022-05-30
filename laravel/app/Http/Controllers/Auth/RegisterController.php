@@ -71,12 +71,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $group = Group::find($data['groupName']); 
+        
+        $user = User::create([
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make($data['password'])
         ]);
+        // $theUser = User::find($user->id);
+        $user->groups()->attach($group);
+        return $user;
     }
 
     public function showRegistrationForm()
