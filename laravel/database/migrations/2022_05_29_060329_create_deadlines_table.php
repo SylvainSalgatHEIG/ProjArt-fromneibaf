@@ -19,15 +19,18 @@ return new class extends Migration
 
             $table->string('name', 100);
             $table->string('description', 250);
-            $table->date('date');
-            $table->integer('group_id')->unsigned();
-            $table->foreign('group_id')->references('id')->on('groups')
-                ->onDelete('restrict')
-                ->onUpdate('restrict');
+            $table->enum('type', ['examen', 'rendu']);
             $table->integer('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
+            $table->integer('group_id')->unsigned();
+            $table->foreign('group_id')->references('id')->on('groups')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
+            $table->date('start_date');
+            $table->date('end_date');
+            
 
 
         });
