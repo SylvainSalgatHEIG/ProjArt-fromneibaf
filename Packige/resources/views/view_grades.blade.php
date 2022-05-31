@@ -7,9 +7,9 @@
 <form action="{{route('grades.store')}}" method="POST">
     @csrf
     <label for="grade">Note :</label>
-    <input type="number" name="grade" id="grade">
+    <input type="number" name="grade" id="grade"  step="0.01">
     <label for="coefficient">coefficient :</label>
-    <input type="number" name="coefficient" id="coefficient">
+    <input type="number" name="coefficient" id="coefficient"  step="0.01">
     <select id="course" name="course">
         @foreach($gradesArray as $module)
             @foreach($module as $courseName => $course)
