@@ -13,15 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('firstname', 30);
-            $table->string('lastname', 25);
-            $table->string('email', 30)->unique();
-            // $table->timestamp('email_verified_at')->nullable();
-            $table->string('password', 250);
-            $table->rememberToken();
             $table->timestamps();
+            
+            $table->string('name', 100);
+            $table->string('shortname', 12);
+            $table->integer('weighting');
+
+            $table->integer('module_id')->unsigned();
+            $table->foreign('module_id')->references('id')->on('modules')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('courses');
     }
 };
