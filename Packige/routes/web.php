@@ -5,6 +5,7 @@ use App\Http\Controllers\GradeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TestApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,5 @@ Route::resource('grades', GradeController::class);
 Route::resource('deadlines', DeadlineController::class);
 
 Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
+
+Route::get('/api/students', [TestApi::class,'getData']);
