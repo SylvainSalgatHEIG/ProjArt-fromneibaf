@@ -12,7 +12,9 @@ class Deadline extends Model
     protected $fillable = [
         'name',
         'description',
-        'date'
+        'type',
+        'start_date',
+        'end_date'
     ];
 
     public function group()
