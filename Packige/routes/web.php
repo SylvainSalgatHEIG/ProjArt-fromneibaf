@@ -30,4 +30,7 @@ Route::resource('grades', GradeController::class);
 
 Route::resource('deadlines', DeadlineController::class);
 
-Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
+Route::post('deadlines', [DeadlineController::class,'filter']);
+
+
+Route::post('deadlines/add', [DeadlineController::class,'store']);
