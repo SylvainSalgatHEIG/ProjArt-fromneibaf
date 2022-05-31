@@ -7,6 +7,7 @@ use App\Models\Grade;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GradeController extends Controller
 {
@@ -19,49 +20,66 @@ class GradeController extends Controller
     public function index()
     {
 
-        echo '<pre>';
+        // echo '<pre>';
+        $modules = DB::table('modules')
+            ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
+            ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
+            ->join('group_user', 'group_user.group_id', '=', 'groups.id')
+            ->join('users', 'users.id', '=', 'group_user.user_id')
+            ->select('modules.name', 'modules.semester', 'modules.id')
+            ->where('users.id', '=', Auth::id())
+            ->where('modules.semester', '=', 4)
+            ->get();
 
         $gradesArray = [];
-        $grades = Grade::where('user_id', Auth::id())->get();
-        $lastModule = '';
         $lastCourse = '';
-        foreach ($grades as $grade) {
-            $course = Course::where('id', $grade->course_id)->first();
-            $module = Module::where('id', $course->module_id)->first();
-            if ($course->name != $lastCourse) {
-                $lastCourse = $course->name;
+        foreach ($modules as $module) {
+            $gradesArray[$module->name] = [];
 
-                if ($module->name != $lastModule) {
-                    $gradesArray[$module->name] = [];
-                    $lastModule = $module->name;
-                }
+            $courses = DB::table('courses')
+                ->where('module_id', '=', $module->id)
+                ->get();
 
+            foreach ($courses as $course) {
                 $gradesArray[$module->name][$course->name]['weighting'] = $course->weighting;
                 $gradesArray[$module->name][$course->name]['grades'] = [];
-            }
 
-            array_push($gradesArray[$module->name][$course->name]['grades'], ['grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
-            $gradesArray[$module->name][$course->name]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->name]);
-            $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray);
+                $grades = DB::table('grades')
+                    ->join('users', 'users.id', '=', 'grades.user_id')
+                    ->join('courses', 'grades.course_id', '=', 'courses.id')
+                    ->where('users.id', '=', Auth::id())
+                    ->where('courses.id', '=', $course->id)
+                    ->select('grades.*')
+                    ->get();
+
+                // print_r($grades);
+                foreach ($grades as $grade) {
+                    array_push($gradesArray[$module->name][$course->name]['grades'], ['grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
+                }
+                $gradesArray[$module->name][$course->name]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->name]);
+            }
+            $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
         }
 
-        print_r($gradesArray);
-        echo '</pre>';
+        // print_r($gradesArray);
+        // print_r($modules);
+        // echo '</pre>';
 
-        // return view('view_grades', compact('grades'));
+        return view('view_grades', compact('gradesArray'));
     }
 
     public function getCourseAverage($courseGrades)
     {
+        if (empty($courseGrades['grades'])) {
+            return 0;
+        }
         $sum = 0;
         $gradeCounter = 0;
-        echo '<pre>';
         foreach ($courseGrades['grades'] as $grade) {
             $sum += $grade['grade'] * $grade['coefficient'];
             $gradeCounter += $grade['coefficient'];
         }
         $average = $sum / $gradeCounter;
-        echo '</pre>';
         return round($average, 1);
     }
 
@@ -69,22 +87,15 @@ class GradeController extends Controller
     {
         $sum = 0;
         $gradeCounter = 0;
-        echo '<pre>';
-        foreach ($moduleData as $key => $value) {
-            // print_r($value);
-            foreach ($value as $label => $data) {
-                if ($label != 'average') {
-                    $sum += $data['average'] * $data['weighting'];
-                    $gradeCounter += $data['weighting'];
-                }
-            }
+        foreach ($moduleData as $course) {
+            $sum += $course['average'] * $course['weighting'];
+            $gradeCounter += $course['weighting'];
+        }
+        if ($gradeCounter == 0) {
+            return 0;
         }
         $average = $sum / $gradeCounter;
-        // print_r($moduleData);
-        // echo '<br>-------------------------------------';
-        echo '</pre>';
         return round($average * 2) / 2;
-        // return $average;
     }
 
     /**
