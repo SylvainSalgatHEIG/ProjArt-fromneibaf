@@ -4,6 +4,6 @@ import {ref} from 'vue';
 const msg = ref('');
 </script>
 
-<template> 
+<template>
 	Hello vue 3
 </template>
