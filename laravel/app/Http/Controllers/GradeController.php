@@ -64,7 +64,7 @@ class GradeController extends Controller
         // print_r($gradesArray);
         // print_r($modules);
         // echo '</pre>';
-
+        // echo Auth::id();
         return view('view_grades', compact('gradesArray'));
     }
 
@@ -116,7 +116,24 @@ class GradeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $courseId = DB::table('courses')
+            ->join('modules', 'modules.id', '=', 'courses.module_id')
+            ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
+            ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
+            ->join('group_user', 'group_user.group_id', '=', 'groups.id')
+            ->join('users', 'users.id', '=', 'group_user.user_id')
+            ->select('courses.id')
+            ->where('users.id', '=', Auth::id())
+            ->where('courses.name', '=', $request->course)
+            ->first();
+        $grade = new Grade;
+
+        $grade->coefficient = $request->coefficient;
+        $grade->grade = $request->grade;
+        $grade->user_id = Auth::id();
+        $grade->course_id = $courseId->id;
+        $grade->save();
+        return redirect(route('grades.index'));
     }
 
     /**

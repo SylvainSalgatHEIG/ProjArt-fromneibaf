@@ -4,6 +4,23 @@
 @endsection
 
 @section('contenu')
+<form action="{{route('grades.store')}}" method="POST">
+    @csrf
+    <label for="grade">Note :</label>
+    <input type="number" name="grade" id="grade">
+    <label for="coefficient">coefficient :</label>
+    <input type="number" name="coefficient" id="coefficient">
+    <select id="course" name="course">
+        @foreach($gradesArray as $module)
+            @foreach($module as $courseName => $course)
+                @if($courseName != 'average')
+                    <option value="{{$courseName}}">{{$courseName}}</option>
+                @endif
+            @endforeach
+        @endforeach
+    </select>
+    <input type="submit" value="Ajouter">
+</form>
 
 @foreach($gradesArray as $moduleName => $moduleData)
 
@@ -25,10 +42,10 @@
             <br>
             Moyenne de branche : {{$courseData['average']}}
 
-        <br>
-    @endif
+            <br>
+        @endif
 
-@endforeach
+    @endforeach
 
 ---<br>
 Moyenne de module : {{$moduleData['average']}}
