@@ -3,7 +3,7 @@
 
   const props = defineProps({
     modelValue: {
-      type: Number, String,
+      type: String,
       required: true
     },
     typeInput: {
@@ -40,7 +40,6 @@
     :type="typeInput"
     v-model="value"
   >
-  <span> {{ value }}</span>
 </template>
 
 <style scoped>

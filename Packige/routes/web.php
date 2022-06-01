@@ -4,6 +4,7 @@ use App\Http\Controllers\DeadlineController;
 use App\Http\Controllers\GradeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TestApi;
 
@@ -34,4 +35,4 @@ Route::resource('deadlines', DeadlineController::class);
 Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
 Route::post('deadlines/add', [DeadlineController::class,'store']);
 
-Route::get('/api/students', [TestApi::class,'getData']);
+Route::get('/api/groups', [GroupController::class,'getGroups']);

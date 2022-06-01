@@ -39,10 +39,6 @@ const hash = ref(window.location.hash);
   const curHash = computed(() => routes[hash.value] ? hash.value : Object.keys(routes)[0]);
   const curComponent = computed(() => routes[curHash.value].component);
 
-
-fetch('/api/students/')
-	.then(res => res.json())
-	.then(students => data.value = students );
 </script>
 
 <template>
