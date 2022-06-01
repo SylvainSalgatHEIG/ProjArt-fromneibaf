@@ -6,6 +6,8 @@ import eventsVue from './views/events.vue';
 import gradesVue from './views/grades.vue';
 import linksVue from './views/links.vue';
 import scheduleVue from './views/schedule.vue';
+import registerVue from './views/register.vue';
+
 
 
 const msg = ref('');
@@ -54,5 +56,5 @@ fetch('/api/students/')
       </div>
     </template>
   </main>
-
+<register-vue></register-vue>
 </template>
