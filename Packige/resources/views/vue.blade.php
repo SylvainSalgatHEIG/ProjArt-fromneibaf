@@ -22,7 +22,7 @@
 				@endauth
 			</div>
 		@endif
-	<div id="app"></div>
+	<div id="myApp"></div>
 
 	<script src="{{ asset('js/app.js') }}"></script>
 </body>
