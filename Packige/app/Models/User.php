@@ -48,10 +48,10 @@ class User extends Authenticatable
      * Permet d'encoder le mot de passe
      * @param type $password Le mot de passe
      */
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = Hash::make($password);
-    }
+    // public function setPasswordAttribute($password)
+    // {
+    //     $this->attributes['password'] = Hash::make($password);
+    // }
 
     public function groups()
     {

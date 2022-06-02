@@ -8,6 +8,9 @@ import linksVue from './views/links.vue';
 import scheduleVue from './views/schedule.vue';
 import registerVue from './views/register.vue';
 
+import Modal from './components/Modal.vue';
+
+let showModal = ref(false);
 
 
 const msg = ref('');
@@ -29,10 +32,13 @@ let data = ref();
     '#links': {
       label: 'Liens',
       component: linksVue,
+    },
+    '/register': {
+      label: 'Register',
     }
 };
 
-const hash = ref(window.location.hash);
+  const hash = ref(window.location.hash);
 
   window.addEventListener('hashchange', () => hash.value = window.location.hash);
 
@@ -42,15 +48,20 @@ const hash = ref(window.location.hash);
 </script>
 
 <template>
+    <Modal v-show="showModal" @close="showModal = false"/>
 
-	<the-nav :routes="routes" :curHash="curHash"></the-nav>
+	  <the-nav :routes="routes" :curHash="curHash"></the-nav>
+
+    <button @click="showModal = true">Show Modal</button>
 
 	<main>
+
     <template v-for="(route, hash) of routes">
       <div v-show="hash == curHash">
         <component :is="route.component"/>
       </div>
     </template>
+
   </main>
-<register-vue></register-vue>
+
 </template>
