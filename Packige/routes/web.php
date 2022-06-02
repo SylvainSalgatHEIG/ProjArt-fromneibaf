@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TestApi;
+use App\Http\Controllers\Auth\RegisterController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +25,7 @@ Route::get('/', function () {
     return view('vue');
 });
 
-Route::resource('user', UserController::class);
+// Route::resource('user', UserController::class);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -36,3 +38,6 @@ Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
 Route::post('deadlines/add', [DeadlineController::class,'store']);
 
 Route::get('/api/groups', [GroupController::class,'getGroups']);
+
+Route::post('/api/register/validator', [RegisterController::class, 'validator']);
+
