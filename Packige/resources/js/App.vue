@@ -34,7 +34,7 @@ let data = ref();
       component: linksVue,
     },
     '/register': {
-      label: 'Register'
+      label: 'Register',
     }
 };
 
@@ -55,6 +55,7 @@ let data = ref();
     <button @click="showModal = true">Show Modal</button>
 
 	<main>
+
     <template v-for="(route, hash) of routes">
       <div v-show="hash == curHash">
         <component :is="route.component"/>
