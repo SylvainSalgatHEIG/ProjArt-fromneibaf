@@ -19,7 +19,7 @@ export function useFetch(url) {
 }
 
 export function usePost({url, method = 'POST', data}) {
-  const data = ref(null);
+  const results = ref(null);
 
   async function fetchJsonPost(body) {
     const res = await fetch(url, {
@@ -31,9 +31,9 @@ export function usePost({url, method = 'POST', data}) {
       }
     });
     const json = await res.json();
-    data.value = json;
+    results.value = json;
   }
 
   fetchJsonPost(data);
-  return { data, fetchJsonPost };
+  return { results, fetchJsonPost };
 }
