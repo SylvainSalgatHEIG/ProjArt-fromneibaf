@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\DB;
 
 class DeadlineController extends Controller
 {
+
+    public function getDeadlines(){
+        echo "test";
+    }
+
     /**
      * Display a listing of the resource.
      *
