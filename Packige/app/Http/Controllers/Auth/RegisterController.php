@@ -61,6 +61,19 @@ class RegisterController extends Controller
             'groupPwd'  => ['required', 'numeric', new GroupPwd],
             'password'  => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+        // $result = Validator::make($request->all(), [
+        //     'firstname' => ['required', 'string', 'max:30'],
+        //     'lastname'  => ['required', 'string', 'max:25'],
+        //     'email'     => ['required', 'string', 'email', 'max:30', 'unique:users', 'regex:/^[\w\-\.]+@heig-vd.ch$/i'],
+        //     'groupName' => ['required', 'numeric', 'exists:App\Models\Group,id'],
+        //     'groupPwd'  => ['required', 'numeric', new GroupPwd],
+        //     'password'  => ['required', 'string', 'min:8', 'confirmed'],
+        // ]);
+        
+        // if ($result->fails()) {
+        //     return $result->errors();
+        // }
+        // return "success";
     }
 
     /**
