@@ -17,7 +17,7 @@ class GradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getGrades()
     {
 
         // echo '<pre>';
@@ -65,7 +65,8 @@ class GradeController extends Controller
         // print_r($modules);
         // echo '</pre>';
         // echo Auth::id();
-        return view('view_grades', compact('gradesArray'));
+        // return view('view_grades', compact('gradesArray'));
+        return $gradesArray;
     }
 
     public function getCourseAverage($courseGrades)

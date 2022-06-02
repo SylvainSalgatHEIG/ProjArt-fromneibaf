@@ -36,3 +36,4 @@ Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
 Route::post('deadlines/add', [DeadlineController::class,'store']);
 
 Route::get('/api/groups', [GroupController::class,'getGroups']);
+Route::get('/api/grades', [GradeController::class,'getGrades']);
