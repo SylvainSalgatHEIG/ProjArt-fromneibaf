@@ -8,7 +8,7 @@ use App\Http\Controllers\GroupController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TestApi;
 use App\Http\Controllers\Auth\RegisterController;
-
+use App\Http\Controllers\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +39,7 @@ Route::post('deadlines/add', [DeadlineController::class,'store']);
 
 Route::get('/api/groups', [GroupController::class,'getGroups']);
 Route::get('/api/grades', [GradeController::class,'getGrades']);
+Route::get('/api/courses', [CourseController::class,'getCourses']);
 
 Route::get('/api/deadlines', [GradeController::class,'getDeadlines']);
 
