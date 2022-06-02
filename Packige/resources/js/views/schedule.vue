@@ -40,3 +40,4 @@ const {data: schedule} = useFetch('https://chabloz.eu/files/horaires/all.json');
   border: 1px solid black;
 }
 </style>
+
