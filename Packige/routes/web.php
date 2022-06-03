@@ -37,10 +37,15 @@ Route::resource('deadlines', DeadlineController::class);
 Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
 Route::post('deadlines/add', [DeadlineController::class,'store']);
 
-Route::get('/api/groups', [GroupController::class,'getGroups']);
-Route::get('/api/grades', [GradeController::class,'getGrades']);
 Route::get('/api/courses', [CourseController::class,'getCourses']);
 
+Route::get('/api/groups', [GroupController::class,'getGroups']);
+
+Route::get('/api/grades/get', [GradeController::class,'getGrades']);
+Route::post('/api/grades/add', [GradeController::class,'addGrade']);
+// Route::post('/api/grades/add', [GradeController::class,'addGrade']);
+
+Route::get('/api/deadlines', [GradeController::class,'getDeadlines']);
 Route::get('/api/usergroups', [GroupController::class,'getUserGroups']);
 
 Route::get('/api/deadlines', [DeadlineController::class,'getDeadlines']);

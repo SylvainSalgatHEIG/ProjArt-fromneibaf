@@ -1,8 +1,28 @@
 <script setup>
-import { useFetch } from "../composables/fetch";
+import { useFetch, usePost } from "../composables/fetch";
+import { ref } from "vue";
 
 const { data: coursesArray } = useFetch("/api/courses/");
-console.log(coursesArray);
+
+const coefficient = ref("");
+const grade = ref("");
+const course = ref("");
+
+const emits = defineEmits(["newGrade"]);
+
+function addGrade() {
+  //   console.log(grade.value);
+  //   console.log(coefficient.value);
+  //   console.log(course.value);
+  const data = {
+    grade: grade.value,
+    coefficient: coefficient.value,
+    course: course.value,
+  };
+  console.log(data);
+  usePost({ url: "/api/grades/add", data: data });
+  emits("newGrade", data);
+}
 </script>
 
 <template>
@@ -16,21 +36,26 @@ console.log(coursesArray);
 
           <div class="modal-body">
             <slot name="body">
-              <label for="grade">Note :</label>
-              <input type="number" name="grade" id="grade" step="0.01" />
-              <label for="coefficient">coefficient :</label>
-              <input
-                type="number"
-                name="coefficient"
-                id="coefficient"
-                step="0.01"
-              />
-              <select id="course" name="course">
-                <option :value="course.name" v-for="course in coursesArray">
-                  {{ course.name }}
-                </option>
-              </select>
-              <input type="submit" name="" id="" />
+              <form @submit.prevent="addGrade()">
+                <label for="grade">Note :</label><br />
+                <input type="number" v-model="grade" id="grade" step="0.01" />
+                <label for="coefficient">Coefficient :</label><br />
+                <input
+                  type="number"
+                  v-model="coefficient"
+                  id="coefficient"
+                  step="0.01"
+                />
+                <label for="course">Cours :</label><br />
+                <select id="course" v-model="course">
+                  <option :value="course.name" v-for="course in coursesArray">
+                    {{ course.shortname }}
+                  </option>
+                </select>
+                <br />
+                <button class="modal-default-button">Ajouter</button>
+                <!-- <button class="modal-default-button" @click="$emit('newGrade', data)">Ajouter</button> -->
+              </form>
             </slot>
           </div>
 
@@ -38,7 +63,7 @@ console.log(coursesArray);
             <slot name="footer">
               default footer
               <button class="modal-default-button" @click="$emit('close')">
-                OK
+                Fermer
               </button>
             </slot>
           </div>
