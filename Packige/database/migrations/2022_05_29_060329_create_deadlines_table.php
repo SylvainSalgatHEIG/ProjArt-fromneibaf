@@ -28,8 +28,8 @@ return new class extends Migration
             $table->foreign('group_id')->references('id')->on('groups')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             
 
 

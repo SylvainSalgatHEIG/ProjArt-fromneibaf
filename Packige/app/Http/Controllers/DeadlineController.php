@@ -14,8 +14,47 @@ use Illuminate\Support\Facades\DB;
 class DeadlineController extends Controller
 {
 
-    public function getDeadlines(){
-        echo "test";
+    public function getDeadlines()
+    {
+        $deadlineArray = [];
+
+        $userId = Auth::id();
+        $user = User::where('id', $userId)->first();
+
+        $userGroups = $user->groups()->get();
+
+        $userPromotion = $userGroups[0]->promotion()->get();
+
+        $modulesList = $userPromotion[0]->modules()->get();
+        $coursesList = [];
+        foreach ($modulesList as $module) {
+            $courses = $module->courses()->get();
+            foreach ($courses as $course) {
+                array_push($coursesList, $course);
+            }
+        }
+
+        $deadlineArray = $user->deadlines()->get();
+
+
+        foreach ($deadlineArray as $deadline) {
+            $course = Course::where('id', $deadline->course_id)->get();
+            $deadline['course'] = $course;
+        }
+
+        foreach ($deadlineArray as $deadline) {
+            $deadlineUser = DB::table('deadline_user')
+                ->join('users','users.id','=','deadline_user.user_id')
+                ->join('deadlines','deadlines.id','=','deadline_user.deadline_id')
+                ->where('deadline_user.user_id','=',$userId)
+                ->where('deadline_user.deadline_id','=',$deadline->id)
+                ->get();
+            
+            $deadline['check'] = $deadlineUser;
+            
+        }
+
+        return $deadlineArray;
     }
 
     /**

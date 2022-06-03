@@ -40,7 +40,8 @@ Route::post('deadlines/add', [DeadlineController::class,'store']);
 Route::get('/api/groups', [GroupController::class,'getGroups']);
 Route::get('/api/grades', [GradeController::class,'getGrades']);
 
-Route::get('/api/deadlines', [GradeController::class,'getDeadlines']);
+Route::get('/api/usergroups', [GroupController::class,'getUserGroups']);
+Route::get('/api/deadlines', [DeadlineController::class,'getDeadlines']);
 
 Route::post('/api/register/validator', [RegisterController::class, 'validator']);
 
