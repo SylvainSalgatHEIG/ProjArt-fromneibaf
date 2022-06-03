@@ -1,18 +1,23 @@
 <script setup>
 import { ref } from "vue";
 import { useFetch } from "../composables/fetch.js";
-import GadeModal from "../components/GradeModal.vue";
+import GradeModal from "../components/GradeModal.vue";
 
 let showModal = ref(false);
 
-const msg = ref("");
+const update = ref(0);
 
-const { data: gradesArray } = useFetch("/api/grades/");
+const { data: gradesArray } = useFetch("/api/grades/get");
+
+function newGrade(data){
+  console.log(data);
+  // const {data:gradesArray} = useFetch("/api/grades/get");
+}
 </script>
 
 <template>
 
-  <GadeModal v-show="showModal" @close="showModal = false" />
+  <GradeModal v-show="showModal" @close="showModal = false" @newGrade="newGrade"/>
   <button @click="showModal = true">Ajouter une note</button>
 
   <div v-for="(moduleData, moduleName) in gradesArray">
