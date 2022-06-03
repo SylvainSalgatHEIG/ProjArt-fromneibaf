@@ -57,6 +57,25 @@ class DeadlineController extends Controller
         return $deadlineArray;
     }
 
+    public function checkDeadline($deadlineId, $action) {
+        if ($action == "check") {
+            DB::table('deadline_user')
+                ->where('deadline_id', '=', $deadlineId)
+                ->limit(1)
+                ->update(array('isChecked'=>1));
+        } else if ($action == "uncheck") {
+            DB::table('deadline_user')
+                ->where('deadline_id', '=', $deadlineId)
+                ->limit(1)
+                ->update(array('isChecked'=>0));
+        } else {
+            return ["fail"];
+        }
+
+        return ["success"];
+        
+    }
+
     /**
      * Display a listing of the resource.
      *

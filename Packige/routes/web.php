@@ -42,7 +42,9 @@ Route::get('/api/grades', [GradeController::class,'getGrades']);
 Route::get('/api/courses', [CourseController::class,'getCourses']);
 
 Route::get('/api/usergroups', [GroupController::class,'getUserGroups']);
+
 Route::get('/api/deadlines', [DeadlineController::class,'getDeadlines']);
+Route::get('/api/deadline/check/{deadlineId}/{action}', [DeadlineController::class,'checkDeadline']);
 
 Route::post('/api/register/validator', [RegisterController::class, 'validator']);
 
