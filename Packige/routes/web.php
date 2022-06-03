@@ -46,6 +46,8 @@ Route::post('/api/grades/add', [GradeController::class,'addGrade']);
 // Route::post('/api/grades/add', [GradeController::class,'addGrade']);
 
 Route::get('/api/deadlines', [GradeController::class,'getDeadlines']);
+Route::get('/api/usergroups', [GroupController::class,'getUserGroups']);
+Route::get('/api/deadlines', [DeadlineController::class,'getDeadlines']);
 
 Route::post('/api/register/validator', [RegisterController::class, 'validator']);
 
