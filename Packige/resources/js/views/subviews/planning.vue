@@ -1,55 +1,35 @@
 <script setup>
 import {computed, ref} from 'vue';
 import { useFetch } from '../../composables/fetch';
+import { useLocalstorage } from '../../composables/localstorage';
+import { apiSchedules} from '../../config/apiUrls.js';
 
 
-const msg = ref('');
-
-const {data: schedules} = useFetch('https://chabloz.eu/files/horaires/all.json');
-
-const {data: groups} = useFetch('/api/groups/');
+const {data: schedules} = useFetch(apiSchedules);
+const {value: theSchedule} = useLocalstorage('schedules', schedules.value);
 
 const daysShort = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
+
+/**
+ * Calculate the week number of a date
+ * @param {Date} date
+ * @returns {integer} week number
+ */
 function getWeekNumber(date) {
     let currentDate = new Date(date.split(' ')[0]);
     let startDate = new Date(currentDate.getFullYear(), 0, 1);
     let days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
-         
     let weekNumber = Math.ceil(days / 7);
 
     return weekNumber;
 }
 
-
-let groupSelected = ref('IM49-2');
-
-function strToDate (str){
-	return new Date(str);
-	// console.log(str)
-	// const date =  new Date(Date.UTC(
-	// 	str.substr(0, 4),
-	// 	str.substr(5, 2) - 1,
-	// 	str.substr(7, 2),
-	// 	str.substr(9, 2),
-	// 	str.substr(11, 2),
-	// 	str.substr(13, 2)
-	// ));
-	// console.log(new Date(str));
-	// return date;
-} 
-
-const dateToFrCh = date => {
-  let mapDay = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
-  let day = date.getDate();
-  let dayName = mapDay[date.getDay()];
-  let month = date.getMonth() + 1;  
-  let year = date.getFullYear();
-  if (month < 10) month = '0' + month;
-  if (day < 10) day = '0' + day;
-  return `${dayName} ${day}.${month}`;
-}
-
+/**
+ * 
+ * @param {date} date
+ * @return {string}: time in format: HH:MM
+ */
 const dateToHours = date => {
   let hours = date.getHours();
   let minutes = date.getMinutes();
@@ -58,13 +38,16 @@ const dateToHours = date => {
   return `${hours}:${minutes}`;
 }
 
+
 const compareEvents = (event1, event2) => {
   let date1 = event1.start;
   let date2 = event2.start;
   return date1.localeCompare(date2);
 }
+
+
 function isInTheFuture(event) { 
-  let dateStart = strToDate(event.end); 
+  let dateStart = new Date(event.end); 
   return dateStart >= new Date();
 }
 
@@ -75,8 +58,8 @@ function isInTheFuture(event) {
 // }
 
 const makeReadable = event => {
-   let dateStart = strToDate(event.start);
-   let dateEnd = strToDate(event.end);
+   let dateStart = new Date(event.start);
+   let dateEnd = new Date(event.end);
    let hoursStart = dateToHours(dateStart);
    let hoursEnd = dateToHours(dateEnd);
 //    let course = event.label.split("-").slice(0, -2).join("-");
@@ -84,7 +67,7 @@ const makeReadable = event => {
    let room = event.class.split(",").slice(0, 1).join("");
    return {
      date: dateEnd,
-     dateFr: dateToFrCh(dateStart),
+    //  dateFr: dateToFrCh(dateStart),
      hours: `${hoursStart}-${hoursEnd}`,
      weekNumber: getWeekNumber(event.end),
      day: daysShort[dateEnd.getDay()],
@@ -108,32 +91,37 @@ const groupNames = computed(() => {
 
 // const schedulesFutur
 const schedulesFiltered = computed(() => {
-	// console.log(schedules.value)
-	if (!schedules.value) return  []
-  // let events = schedules.value.filter(isInTheFuture).sort(compareEvents);
-  let events = schedules.value.sort(compareEvents);
-  if (groupNames) {
-    events = events.filter(schedule => {
-      return schedule.class === groupSelected.value;
+
+	if (!theSchedule.value) {
+    theSchedule.value = schedules.value;
+  }
+  // filter to get only after today, and sort by date
+  let events = theSchedule.value.filter(isInTheFuture).sort(compareEvents);
+  
+  // filter to get only the courses of the specific group.
+  if (groupSelected) {
+    events = events.filter(theSchedule => {
+      return theSchedule.class === groupSelected.value;
     });
     // return events;
   }
     return events.map(makeReadable);
 });
 
-function formatDayZero(date) {
-  if (date.getUTCDate() < 10)
-    return `0${date.getUTCDate()}`;
+
+/**
+ * Function that format the digit if it is less than 10
+ * Example: 1 => 01 --> 01.01.2020 instead of 1.01.2020
+ * @param {date} Date
+ * @return {date}
+ */
+function formatTwoDigits(date) {
+  if (date < 10)
+    return `0${date}`;
   else
-    return date.getUTCDate();
+    return date;
 }
 
-function formatMonthZero(date) {
-  if (date.getUTCMonth() + 1 < 10)
-    return `0${date.getUTCMonth() + 1}`;
-  else
-    return date.getUTCMonth() + 1 ;
-}
 
 function getDateRange(dates) {
   let end = new Date(dates[dates.length - 1]);
@@ -145,96 +133,78 @@ function getDateRange(dates) {
   // start = start.getUTCDate === 0 ? start : new Date(start.getTime() + 24 * 60 * 60 * 1000);
   // end = end.getUTCDate === 6 ? end : new Date(end.getTime() + 24 * 60 * 60 * 1000);
   return {
-    start: formatDayZero(start) + '.' + formatMonthZero(start),
-    end: formatDayZero(end) + '.' + formatMonthZero(end)
+    start: formatTwoDigits(start.getUTCDate()) + '.' + formatTwoDigits(start.getUTCMonth() + 1),
+    end: formatTwoDigits(end.getUTCDate()) + '.' + formatTwoDigits(end.getUTCMonth() + 1)
   };
 }
 
 const schedulesShowable = computed(() => {
   if (!schedulesFiltered.value) return [];
-  let crtWeek = ref(0);
-  let crtDay = ref('');
   let allWeeks = [... new Set(schedulesFiltered.value.map(value => value.weekNumber))];
-  // return allWeeks;
   let myArray = {};
-  allWeeks.forEach((week, index, array) => {
-    let weekEvents = schedulesFiltered.value.filter(value => value.weekNumber === week);
-    let dateRange = getDateRange(weekEvents.map(value => value.date));
-    let date = [... new Set(weekEvents.map(value => value.date))];
-    let daysEvent = daysShort.map((day, index, array) => {
-      let events = schedulesFiltered.value.filter(event => {
-        return event.weekNumber === week && event.day === day;
-      });
-      return {
-        day,
-        events
-      }
-      
+
+  allWeeks.forEach(week => {
+    let weekCourses = schedulesFiltered.value.filter(value => value.weekNumber === week);
+    let dateRange = getDateRange(weekCourses.map(value => value.date));
+
+    let daysCourse = daysShort.map(day => {
+      let courses = schedulesFiltered.value.filter(course => (course.weekNumber === week && course.day === day));
+      return { day,courses }
     });
+
     myArray[week] = {
       dates: `${dateRange.start}-${dateRange.end} `, 
-      daysEvent
-      };
+      daysCourse
+    };
   });
   return myArray;
-  // let newArray = schedulesFiltered.value.map((value, index, array) => {
-  //   let newValue = {};
-  //   if (crtWeek != value.weekNumber) {
-  //     crtWeek = value.weekNumber;
-  //     newValue = weeks;
-  //   }
-  //   weeks[`${crtWeek}`] = value;
-  //   return newValue;
-  // });
-  // return newArray;
 });
 
-const currentWeek = ref(0);
-const currentDay = ref('')
-
-
+const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
 
 </script>
 
 <template>
 	<h1>Horaires</h1>
 	<p>{{}}</p>
-  <ul>
-    <li v-for="(schedule, weekNb) of schedulesShowable">
-      <h2>{{weekNb}} - {{schedule.dates}}</h2>
-        <li v-for="event of schedule.daysEvent">
-          <p>{{event.day}}</p>
-            <ul>
-              <li v-for="course of event.events">
-                <p>{{course.hours}}</p>
-                <p>{{course.course}}</p>
-                <p>{{course.room}}</p>
-              </li>
-            </ul>
-        </li>
-    </li>
-  </ul>
-	<div id="listSchedule">
-		<select v-model="groupSelected">
-			<option v-for="groupName in groupNames" :value="groupName">{{groupName}}</option>
-			<!-- <option v-for="group in groups" :value="group.id">{{group.promotion.name}}-{{group.name}}</option> -->
-		</select>
+  <div id="listSchedule">
+    <select v-model="groupSelected">
+      <option v-for="groupName in groupNames" :value="groupName">{{groupName}}</option>
+      <!-- <option v-for="group in groups" :value="group.id">{{group.promotion.name}}-{{group.name}}</option> -->
+    </select>
+    <ul>
+      <li v-for="(schedule, weekNb) of schedulesShowable">
+        <h2>{{weekNb}} - {{schedule.dates}}</h2>
+          <li v-for="event of schedule.daysCourse">
+            <p>{{event.day}}</p>
+              <ul>
+                <li v-for="course of event.courses">
+                  <p>{{course.hours}}</p>
+                  <p>{{course.course}}</p>
+                  <p>{{course.room}}</p>
+                </li>
+              </ul>
+          </li>
+      </li>
+    </ul>
+  </div>
+	<!-- <div id="listSchedule">
 		<ul>
 			<li v-for="event of schedulesFiltered">
 				<span class="date" v-if="currentWeek != event.weekNumber">
           semaine: {{currentWeek = event.weekNumber}}
-          </span> --
+          </span>
         <span class="day" v-if="currentDay != event.day">
           Jour: {{currentDay = event.day}}
-        </span> -- 
-				<!-- <span class="date">date: {{event.dateFr}}</span> -->
-				-- {{event.hours}} -- 
-				{{event.course}} -- 
-				{{event.room}} -- 
+        </span>
+				<span class="date">date: {{event.dateFr}}</span>
+			{{event.hours}}
+				{{event.course} 
+				{{event.room}}
 			</li>
 		</ul>
 	</div>
-	<!-- <table id="schedule">
+	<table id="schedule">
 		<thead>
           <tr class="template template-course">
             <th class="date">Date</th>
