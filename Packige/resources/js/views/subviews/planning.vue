@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, ref, watchEffect} from 'vue';
 import { useFetch } from '../../composables/fetch';
 import { useLocalstorage } from '../../composables/localstorage';
 import { apiSchedules} from '../../config/apiUrls.js';
@@ -8,6 +8,7 @@ import { apiSchedules} from '../../config/apiUrls.js';
 const {data: schedules} = useFetch(apiSchedules);
 const {value: theSchedule} = useLocalstorage('schedules', schedules.value);
 
+const showPast = ref(false);
 const daysShort = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
 
@@ -91,12 +92,18 @@ const groupNames = computed(() => {
 
 // const schedulesFutur
 const schedulesFiltered = computed(() => {
-
-	if (!theSchedule.value) {
+  if (!theSchedule.value) {
     theSchedule.value = schedules.value;
   }
+  let events = {};
   // filter to get only after today, and sort by date
-  let events = theSchedule.value.filter(isInTheFuture).sort(compareEvents);
+  if (!showPast.value) {
+    events = theSchedule.value.filter(isInTheFuture);
+  }else {
+    events = theSchedule.value;
+  }
+
+  events = events.sort(compareEvents);
   
   // filter to get only the courses of the specific group.
   if (groupSelected) {
@@ -172,6 +179,10 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
       <option v-for="groupName in groupNames" :value="groupName">{{groupName}}</option>
       <!-- <option v-for="group in groups" :value="group.id">{{group.promotion.name}}-{{group.name}}</option> -->
     </select>
+    <label for="showPast">
+      <input type="checkbox" v-model="showPast" id="showPast">
+      Afficher l'historique
+    </label>
     <ul>
       <li v-for="(schedule, weekNb) of schedulesShowable">
         <h2>{{weekNb}} - {{schedule.dates}}</h2>
