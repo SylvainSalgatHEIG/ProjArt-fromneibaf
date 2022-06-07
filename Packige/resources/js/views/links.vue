@@ -46,7 +46,6 @@ const links = [
 		"category":"Enseignement",
 		"link":"https://www.heig-vd.ch"
 	}
-
 ]
 
 </script>
