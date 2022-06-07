@@ -12,7 +12,7 @@ const msg = ref('');
       component: planningVue,
     },
     '#schedule#deadlines': {
-      label: 'Deadline',
+      label: 'Tâches',
       component: deadlinesVue,
     }
 };
@@ -27,9 +27,9 @@ const hash = ref(window.location.hash);
 </script>
 
 <template>
-	<h1>Page Schedule</h1>
+	<h1>Planification</h1>
 
-	<the-nav :routes="subRoutes" :curHash="curHash"></the-nav>
+	<the-nav id="scheduleMenu" :routes="subRoutes" :curHash="curHash"></the-nav>
 
 	<main>
 
@@ -41,3 +41,36 @@ const hash = ref(window.location.hash);
 
   </main>
 </template>
+
+<style>
+  #scheduleMenu {
+    text-align: center;
+
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  #scheduleMenu ul li {
+    width: 156px;
+    border-bottom: 1px solid white;
+  }
+
+  #scheduleMenu ul li.active {
+    width: 156px;
+    border-bottom: 1px solid #F84E35;
+  }
+
+  #scheduleMenu ul li a {
+    opacity: 1;
+    color: #FFFFFF;
+  }
+
+  #scheduleMenu ul li a.active {
+    font-weight: 600;
+    color: #F84E35;
+  }
+</style>

@@ -46,13 +46,12 @@ const links = [
 		"category":"Enseignement",
 		"link":"https://www.heig-vd.ch"
 	}
-
 ]
 
 </script>
 
 <template>
-	<h1>Page Links</h1>
+	<h1>Liens utiles</h1>
 	<div v-for="(link) in links">
 		<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
 		<a :href=link.link>{{link.name}}</a>

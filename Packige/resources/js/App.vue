@@ -18,23 +18,24 @@ let data = ref();
 
  const routes = {
     '#schedule': {
-      label: 'Horaire',
+      label: 'Planification',
+      icon: 'calendar',
       component: scheduleVue,
     },
     '#grades': {
       label: 'Notes',
+      icon: 'graph',
       component: gradesVue,
     },
     '#events': {
-      label: 'AGE',
+      label: 'Actus',
+      icon: 'people',
       component: eventsVue,
     },
     '#links': {
       label: 'Liens',
+      icon: 'chains',
       component: linksVue,
-    },
-    '/register': {
-      label: 'Register',
     }
 };
 
@@ -48,11 +49,8 @@ let data = ref();
 </script>
 
 <template>
-    <Modal v-show="showModal" @close="showModal = false"/>
 
-	  <the-nav :routes="routes" :curHash="curHash"></the-nav>
-
-    <button @click="showModal = true">Show Modal</button>
+	  <the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
 
 	<main>
 
@@ -65,3 +63,71 @@ let data = ref();
   </main>
 
 </template>
+
+<style>
+  * {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: none;
+  }
+
+  body {
+    background-color: #0C223F;
+    color: #FFFFFF;
+  }
+
+  main {
+    padding-bottom: 93px;    
+  }
+
+  h1 {
+    margin-top: 55px;
+    font-family: 'outfit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 36px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    font-feature-settings: 'calt' off;
+  }
+
+  #mainMenu {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    
+    background: linear-gradient(#112A4A 22.56%, #F84E35 331.81%);
+    backdrop-filter: blur(30px);
+  }
+
+  #mainMenu ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    padding-top: 10px;
+  }
+
+  #mainMenu ul li {
+    flex: 1 1 0px;
+    text-align: center;
+
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 32px;
+  }
+
+  #mainMenu ul li a {
+    opacity: 0.6;
+  }
+
+  #mainMenu ul li .active {
+    opacity: 1 !important;
+    color: #F84E35;
+  }
+
+
+</style>
