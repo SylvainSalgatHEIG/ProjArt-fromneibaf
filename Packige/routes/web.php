@@ -54,5 +54,5 @@ Route::get('/api/deadline/check/{deadlineId}/{action}', [DeadlineController::cla
 
 Route::post('/api/register/validator', [RegisterController::class, 'validator']);
 
-Route::get('/api/events}', [EventController::class,'getEvents']);
+Route::get('/api/events', [EventController::class,'getEvents']);
 
