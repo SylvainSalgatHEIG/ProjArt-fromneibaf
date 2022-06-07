@@ -26,6 +26,16 @@ class DeadlineSeeder extends Seeder
         ]);
 
         DB::table('deadlines')->insert([
+            'name' => "Deadline 1.5",
+            'description' => "Description deadline 1",
+            'type' => "rendu",
+            'course_id' => 3,
+            'group_id' => 1,
+            'start_date' => "2022-06-06 10:30:00",
+            'end_date' => "2022-06-06 10:30:00",
+        ]);
+
+        DB::table('deadlines')->insert([
             'name' => "Deadline 2",
             'description' => "Description deadline 2",
             'type' => "examen",

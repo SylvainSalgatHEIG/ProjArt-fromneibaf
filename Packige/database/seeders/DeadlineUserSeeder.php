@@ -26,5 +26,11 @@ class DeadlineUserSeeder extends Seeder
             'user_id' => 1,
             'deadline_id' => 2,
         ]);
+
+        DB::table('deadline_user')->insert([
+            'isChecked' => 1,
+            'user_id' => 1,
+            'deadline_id' => 3,
+        ]);
     }
 }

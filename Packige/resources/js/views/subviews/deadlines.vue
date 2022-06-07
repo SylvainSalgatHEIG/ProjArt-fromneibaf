@@ -1,6 +1,6 @@
 <script setup>
 import {computed, ref} from 'vue';
-import { useFetch } from '../../composables/fetch';
+import { useFetch, usePost } from '../../composables/fetch';
 
 const msg = ref('');
 
@@ -10,6 +10,9 @@ const { data: deadlinesArray } = useFetch("/api/deadlines/");
 const daysShort = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 let groupSelected = ref(1);
+
+let currentWeek = ref('');
+let currentDay = ref('');
 
 function getWeekNumber(date) {
     let currentDate = new Date(date.split(' ')[0]);
@@ -21,6 +24,18 @@ function getWeekNumber(date) {
     return weekNumber;
 }
 
+function checkEvent(event) {
+    let deadlineId = event.target.value;
+    if (event.currentTarget.checked) {
+        // Check
+        useFetch("/api/deadline/check/" + deadlineId + "/check");
+        event.target.classList.add('checked');
+    } else {
+        // Uncheck
+        useFetch("/api/deadline/check/" + deadlineId + "/uncheck");
+    }
+}
+
 </script>
 
 <template>
@@ -29,12 +44,18 @@ function getWeekNumber(date) {
     </select>
     
     <h1>Deadline</h1>
-    <h2 v-if="deadlinesArray">Semaine {{ getWeekNumber(deadlinesArray[0].start_date) }}</h2>
+    
     <div v-for="deadline in deadlinesArray">
+        <h2 v-if="deadline.group_id == groupSelected && currentWeek != getWeekNumber(deadline.start_date) ">Semaine  {{currentWeek = getWeekNumber(deadline.start_date) }}</h2>
+
         <div v-if="deadline.group_id == groupSelected" class="deadline" :class="deadline['check'][0].isChecked ? 'checked' : ''">
-            <div class="date">
+            
+            <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date">
                 {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()]}}
                 {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
+            </div>
+            <div v-else class="date">
+                currentDay = deadline.end_date.split(' ')[0]
             </div>
             <div class="info">
                 {{deadline.name}}
@@ -50,8 +71,8 @@ function getWeekNumber(date) {
                 {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
             </div>
 
-            <div class="check">
-                <input type="checkbox" id="scales" name="scales" :checked="deadline['check'][0].isChecked">
+            <div class="check" v-show="deadline.type == 'rendu'">
+                <input @change="checkEvent($event)" :value="deadline.id" type="checkbox" :checked="deadline['check'][0].isChecked">
             </div>
 
         </div>
