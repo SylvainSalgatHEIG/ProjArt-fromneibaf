@@ -41,12 +41,10 @@
     padding: 0.5rem 1rem;
     text-decoration: none;
     color: #FFFFFF;
-    opacity: 0.6;
     display: inline-block;
-    width: 100%;
   }
   .active {
-    opacity: 1;
+    opacity: 1 !important;
     color: #F84E35;
   }
 

@@ -68,11 +68,15 @@ let data = ref();
   * {
     overscroll-behavior: none;
     -webkit-overflow-scrolling: none;
-    touch-action: none;
+  }
+
+  body {
+    background-color: #0C223F;
+    color: #FFFFFF;
   }
 
   main {
-    padding-bottom: 93px;
+    padding-bottom: 93px;    
   }
 
   #mainMenu {
@@ -103,5 +107,15 @@ let data = ref();
     font-size: 10px;
     line-height: 32px;
   }
+
+  #mainMenu ul li a {
+    opacity: 0.6;
+  }
+
+  #mainMenu ul li .active {
+    opacity: 1 !important;
+    color: #F84E35;
+  }
+
 
 </style>
