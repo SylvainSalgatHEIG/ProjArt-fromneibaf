@@ -79,6 +79,18 @@ let data = ref();
     padding-bottom: 93px;    
   }
 
+  h1 {
+    margin-top: 55px;
+    font-family: 'outfit', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 36px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    font-feature-settings: 'calt' off;
+  }
+
   #mainMenu {
     position: fixed;
     width: 100%;
