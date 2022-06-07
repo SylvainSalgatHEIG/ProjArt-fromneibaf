@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TestApi;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +53,6 @@ Route::get('/api/deadlines', [DeadlineController::class,'getDeadlines']);
 Route::get('/api/deadline/check/{deadlineId}/{action}', [DeadlineController::class,'checkDeadline']);
 
 Route::post('/api/register/validator', [RegisterController::class, 'validator']);
+
+Route::get('/api/events}', [EventController::class,'getEvents']);
 
