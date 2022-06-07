@@ -1,27 +1,46 @@
 <script setup>
 import { useFetch, usePost } from "../composables/fetch";
-import { ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
+import { grades } from "../stores/grades.js";
 
 const { data: coursesArray } = useFetch("/api/courses/");
-
 const coefficient = ref("");
 const grade = ref("");
 const course = ref("");
+// setTimeout(function() { console.log(coursesArray.value); }, 5000);
 
-const emits = defineEmits(["newGrade"]);
+// const courses = computed(() => {
+//   if (coursesArray.value != null) {
+//     return coursesArray.value;
+//   }
+//   return [];
+// });
+
+// watchEffect(() => console.log(courses.value));
 
 function addGrade() {
-  //   console.log(grade.value);
-  //   console.log(coefficient.value);
-  //   console.log(course.value);
+  let moduleName = "";
+  for (const courseData of coursesArray.value) {
+    if (courseData.courseName === course.value) {
+      moduleName = courseData.moduleName;
+    }
+  }
+
   const data = {
     grade: grade.value,
     coefficient: coefficient.value,
     course: course.value,
   };
-  console.log(data);
+
+  // console.log(data);
+
   usePost({ url: "/api/grades/add", data: data });
-  emits("newGrade", data);
+
+  // Faire un test si la note à été ajoutée à la base
+  grades.value[moduleName][course.value].grades.push({
+    grade: grade.value,
+    coefficient: coefficient.value,
+  });
 }
 </script>
 
@@ -33,7 +52,6 @@ function addGrade() {
           <div class="modal-header">
             <slot name="header"> Ajouter une note </slot>
           </div>
-
           <div class="modal-body">
             <slot name="body">
               <form @submit.prevent="addGrade()">
@@ -48,13 +66,15 @@ function addGrade() {
                 />
                 <label for="course">Cours :</label><br />
                 <select id="course" v-model="course">
-                  <option :value="course.name" v-for="course in coursesArray">
-                    {{ course.shortname }}
+                  <option
+                    :value="course.courseName"
+                    v-for="course in coursesArray"
+                  >
+                    {{ course.courseShortName }}
                   </option>
                 </select>
                 <br />
                 <button class="modal-default-button">Ajouter</button>
-                <!-- <button class="modal-default-button" @click="$emit('newGrade', data)">Ajouter</button> -->
               </form>
             </slot>
           </div>

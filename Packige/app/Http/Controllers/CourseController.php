@@ -20,7 +20,7 @@ class CourseController extends Controller
             ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
             ->join('group_user', 'group_user.group_id', '=', 'groups.id')
             ->join('users', 'users.id', '=', 'group_user.user_id')
-            ->select('courses.name', 'courses.shortname')
+            ->select('courses.name as courseName', 'courses.shortname as courseShortName', 'modules.name AS moduleName')
             ->where('users.id', '=', Auth::id())
             ->where('modules.semester', '=', 4)
             ->get();

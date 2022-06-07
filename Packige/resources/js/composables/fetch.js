@@ -4,18 +4,22 @@ export function useFetch(url) {
   const data = ref(null);
 
   async function fetchJson() {
+    // const res = await fetch(unref(url), {
+    //   credentials: 'include'
+    // });
     const res = await fetch(url);
     const json = await res.json();
     data.value = json;
+    // console.log(data.value);
   }
 
   fetchJson();
 
-  return { data };
+  return { data, fetchJson };
 
 }
 
-export function usePost({url, method = 'POST', data}) {
+export function usePost({ url, method = 'POST', data }) {
   const results = ref(null);
 
   async function fetchJsonPost(body) {
