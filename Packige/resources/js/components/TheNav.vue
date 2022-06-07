@@ -16,7 +16,7 @@
 <template>
   <nav>
     <ul>
-      <li v-for="(route, hash) of routes">
+      <li v-for="(route, hash) of routes" :class="{ active: hash == curHash }">
         
         <a :href="hash" :class="{ active: hash == curHash }">
           <img v-if="route.icon" class="icon" :class="{ active: hash == curHash }" :src="'./icons/' + route.icon + '.svg'"><br>

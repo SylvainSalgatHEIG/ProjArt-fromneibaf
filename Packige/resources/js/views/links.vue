@@ -50,10 +50,50 @@ const links = [
 
 </script>
 
+
 <template>
-	<h1>Page Links</h1>
-	<div v-for="(link) in links">
-		<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
-		<a :href=link.link>{{link.name}}</a>
+	<h1>Liens utiles</h1>
+	<div class="content">
+		<div v-for="(link) in links" class="link">
+			<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
+			<a :href=link.link>{{link.name}}</a>
+		</div>
 	</div>
+	<hr>
 </template>
+
+<style>
+	h2 {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 30px;
+
+	letter-spacing: -0.02em;
+
+	margin: 14px auto 5px auto;
+	}
+
+	a {
+		width: 100%;
+
+		text-decoration: none;
+		color: #C8D7F4;
+
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 22px;
+
+		letter-spacing: -0.02em;
+	}
+
+	hr {
+		margin: 30px auto;
+		width: 80%;
+		border-top: 1px solid #FFFFFF;
+		opacity: 0.6;
+	}
+</style>
