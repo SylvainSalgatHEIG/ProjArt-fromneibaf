@@ -65,6 +65,9 @@ let data = ref();
 </template>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
   * {
     overscroll-behavior: none;
     -webkit-overflow-scrolling: none;
@@ -76,7 +79,7 @@ let data = ref();
   }
 
   main {
-    padding-bottom: 93px;    
+    padding-bottom: 93px;
   }
 
   h1 {
@@ -88,7 +91,6 @@ let data = ref();
     line-height: 36px;
     text-align: center;
     letter-spacing: -0.02em;
-    font-feature-settings: 'calt' off;
   }
 
   #mainMenu {
@@ -129,5 +131,10 @@ let data = ref();
     color: #F84E35;
   }
 
-
+  @media (max-width:480px) {
+    .content {
+      margin-left: 33px;
+    }
+    
+  }
 </style>
