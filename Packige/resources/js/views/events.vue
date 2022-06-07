@@ -6,13 +6,21 @@ import { apiEvents} from '../config/apiUrls.js';
 
 const {data: events} = useFetch(apiEvents);
 const year = ref(new Date().getFullYear());
-console.log(events);
+
+const {value: theEvents} = useLocalstorage('events', events.value);
+
+const allEvents = computed(() => {
+	if (!theEvents.value) {
+		theEvents.value = events.value;
+	}
+  return theEvents.value;
+});
 </script>
 
 <template>
 	<h1>Hello {{}}</h1>
 	<ul>
-		<li v-for="event in events">
+		<li v-for="event in allEvents">
 			<img :src="event.imageLink" :alt="event.name">
 			{{event.day}} {{event.month}} {{year}}<a :href="event.link">{{event.name}}</a>
 			
