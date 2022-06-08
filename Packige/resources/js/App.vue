@@ -1,67 +1,63 @@
 <script setup>
-import {computed, ref} from 'vue';
+import { computed, ref } from "vue";
 
-import TheNav from './components/TheNav.vue';
-import eventsVue from './views/events.vue';
-import gradesVue from './views/grades.vue';
-import linksVue from './views/links.vue';
-import scheduleVue from './views/schedule.vue';
-import registerVue from './views/register.vue';
+import TheNav from "./components/TheNav.vue";
+import eventsVue from "./views/events.vue";
+import gradesVue from "./views/grades.vue";
+import linksVue from "./views/links.vue";
+import scheduleVue from "./views/schedule.vue";
+import registerVue from "./views/register.vue";
 
-import Modal from './components/Modal.vue';
+import Modal from "./components/Modal.vue";
 
 let showModal = ref(false);
 
-
-const msg = ref('');
+const msg = ref("");
 let data = ref();
 
- const routes = {
-    '#schedule': {
-      label: 'Horaire',
-      component: scheduleVue,
-    },
-    '#grades': {
-      label: 'Notes',
-      component: gradesVue,
-    },
-    '#events': {
-      label: 'AGE',
-      component: eventsVue,
-    },
-    '#links': {
-      label: 'Liens',
-      component: linksVue,
-    },
-    '/register': {
-      label: 'Register',
-    }
+const routes = {
+  "#schedule": {
+    label: "Horaire",
+    component: scheduleVue,
+  },
+  "#grades": {
+    label: "Notes",
+    component: gradesVue,
+  },
+  "#events": {
+    label: "AGE",
+    component: eventsVue,
+  },
+  "#links": {
+    label: "Liens",
+    component: linksVue,
+  },
+  "/register": {
+    label: "Register",
+  },
 };
 
-  const hash = ref(window.location.hash);
+const hash = ref(window.location.hash);
 
-  window.addEventListener('hashchange', () => hash.value = window.location.hash);
+window.addEventListener(
+  "hashchange",
+  () => (hash.value = window.location.hash)
+);
 
-  const curHash = computed(() => routes[hash.value] ? hash.value : Object.keys(routes)[0]);
-  const curComponent = computed(() => routes[curHash.value].component);
-
+const curHash = computed(() =>
+  routes[hash.value] ? hash.value : Object.keys(routes)[0]
+);
+const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
-    <Modal v-show="showModal" @close="showModal = false"/>
+  <the-nav :routes="routes" :curHash="curHash"></the-nav>
 
-	  <the-nav :routes="routes" :curHash="curHash"></the-nav>
-
-    <button @click="showModal = true">Show Modal</button>
-
-	<main>
-
+  <main>
     <template v-for="(route, hash) of routes">
       <div v-show="hash == curHash">
-        <component :is="route.component"/>
+        <component :is="route.component" />
       </div>
     </template>
-
   </main>
-
 </template>
