@@ -59,3 +59,8 @@ Route::get('/api/events', [EventController::class,'getEvents']);
 
 Route::get('/api/user/links', [UserController::class,'getLinks']);
 
+Route::post('/api/user/link/add', [UserController::class,'addLink']);
+Route::post('/api/user/link/edit', [UserController::class,'editLink']);
+Route::post('/api/user/link/delete', [UserController::class,'deleteLink']);
+
+
