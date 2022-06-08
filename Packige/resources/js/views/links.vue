@@ -86,7 +86,10 @@ const links = computed(() => {
 			category: "Mes liens",
 			link: link.link
 		}
-		theLinks.value.unshift(aLink);
+		if (theLinks.value.findIndex(l => l.name == link.name) === -1) {
+			theLinks.value.unshift(aLink);
+		}
+		
 	})
 	return theLinks.value;
 });
