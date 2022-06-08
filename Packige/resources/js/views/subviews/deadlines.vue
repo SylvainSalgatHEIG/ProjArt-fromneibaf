@@ -228,6 +228,8 @@ function getWeekStartEnd(day) {
 
     .deadline .check {
         visibility: hidden;
+
+        z-index: 3000;
         
         width: 36px;
         height: 36px;
@@ -236,14 +238,11 @@ function getWeekStartEnd(day) {
 
         float: right;
 
-        z-index: 1;
 
     }
 
     /* Checked */
-    .deadline .check::after {
-
-        z-index: -1;
+    .deadline .check:after {
 
         visibility: visible;
 
@@ -259,12 +258,11 @@ function getWeekStartEnd(day) {
 
         border-radius: 7px;
         background: rgba(255, 255, 255, 0.5);
+
     }
 
     /* Unchecked */
-    .deadline .check .checked::after {
-
-        z-index: 10;
+    .deadline .check .checked:before {
 
         visibility: visible;
         content: "";
@@ -284,6 +282,8 @@ function getWeekStartEnd(day) {
         background-repeat: no-repeat;
         background-position: center;
         background-size: 21px;
+
+        pointer-events: all;
     }
 
 
