@@ -1,5 +1,8 @@
 <script setup>
 import {computed, ref} from 'vue';
+import { useFetch } from '../composables/fetch';
+import { apiUserLinks} from '../config/apiUrls.js';
+
 
 let currentCategory = "";
 const menusCafet = ref(null);
@@ -21,7 +24,10 @@ const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
         console.log(error);
     });
 
-const links = [
+	const {data: userLinks} = useFetch(apiUserLinks);
+
+	
+const mainLinks = ref([
 	{
 		"name":"Attestation d'études",
 		"category":"Semestre",
@@ -63,7 +69,23 @@ const links = [
 		"link":"https://www.heig-vd.ch"
 	}
 
-]
+]);
+
+const links = computed(() => {
+
+	if (!userLinks.value) return mainLinks.value;
+	let links = mainLinks.value;
+	userLinks.value.forEach((link, index, array) => {
+		const aLink = {
+			name: link.name,
+			category: "Mes liens",
+			link: link.link
+		}
+		links.unshift(aLink);
+	})
+	return links;
+});
+
 
 /**
  * Function that format the digit if it is less than 10
@@ -91,7 +113,7 @@ function getDayFr(date) {
 	return dayFr.charAt(0).toUpperCase() + dayFr.slice(1);
 }
 
-const test = computed(() => {
+const menusFormatted = computed(() => {
 	if (!menusCafet.value) return []
 	
 	const cafeteria = {
@@ -108,7 +130,6 @@ const test = computed(() => {
 			"menus": []
 		}
 		menus.date = formatDateFr(menus.day);
-		// console.log("hello");
 		menus.dayFr = getDayFr(menus.day);
 		let hasMeals = false;
 		let index = 1;
@@ -127,55 +148,25 @@ const test = computed(() => {
 			days.menus = "Pas de menu aujourd'hui";
 		}
 		cafeteria.days.push(days);
-		// const days = {
-		// 	date: formatDateFr(menus.day),
-		// 	hasMeals,
-		// 	menus: 
-		// }
 
 	})
 	return cafeteria
-});
-
-const menusCafetFormatted = computed(() => {
-	if (!menusCafet.value) return [];
-	
-	menusCafet.value.days.forEach(menus => {
-		menus.date = formatDateFr(menus.day);
-		// console.log("hello");
-		menus.dayFr = getDayFr(menus.day);
-		let hasMeals = false;
-		menus.menus.forEach(meal => {
-			if (meal.mainCourse != "") {
-				console.log ("Has a main course: " + meal.mainCourse)
-				hasMeals = true;
-			}
-		});
-	})
-	return menusCafet.value;
 });
 
 </script>
 
 <template>
 	<h1>Liens utiles</h1>
-	<div class="content">
+	<div class="content">		
 		<div v-for="(link) in links" class="link">
 			<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
 			<a :href=link.link >{{link.name}}</a>
 		</div>
 	</div>
 
-	{{test}} -----------------
-	{{menusCafetFormatted}}
-	<div v-for="(link) in links" class="link">
-		<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
-		<a :href=link.link>{{link.name}}</a>
-	</div>
-
 	<div class="menu-cafeteria">
-		<h1>Cafétéria - Semaine {{test.week}}</h1>
-		<div class="menu-day" v-for="menu of test.days">
+		<h1>Cafétéria - Semaine {{menusFormatted.week}}</h1>
+		<div class="menu-day" v-for="menu of menusFormatted.days">
 			<h2>{{menu.dayFr}} : {{menu.date}}</h2>
 			<p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
 			<div v-for="meal of menu.menus" v-show="menu.hasMeals">
