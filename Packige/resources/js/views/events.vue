@@ -4,8 +4,7 @@ import { useFetch } from '../composables/fetch';
 import { useLocalstorage } from '../composables/localstorage';
 import { apiEvents} from '../config/apiUrls.js';
 
-// const {data: events} = useFetch(apiEvents);
-const events = ref([{"name":"Tournoi de Karting","day":"11","month":"juin","link":"https:\/\/age.heig-vd.ch\/events\/tournoi-de-karting\/","imageLink":"https:\/\/age.heig-vd.ch\/wp-content\/uploads\/2022\/05\/afficheKarting_page-0001-350x250.jpg"},{"name":"Assembl\u00e9e g\u00e9n\u00e9rale","day":"14","month":"juin","link":"https:\/\/age.heig-vd.ch\/events\/assemblee-generale\/","imageLink":"https:\/\/age.heig-vd.ch\/wp-content\/uploads\/2022\/06\/ag-350x250.png"},{"name":"Soir\u00e9e de fin d\u2019ann\u00e9e","day":"16","month":"juin","link":"https:\/\/age.heig-vd.ch\/events\/soiree-de-fin-dannee\/","imageLink":"https:\/\/age.heig-vd.ch\/wp-content\/uploads\/2022\/06\/msg1233560228-18486-350x250.jpg"}])
+const {data: events} = useFetch(apiEvents);
 const year = ref(new Date().getFullYear());
 
 const {value: theEvents} = useLocalstorage('events', events.value);

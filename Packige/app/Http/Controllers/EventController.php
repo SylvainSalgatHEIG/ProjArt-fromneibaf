@@ -12,8 +12,10 @@ class EventController extends Controller
 	public function getEvents() {
 		$wsEvents = "https://age.heig-vd.ch/activites/";
 
-		$string = file_get_contents($wsEvents);
+		// $string = file_get_contents($wsEvents);
 		// die($string);
+		$stream = fopen($wsEvents, 'r');
+		$string = stream_get_contents($stream);
 		// the backslash is to escape the DOMDocument so it doesn't think it's a controller.
 		$d = new \DOMDocument();
 
