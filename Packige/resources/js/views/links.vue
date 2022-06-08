@@ -56,14 +56,14 @@ const links = [
 	<div class="content">
 		<div v-for="(link) in links" class="link">
 			<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
-			<a :href=link.link>{{link.name}}</a>
+			<a :href=link.link >{{link.name}}</a>
 		</div>
 	</div>
 	<hr>
 </template>
 
 <style>
-	h2 {
+	.link h2 {
 	font-family: 'Inter';
 	font-style: normal;
 	font-weight: 700;
@@ -75,7 +75,7 @@ const links = [
 	margin: 14px auto 5px auto;
 	}
 
-	a {
+	.link a {
 		width: 100%;
 
 		text-decoration: none;
