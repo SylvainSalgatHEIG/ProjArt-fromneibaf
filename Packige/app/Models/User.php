@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Grade::class);
     }
+
+    public function links()
+    {
+        return $this->hasMany(Link::class);
+    }
 }
