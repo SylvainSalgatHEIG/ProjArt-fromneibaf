@@ -57,3 +57,5 @@ Route::post('/api/register/validator', [RegisterController::class, 'validator'])
 
 Route::get('/api/events', [EventController::class,'getEvents']);
 
+Route::get('/api/user/links', [UserController::class,'getLinks']);
+
