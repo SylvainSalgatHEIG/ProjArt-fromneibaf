@@ -1,9 +1,25 @@
 <script setup>
-import {ref} from 'vue';
-
-const msg = ref('');
+import {computed, ref} from 'vue';
 
 let currentCategory = "";
+const menusCafet = ref(null);
+
+const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
+    fetch(menuCafetUrl, {
+		method: "GET",
+		withCredentials: true,
+		headers: {
+			"x-api-key": "xY79sN6FDiN6PXucrsBiQBeWkasTLCEn9hcD@dGBcH2Q22f*zs9LHzsfdshT_JBV.Td_ZRdCqQdm4RNFY8JTE!tLK@.GA!2YLNoo",
+			"Content-Type": "application/json"
+		}
+    })
+    .then(resp => resp.json())
+    .then(function(data) {
+		menusCafet.value = data;
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
 
 const links = [
 	{
@@ -46,22 +62,134 @@ const links = [
 		"category":"Enseignement",
 		"link":"https://www.heig-vd.ch"
 	}
+
 ]
+
+/**
+ * Function that format the digit if it is less than 10
+ * Example: 1 => 01 --> 01.01.2020 instead of 1.01.2020
+ * @param {date} Date
+ * @return {date}
+ */
+function formatTwoDigits(date) {
+  if (date < 10)
+    return `0${date}`;
+  else
+    return date;
+}
+
+function formatDateFr(date) {
+	let day = formatTwoDigits(new Date(date).getUTCDate());
+	let month = formatTwoDigits(new Date(date).getUTCMonth() + 1);
+	let year = new Date(date).getFullYear();
+	return day + "." + month + "." + year;
+}
+
+function getDayFr(date) {
+	const dayFr = new Date(date).toLocaleDateString("fr-FR", {weekday: 'long'});
+	// first letter uppercase
+	return dayFr.charAt(0).toUpperCase() + dayFr.slice(1);
+}
+
+const test = computed(() => {
+	if (!menusCafet.value) return []
+	
+	const cafeteria = {
+		week: menusCafet.value.week,
+		monday: menusCafet.value.monday,
+		friday: menusCafet.value.friday,
+		days: []
+	}
+	let days = {};
+	menusCafet.value.days.forEach(menus => {
+		days = {
+			"day": menus.day,
+			"date": formatDateFr(menus.day),
+			"menus": []
+		}
+		menus.date = formatDateFr(menus.day);
+		// console.log("hello");
+		menus.dayFr = getDayFr(menus.day);
+		let hasMeals = false;
+		let index = 1;
+		menus.menus.forEach(meal => {
+			if (meal.mainCourse != "") {
+				console.log ("Has a main course: " + meal.mainCourse)
+				hasMeals = true;
+				meal.index = index;
+				days.menus.push(meal);
+				index++;
+			}
+		});
+		days.hasMeals = hasMeals;
+		days.dayFr = getDayFr(days.day);
+		if (!hasMeals) {
+			days.menus = "Pas de menu aujourd'hui";
+		}
+		cafeteria.days.push(days);
+		// const days = {
+		// 	date: formatDateFr(menus.day),
+		// 	hasMeals,
+		// 	menus: 
+		// }
+
+	})
+	return cafeteria
+});
+
+const menusCafetFormatted = computed(() => {
+	if (!menusCafet.value) return [];
+	
+	menusCafet.value.days.forEach(menus => {
+		menus.date = formatDateFr(menus.day);
+		// console.log("hello");
+		menus.dayFr = getDayFr(menus.day);
+		let hasMeals = false;
+		menus.menus.forEach(meal => {
+			if (meal.mainCourse != "") {
+				console.log ("Has a main course: " + meal.mainCourse)
+				hasMeals = true;
+			}
+		});
+	})
+	return menusCafet.value;
+});
 
 </script>
 
-
 <template>
 	<h1>Liens utiles</h1>
-	<div class="content">
-		<div v-for="(link) in links" class="link">
-			<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
-			<a :href=link.link>{{link.name}}</a>
+	{{test}} -----------------
+	{{menusCafetFormatted}}
+	<div v-for="(link) in links" class="link">
+		<h2 v-if="link.category != currentCategory">{{currentCategory = link.category}}</h2>
+		<a :href=link.link>{{link.name}}</a>
+	</div>
+
+	<div class="menu-cafeteria">
+		<h1>Cafétéria - Semaine {{test.week}}</h1>
+		<div class="menu-day" v-for="menu of test.days">
+			<h2>{{menu.dayFr}} : {{menu.date}}</h2>
+			<p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
+			<div v-for="meal of menu.menus" v-show="menu.hasMeals">
+				<h3> Menu {{meal.index}}</h3>
+				<h4>Entrée</h4>
+				<p>{{meal.starter}}</p>
+				<h4>Plat</h4>
+					<!-- <ul> -->
+						<p v-for="mainCourse of meal.mainCourse">{{mainCourse}}</p>
+						<!-- <li v-for="mainCourse of meal.mainCourse">{{mainCourse}}</li>
+					</ul> -->
+					<span v-show="meal.containsPork">Ce menu contient du porc</span>
+				<h4>Dessert</h4>
+				<p>{{meal.dessert}}</p>
+				<br>
+				<p>------------- SEPARATION MENUS ----------------------</p>
+			</div>
+			<p>----------- SEPARATION JOURS----------------</p>
 		</div>
 	</div>
-	<hr>
 </template>
-
 <style>
 	h2 {
 	font-family: 'Inter';
@@ -75,6 +203,33 @@ const links = [
 	margin: 14px auto 5px auto;
 	}
 
+	h3 {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 17px;
+	line-height: 30px;
+
+	letter-spacing: -0.02em;
+
+	margin: 14px auto 5px auto;
+	}
+
+	h4 {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 30px;
+
+	letter-spacing: -0.02em;
+
+	margin: 14px auto 5px auto;
+	}
+
+	.menu-day {
+		text-align: center;
+	}
 	a {
 		width: 100%;
 
