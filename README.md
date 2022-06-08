@@ -21,7 +21,9 @@ Voici les différentes étapes d'installation à suivre pour exécuter le projet
 1. Faire un "git pull" du projet
 2. Se rendre dans le répertoire /laravel/
 3. Lancer la commmande "composer install"
-4. Lancer la commmande "npm install"
-5. Dupliquer le fichier ".env.example" et renommer en ".env"
-6. Lancer la commande "php artisan key:generate"
-7. Vérifier que tout fonctionne en lançant le serveur grâce à la commande "php artisan serve"
+4. Lancer la commmande "npm install", puis "npm run dev".
+5. Répéter l'étape 4 en ré-exécutant ces deux commandes.
+6. Dupliquer le fichier ".env.example" et renommer en ".env"
+7. Lancer la commande "php artisan key:generate"
+8. Modifier le fichier ".env" pour y ajouter les informations de connexion à votre base de données.
+9. Vérifier que tout fonctionne en lançant le serveur grâce à la commande "php artisan serve", puis dans un autre terminal, "npm run watch".
