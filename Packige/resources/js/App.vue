@@ -115,15 +115,16 @@ let data = ref();
     flex: 1 1 0px;
     text-align: center;
 
+  }
+
+  #mainMenu ul li a {
+    opacity: 0.6;
+    
     font-family: 'Outfit', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 10px;
     line-height: 32px;
-  }
-
-  #mainMenu ul li a {
-    opacity: 0.6;
   }
 
   #mainMenu ul li .active {
