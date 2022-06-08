@@ -1,11 +1,14 @@
 <script setup>
 import {computed, ref} from 'vue';
 import { useFetch } from '../composables/fetch';
+import { useLocalstorage } from '../composables/localstorage';
 import { apiUserLinks} from '../config/apiUrls.js';
 
 
 let currentCategory = "";
 const menusCafet = ref(null);
+const {value: theLinks} = useLocalstorage('links', null);
+
 
 const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
     fetch(menuCafetUrl, {
@@ -21,7 +24,7 @@ const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
 		menusCafet.value = data;
     })
     .catch(function(error) {
-        console.log(error);
+		console.log(error);
     });
 
 	const {data: userLinks} = useFetch(apiUserLinks);
@@ -72,18 +75,20 @@ const mainLinks = ref([
 ]);
 
 const links = computed(() => {
-
+	if (!theLinks.value) {
+		theLinks.value = mainLinks.value;
+	}
 	if (!userLinks.value) return mainLinks.value;
-	let links = mainLinks.value;
+	// let links = mainLinks.value;
 	userLinks.value.forEach((link, index, array) => {
 		const aLink = {
 			name: link.name,
 			category: "Mes liens",
 			link: link.link
 		}
-		links.unshift(aLink);
+		theLinks.value.unshift(aLink);
 	})
-	return links;
+	return theLinks.value;
 });
 
 
@@ -135,7 +140,6 @@ const menusFormatted = computed(() => {
 		let index = 1;
 		menus.menus.forEach(meal => {
 			if (meal.mainCourse != "") {
-				console.log ("Has a main course: " + meal.mainCourse)
 				hasMeals = true;
 				meal.index = index;
 				days.menus.push(meal);
