@@ -7,6 +7,7 @@ if (window.location.hostname == 'localhost' || window.location.hostname == '127.
 export const apiCourses = BASE_URL + 'api/courses';
 export const apiGroups = BASE_URL + 'api/groups';
 export const apiEvents = BASE_URL + 'api/events';
+export const apiUserLinks = BASE_URL + 'api/user/links';
 
 const CHABLOZ_URL = "https://chabloz.eu/";
 export const apiSchedules = CHABLOZ_URL + 'files/horaires/all.json';
