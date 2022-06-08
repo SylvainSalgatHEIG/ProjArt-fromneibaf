@@ -1,6 +1,6 @@
 let BASE_URL = "";
-if (window.location.hostname == 'localhost') {
-    BASE_URL = 'http://localhost:8000/';
+if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
+    BASE_URL = "http://" + window.location.host + "/";
 } else {
     BASE_URL = "https://" + window.location.hostname + "/";
 }
