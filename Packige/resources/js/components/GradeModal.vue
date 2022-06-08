@@ -1,46 +1,126 @@
 <script setup>
 import { useFetch, usePost } from "../composables/fetch";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import { grades } from "../stores/grades.js";
 
 const { data: coursesArray } = useFetch("/api/courses/");
-const coefficient = ref("");
-const grade = ref("");
-const course = ref("");
-// setTimeout(function() { console.log(coursesArray.value); }, 5000);
 
-// const courses = computed(() => {
-//   if (coursesArray.value != null) {
-//     return coursesArray.value;
-//   }
-//   return [];
-// });
+const emit = defineEmits(["close"]);
+const props = defineProps({
+  id: {
+    type: BigInt,
+    required: true,
+  },
+});
 
-// watchEffect(() => console.log(courses.value));
+let btnText = ref("Ajouter");
+let coefficient = ref("");
+let grade = ref("");
+let course = ref("");
+let disabledSelect = ref(false);
+let deleBtnPressed = ref(false);
 
-function addGrade() {
+watchEffect(() => {
+  if (grades.value != null && coursesArray.value != null) {
+    let pass = false;
+    for (const courseData of coursesArray.value) {
+      for (const gradeData of grades.value[courseData.moduleName][
+        courseData.courseName
+      ].grades) {
+        if (gradeData.id === props.id) {
+          console.log(gradeData);
+          coefficient.value = gradeData.coefficient;
+          grade.value = gradeData.grade;
+          course.value = courseData.courseShortName;
+          btnText.value = "Modifier";
+          disabledSelect.value = true;
+          pass = true;
+        }
+      }
+    }
+    if (!pass) {
+      coefficient.value = "";
+      grade.value = "";
+      course.value = "";
+      disabledSelect.value = false;
+      btnText.value = "Ajouter";
+    }
+  }
+});
+
+function deleteBtnClicked() {
+  deleBtnPressed.value = true;
+}
+
+function addOrEditGrade(id = props.id) {
   let moduleName = "";
+  let courseFullName = "";
+
   for (const courseData of coursesArray.value) {
-    if (courseData.courseName === course.value) {
+    if (courseData.courseShortName === course.value) {
+      courseFullName = courseData.courseName;
       moduleName = courseData.moduleName;
     }
   }
+  if (id && deleBtnPressed.value) {
+    console.log("delete");
+    const data = {
+      id: id,
+    };
+    deleteGrade(data, courseFullName, moduleName)
+  } else if (id) {
+    console.log("edit");
+    const data = {
+      grade: grade.value,
+      coefficient: coefficient.value,
+      course: course.value,
+      id: id,
+    };
+    editGrade(data, courseFullName, moduleName);
+  } else {
+    console.log("add");
+    const data = {
+      grade: grade.value,
+      coefficient: coefficient.value,
+      course: course.value,
+    };
+    addGrade(data, courseFullName, moduleName);
+  }
+  emit("close");
+}
 
-  const data = {
-    grade: grade.value,
-    coefficient: coefficient.value,
-    course: course.value,
-  };
+function editGrade(data, courseFullName, moduleName) {
+  usePost({ url: "/api/grades/edit", data: data });
 
-  // console.log(data);
+  for (const gradeData of grades.value[moduleName][courseFullName].grades) {
+    if (gradeData.id === data.id) {
+      gradeData.grade = grade.value;
+      gradeData.coefficient = coefficient.value;
+    }
+  }
+}
 
+function addGrade(data, courseFullName, moduleName) {
   usePost({ url: "/api/grades/add", data: data });
 
   // Faire un test si la note à été ajoutée à la base
-  grades.value[moduleName][course.value].grades.push({
+  grades.value[moduleName][courseFullName].grades.push({
     grade: grade.value,
     coefficient: coefficient.value,
   });
+}
+
+function deleteGrade(data, courseFullName, moduleName) {
+  // Supprimer la note de la base
+  usePost({ url: "/api/grades/delete", data: data });
+  // Supprimer la note du tableau
+  for(let i = 0; i < grades.value[moduleName][courseFullName].grades.length; i++){
+    if(grades.value[moduleName][courseFullName].grades[i].id == data.id){
+      grades.value[moduleName][courseFullName].grades.splice(i, 1)
+    }
+  }
+
+  deleBtnPressed.value = false;
 }
 </script>
 
@@ -54,27 +134,44 @@ function addGrade() {
           </div>
           <div class="modal-body">
             <slot name="body">
-              <form @submit.prevent="addGrade()">
+              <form @submit.prevent="addOrEditGrade()">
+                <!-- <form @submit.prevent="addOrEditGrade()"> -->
                 <label for="grade">Note :</label><br />
-                <input type="number" v-model="grade" id="grade" step="0.01" />
+                <input
+                  type="number"
+                  v-model="grade"
+                  id="grade"
+                  step="0.01"
+                  required
+                />
                 <label for="coefficient">Coefficient :</label><br />
                 <input
                   type="number"
                   v-model="coefficient"
                   id="coefficient"
                   step="0.01"
+                  required
                 />
                 <label for="course">Cours :</label><br />
-                <select id="course" v-model="course">
+                <select id="course" v-model="course" :disabled="disabledSelect">
                   <option
-                    :value="course.courseName"
+                    :value="course.courseShortName"
                     v-for="course in coursesArray"
                   >
                     {{ course.courseShortName }}
                   </option>
                 </select>
                 <br />
-                <button class="modal-default-button">Ajouter</button>
+                <button class="modal-default-button">
+                  {{ btnText }}
+                </button>
+                <button
+                  class="modal-default-button"
+                  v-show="disabledSelect"
+                  @click="deleteBtnClicked"
+                >
+                  del
+                </button>
               </form>
             </slot>
           </div>

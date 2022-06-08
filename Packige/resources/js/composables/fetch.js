@@ -5,9 +5,9 @@ export function useFetch(url, fetchOnUse = true) {
 
   async function fetchJson() {
     const res = await fetch(unref(url));
+    // const res = await fetch(url);
     const json = await res.json();
     data.value = json;
-    // console.log(data.value);
   }
 
   if (fetchOnUse) fetchJson();

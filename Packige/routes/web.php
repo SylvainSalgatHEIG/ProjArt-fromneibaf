@@ -44,6 +44,8 @@ Route::get('/api/groups', [GroupController::class,'getGroups']);
 
 Route::get('/api/grades/get', [GradeController::class,'getGrades']);
 Route::post('/api/grades/add', [GradeController::class,'addGrade']);
+Route::post('/api/grades/edit', [GradeController::class,'editGrade']);
+Route::post('/api/grades/delete', [GradeController::class,'deleteGrade']);
 
 Route::get('/api/deadlines', [GradeController::class,'getDeadlines']);
 Route::get('/api/usergroups', [GroupController::class,'getUserGroups']);

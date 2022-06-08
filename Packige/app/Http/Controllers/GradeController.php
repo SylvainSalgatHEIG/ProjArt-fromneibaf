@@ -49,7 +49,7 @@ class GradeController extends Controller
 
                 // print_r($grades);
                 foreach ($grades as $grade) {
-                    array_push($gradesArray[$module->name][$course->name]['grades'], ['grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
+                    array_push($gradesArray[$module->name][$course->name]['grades'], ['id' => $grade->id, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
                 }
                 $gradesArray[$module->name][$course->name]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->name]);
             }
@@ -107,20 +107,31 @@ class GradeController extends Controller
             ->join('users', 'users.id', '=', 'group_user.user_id')
             ->select('courses.id')
             ->where('users.id', '=', Auth::id())
-            ->where('courses.name', '=', $request->course)
+            ->where('courses.shortname', '=', $request->course)
             ->first();
 
         $grade = new Grade;
-        
+
         $grade->coefficient = $request->coefficient;
         $grade->grade = $request->grade;
         $grade->user_id = Auth::id();
         $grade->course_id = $courseId->id;
         $grade->save();
-        if(!$grade){
+        if (!$grade) {
             return 'FAILED';
         }
         return 'SUCCESS';
         // return redirect(route('grades.index'));
+    }
+
+    public function editGrade(Request $request)
+    {
+        $update = DB::table('grades')
+            ->where('id', $request->id)
+            ->update(['grade' => $request->grade, 'coefficient' => $request->coefficient]);
+    }
+
+    public function deleteGrade(Request $request){
+        $deleted = DB::table('grades')->where('id', '=', $request->id)->delete();
     }
 }

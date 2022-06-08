@@ -1,21 +1,42 @@
 <script setup>
-import {computed, ref} from 'vue';
+import { computed, ref } from "vue";
 
-import TheNav from './components/TheNav.vue';
-import eventsVue from './views/events.vue';
-import gradesVue from './views/grades.vue';
-import linksVue from './views/links.vue';
-import scheduleVue from './views/schedule.vue';
-import registerVue from './views/register.vue';
+import TheNav from "./components/TheNav.vue";
+import eventsVue from "./views/events.vue";
+import gradesVue from "./views/grades.vue";
+import linksVue from "./views/links.vue";
+import scheduleVue from "./views/schedule.vue";
+import registerVue from "./views/register.vue";
 
-import Modal from './components/Modal.vue';
+import Modal from "./components/Modal.vue";
 
 let showModal = ref(false);
 
-
-const msg = ref('');
+const msg = ref("");
 let data = ref();
 
+<<<<<<< HEAD
+const routes = {
+  "#schedule": {
+    label: "Horaire",
+    component: scheduleVue,
+  },
+  "#grades": {
+    label: "Notes",
+    component: gradesVue,
+  },
+  "#events": {
+    label: "AGE",
+    component: eventsVue,
+  },
+  "#links": {
+    label: "Liens",
+    component: linksVue,
+  },
+  "/register": {
+    label: "Register",
+  },
+=======
  const routes = {
     '#schedule': {
       label: 'Planification',
@@ -37,30 +58,42 @@ let data = ref();
       icon: 'chains',
       component: linksVue,
     }
+>>>>>>> 6d59752d75f1eaaaf06c5104c59192ddda7b3acc
 };
 
-  const hash = ref(window.location.hash);
+const hash = ref(window.location.hash);
 
-  window.addEventListener('hashchange', () => hash.value = window.location.hash);
+window.addEventListener(
+  "hashchange",
+  () => (hash.value = window.location.hash)
+);
 
-  const curHash = computed(() => routes[hash.value] ? hash.value : Object.keys(routes)[0]);
-  const curComponent = computed(() => routes[curHash.value].component);
-
+const curHash = computed(() =>
+  routes[hash.value] ? hash.value : Object.keys(routes)[0]
+);
+const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
+<<<<<<< HEAD
+  <the-nav :routes="routes" :curHash="curHash"></the-nav>
+=======
 
 	  <the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
 
 	<main>
+>>>>>>> 6d59752d75f1eaaaf06c5104c59192ddda7b3acc
 
+  <main>
     <template v-for="(route, hash) of routes">
       <div v-show="hash == curHash">
-        <component :is="route.component"/>
+        <component :is="route.component" />
       </div>
     </template>
-
   </main>
+<<<<<<< HEAD
+</template>
+=======
 
 </template>
 
@@ -139,3 +172,4 @@ let data = ref();
     
   }
 </style>
+>>>>>>> 6d59752d75f1eaaaf06c5104c59192ddda7b3acc
