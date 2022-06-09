@@ -43,5 +43,7 @@
 </template>
 
 <style scoped>
-
+h2{
+  background-color: 0C223F;
+}
 </style>
