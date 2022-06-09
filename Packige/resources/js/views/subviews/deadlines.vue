@@ -14,6 +14,10 @@ let groupSelected = ref(1);
 let currentWeek = ref('');
 let currentDay = ref('');
 
+const todayDate = new Date(Date.now()).toISOString().split('T')[0];
+
+console.log(todayDate);
+
 function getWeekNumber(date) {
     let currentDate = new Date(date.split(' ')[0]);
     let startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -86,7 +90,8 @@ function getWeekStartEnd(day) {
                 <h2 v-if="deadline.group_id == groupSelected && currentWeek != getWeekStartEnd(deadline.start_date) ">{{currentWeek = getWeekStartEnd(deadline.start_date) }}</h2>
                 <div v-if="deadline.group_id == groupSelected" class="deadline">
                     
-                    <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date">
+                    <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date" v-bind:class="deadline.start_date.split(' ')[0] == todayDate ? 'currentDay' : ''">
+
                         {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
                         {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
                         <div class="hidden">{{ currentDay = deadline.end_date.split(' ')[0] }}</div>
@@ -217,14 +222,18 @@ function getWeekStartEnd(day) {
         font-size: 16px;
         line-height: 16px;
 
-        background-color: #F84E35;
-        border-radius: 5px;
+        
 
         line-height: 1rem;
         padding: px 4px;
         margin-left: 0 !important;
         margin-bottom: 5px;
         margin-top: 5px;
+    }
+
+    .deadline .date.currentDay {
+        background-color: #F84E35;
+        border-radius: 5px;
     }
 
     .deadline .date::first-line {
