@@ -131,10 +131,4 @@ const curComponent = computed(() => routes[curHash.value].component);
     color: #F84E35;
   }
 
-  @media (max-width:480px) {
-    .content {
-      margin-left: 33px;
-    }
-    
-  }
 </style>
