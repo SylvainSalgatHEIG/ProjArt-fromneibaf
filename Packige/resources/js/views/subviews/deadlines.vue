@@ -81,49 +81,53 @@ function getWeekStartEnd(day) {
                 <option v-for="(group, index) in userGroups" :value="group[0].id">{{group[0].promotion.name}}-{{group[0].id}}</option>
             </select>
         </div>
-        
-        <div v-for="deadline in deadlinesArray" class="content">
-            <h2 v-if="deadline.group_id == groupSelected && currentWeek != getWeekStartEnd(deadline.start_date) ">{{currentWeek = getWeekStartEnd(deadline.start_date) }}</h2>
-            <div v-if="deadline.group_id == groupSelected" class="deadline">
-                
-                <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date">
-                    {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
-                    {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
-                    <div class="hidden">{{ currentDay = deadline.end_date.split(' ')[0] }}</div>
-                </div>
-                
-                <div v-else class="date hidden">
+        <div class="content">
+            <div v-for="deadline in deadlinesArray" >
+                <h2 v-if="deadline.group_id == groupSelected && currentWeek != getWeekStartEnd(deadline.start_date) ">{{currentWeek = getWeekStartEnd(deadline.start_date) }}</h2>
+                <div v-if="deadline.group_id == groupSelected" class="deadline">
                     
-                </div>
-
-                <div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
-                    {{deadline.name}}
-                
-                    <!-- Same date = 1 hour -->
-                    <div class="time" v-if="deadline.start_date == deadline.end_date">
-                        {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                    <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date">
+                        {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
+                        {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
+                        <div class="hidden">{{ currentDay = deadline.end_date.split(' ')[0] }}</div>
                     </div>
-
-                    <!-- Different dates = Range of hours -->
-                    <div class="time" v-if="deadline.start_date != deadline.end_date">
-                        {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
-                        {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
-                    </div>
-
-                    <div class="check" v-show="deadline.type == 'rendu'">
+                    
+                    <div v-else class="date hidden">
                         
-                        <div @click="checkEvent($event, deadline.id)" :value="deadline.id" class="checkbox" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"></div>
-                        <!-- <input @change="checkEvent($event)" :value="deadline.id" type="checkbox" :checked="deadline['check'][0].isChecked" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"> -->
+                    </div>
+
+                    <div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
+                        <div class="name">
+                            {{deadline.name}}
+                        </div>
+                        <!-- Same date = 1 hour -->
+                        <div class="time" v-if="deadline.start_date == deadline.end_date">
+                            {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                        </div>
+
+                        <!-- Different dates = Range of hours -->
+                        <div class="time" v-if="deadline.start_date != deadline.end_date">
+                            {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
+                            {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                        </div>
+
+                        <div class="check" v-show="deadline.type == 'rendu'">
+                            
+                            <div @click="checkEvent($event, deadline.id)" :value="deadline.id" class="checkbox" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"></div>
+                            <!-- <input @change="checkEvent($event)" :value="deadline.id" type="checkbox" :checked="deadline['check'][0].isChecked" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"> -->
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
 </template>
 
 <style scoped>
 
-    
+    .deadline .name {
+        display: inline-block;
+        width: 90px;
+    }
 
 
     .inputRow {
@@ -307,6 +311,18 @@ function getWeekStartEnd(day) {
     .hidden {
         visibility: hidden;
     }
+
+    @media (min-width:480px) {
+    .content {
+        position: absolute;
+        left: 0; 
+        right: 0; 
+        margin-left: auto; 
+        margin-right: auto; 
+        width: 312px;
+    }
+    
+  }
 
 
 </style>
