@@ -174,28 +174,52 @@ const menusFormatted = computed(() => {
 	<div class="menu-cafeteria">
 		<h1>Cafétéria - Semaine {{menusFormatted.week}}</h1>
 		<div class="menu-day" v-for="menu of menusFormatted.days">
+			<div class="big-line"></div>
 			<h2>{{menu.dayFr}} : {{menu.date}}</h2>
 			<p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
 			<div v-for="meal of menu.menus" v-show="menu.hasMeals">
-				<h3> Menu {{meal.index}}</h3>
+				<h3>| Menu {{meal.index}} |</h3>
 				<h4>Entrée</h4>
 				<p>{{meal.starter}}</p>
+				<div class="smallline"></div>
 				<h4>Plat</h4>
 					<!-- <ul> -->
-						<p v-for="mainCourse of meal.mainCourse">{{mainCourse}}</p>
+						<div v-for="mainCourse of meal.mainCourse">{{mainCourse}}</div>
 						<!-- <li v-for="mainCourse of meal.mainCourse">{{mainCourse}}</li>
 					</ul> -->
-					<span v-show="meal.containsPork">Ce menu contient du porc</span>
+					<div class="porc" v-show="meal.containsPork">*Ce menu contient du porc</div>
+				<div class="smallline"></div>
 				<h4>Dessert</h4>
 				<p>{{meal.dessert}}</p>
 				<br>
-				<p>------------- SEPARATION MENUS ----------------------</p>
+				<!-- <p>------------- SEPARATION MENUS ----------------------</p> -->
 			</div>
-			<p>----------- SEPARATION JOURS----------------</p>
+			<!-- <p>----------- SEPARATION JOURS----------------</p> -->
 		</div>
 	</div>
 </template>
 <style>
+	.porc{
+		font-style: italic;
+		color: #F84E35;
+	}
+	.smallline{
+		opacity: 50%;
+		width: 60px;
+		height: 10px;
+		border-bottom: 1px solid rgb(255, 255, 255);
+		display: inline-block;
+	}
+	.big-line{
+		width: 224px;
+		height: 47px;
+		border-bottom: 1px solid rgb(255, 255, 255);
+		display: inline-block;
+	}
+	h2 {
+		margin-top: 20px;
+	}
+
 	.link h2 {
 	font-family: 'Inter';
 	font-style: normal;
@@ -217,7 +241,7 @@ const menusFormatted = computed(() => {
 
 	letter-spacing: -0.02em;
 
-	margin: 14px auto 5px auto;
+	margin-top: 35px;
 	}
 
 	h4 {
@@ -229,12 +253,13 @@ const menusFormatted = computed(() => {
 
 	letter-spacing: -0.02em;
 
-	margin: 14px auto 5px auto;
+	margin: 10px auto 5px auto;
 	}
 
 	.menu-day {
 		text-align: center;
 	}
+
 	a {
 		width: 100%;
 
@@ -255,5 +280,10 @@ const menusFormatted = computed(() => {
 		width: 80%;
 		border-top: 1px solid #FFFFFF;
 		opacity: 0.6;
+	}
+
+	p {
+		margin : 0;
+		padding : 0;
 	}
 </style>

@@ -18,7 +18,6 @@ let currentDay = ref("");
 
 const todayDate = new Date(Date.now()).toISOString().split("T")[0];
 
-console.log(todayDate);
 
 const dealinesArray = computed(() => {
 
