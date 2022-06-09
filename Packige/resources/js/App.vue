@@ -70,11 +70,6 @@ const curComponent = computed(() => routes[curHash.value].component);
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-  * {
-    overscroll-behavior: none;
-    -webkit-overflow-scrolling: none;
-  }
-
   body {
     background-color: #0C223F;
     color: #FFFFFF;
