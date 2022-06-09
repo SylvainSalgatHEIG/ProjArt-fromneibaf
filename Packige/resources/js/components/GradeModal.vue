@@ -102,16 +102,20 @@ function addGrade(data, courseFullName, moduleName) {
     url: "/api/grades/add",
     data: data,
   });
-
+  let added = false;
   watchEffect(() => {
-    if(newGradeId.value != null){grades.value[moduleName][courseFullName].grades.push({
-      grade: grade.value,
-      coefficient: coefficient.value,
-      id: newGradeId.value,
-    });}
+    if (newGradeId.value != null && !added) {
+      console.log(newGradeId.value);
+      grades.value[moduleName][courseFullName].grades.push({
+        id: newGradeId.value,
+        grade: grade.value,
+        coefficient: coefficient.value,
+      });
+      added = true;
+    }
+    console.log(grades.value);
   });
   // Faire un test si la note à été ajoutée à la base
-  console.log(grades.value);
 }
 
 function deleteGrade(data, courseFullName, moduleName) {
