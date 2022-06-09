@@ -19,10 +19,11 @@ let deleBtnPressed = ref(false);
 
 watchEffect(() => {
   if (grades.value != null && coursesArray.value != null) {
+    console.log(coursesArray);
     let pass = false;
     for (const courseData of coursesArray.value) {
       for (const gradeData of grades.value[courseData.moduleName][
-        courseData.courseName
+        courseData.courseShortName
       ].grades) {
         if (gradeData.id === props.id) {
           console.log(gradeData);
@@ -51,11 +52,10 @@ function deleteBtnClicked() {
 
 function addOrEditGrade(id = props.id) {
   let moduleName = "";
-  let courseFullName = "";
+  let courseShortname = "";
 
   for (const courseData of coursesArray.value) {
     if (courseData.courseShortName === course.value) {
-      courseFullName = courseData.courseName;
       moduleName = courseData.moduleName;
     }
   }
@@ -64,7 +64,7 @@ function addOrEditGrade(id = props.id) {
     const data = {
       id: id,
     };
-    deleteGrade(data, courseFullName, moduleName);
+    deleteGrade(data, courseShortname, moduleName);
   } else if (id) {
     console.log("edit");
     const data = {
@@ -73,7 +73,7 @@ function addOrEditGrade(id = props.id) {
       course: course.value,
       id: id,
     };
-    editGrade(data, courseFullName, moduleName);
+    editGrade(data, courseShortname, moduleName);
   } else {
     console.log("add");
     const data = {
@@ -81,15 +81,15 @@ function addOrEditGrade(id = props.id) {
       coefficient: coefficient.value,
       course: course.value,
     };
-    addGrade(data, courseFullName, moduleName);
+    addGrade(data, courseShortname, moduleName);
   }
   emit("close");
 }
 
-function editGrade(data, courseFullName, moduleName) {
+function editGrade(data, courseShortname, moduleName) {
   usePost({ url: "/api/grades/edit", data: data });
 
-  for (const gradeData of grades.value[moduleName][courseFullName].grades) {
+  for (const gradeData of grades.value[moduleName][course.value].grades) {
     if (gradeData.id === data.id) {
       gradeData.grade = grade.value;
       gradeData.coefficient = coefficient.value;
@@ -97,7 +97,7 @@ function editGrade(data, courseFullName, moduleName) {
   }
 }
 
-function addGrade(data, courseFullName, moduleName) {
+function addGrade(data, courseShortname, moduleName) {
   const { results: newGradeId } = usePost({
     url: "/api/grades/add",
     data: data,
@@ -106,7 +106,7 @@ function addGrade(data, courseFullName, moduleName) {
   watchEffect(() => {
     if (newGradeId.value != null && !added) {
       console.log(newGradeId.value);
-      grades.value[moduleName][courseFullName].grades.push({
+      grades.value[moduleName][course.value].grades.push({
         id: newGradeId.value,
         grade: grade.value,
         coefficient: coefficient.value,
@@ -118,17 +118,17 @@ function addGrade(data, courseFullName, moduleName) {
   // Faire un test si la note à été ajoutée à la base
 }
 
-function deleteGrade(data, courseFullName, moduleName) {
+function deleteGrade(data, courseShortname, moduleName) {
   // Supprimer la note de la base
   usePost({ url: "/api/grades/delete", data: data });
   // Supprimer la note du tableau
   for (
     let i = 0;
-    i < grades.value[moduleName][courseFullName].grades.length;
+    i < grades.value[moduleName][course.value].grades.length;
     i++
   ) {
-    if (grades.value[moduleName][courseFullName].grades[i].id == data.id) {
-      grades.value[moduleName][courseFullName].grades.splice(i, 1);
+    if (grades.value[moduleName][course.value].grades[i].id == data.id) {
+      grades.value[moduleName][course.value].grades.splice(i, 1);
     }
   }
 
