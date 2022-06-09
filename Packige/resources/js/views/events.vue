@@ -58,24 +58,20 @@ const allEvents = computed(() => {
   <h1>Actus</h1>
   <div id="events-cards">
     <div v-for="event in allEvents" class="event-card">
-      <img class="img" :src="event.imageLink" :alt="event.name" />
-      <div class="date">
-        <span>{{ event.date }}</span>
-      </div>
-      <h2 class="title">{{ event.name }}</h2>
-
-      <a class="link" :href="event.link">Lien vers l'événement</a>
+      <p><img class="img" :src="event.imageLink" :alt="event.name" /></p>
+      
+        <span class="date">{{ event.date }}</span>
+        <div class="description">
+          <h2 class="title">{{ event.name }}</h2>
+          <p class="event-link"><a class="link" :href="event.link">Lien vers l'événement</a></p>
+          
+        </div>
+    
     </div>
   </div>
 </template>
 
 <style scoped>
-
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-  margin: auto;
-}
 
 #events-cards {
   display: flex;
@@ -95,18 +91,15 @@ html, body {
   margin-bottom: 12px;
   margin-top: 12px;
   width: 330px;
-  height: 240px;
-
 }
 
 #events-cards .event-card .date {
   padding: 3px;
-  position: absolute;
-
+  position: relative;
   width: 90px;
   height: 30px;
-  left: 50px;
-	margin-top:20px;
+  left: 20px;
+  top: -210px;
 
   font-family: "Inter";
   font-weight: bold;
@@ -115,33 +108,30 @@ html, body {
   background: #f84e35;
   border-radius: 15px;
 }
+
 #events-cards .event-card .img {
   border-radius: 15px;
   width: 300px;
-  height: 145px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top:15px;
+  margin-top: 15px;
+  object-fit: cover;
 }
 
-#events-cards .event-card a {
-  position: relative;
-  left: 195px;
-  top: 175px;
-  width: 130px;
-  /* margin-top: 20px;
-margin-left: 20px; */
+#events-cards .event-card div.description {
+  margin: 0 auto 10px auto;
+  width: 300px;
+}
+
+#events-cards .event-card p {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+#events-cards .event-card p.event-link {
+    text-align: right;
 }
 #events-cards .event-card .link {
   text-decoration: underline;
   font-size: 12px;
 }
-#events-cards .event-card .title {
-  position: relative;
-  top: 175px;
-  left: 15px;
-}
+
 </style>
