@@ -7,6 +7,7 @@ import { grades } from "../stores/grades.js";
 let id = ref(null);
 
 function editGrade(note) {
+  console.log(note.id);
   id.value = note.id;
   showModal.value = true;
 }
@@ -32,7 +33,7 @@ let showModal = ref(false);
         <h3>{{ courseName }}</h3>
         <span class="courseWeighting">{{ courseData.weighting }}</span>
         <br />
-        <div v-for="gradeData in courseData.grades" @click="editGrade();">
+        <div v-for="gradeData in courseData.grades" @click="editGrade(gradeData);">
           Note : {{ gradeData.grade }} | Pondération :
           {{ gradeData.coefficient }}
         </div>
