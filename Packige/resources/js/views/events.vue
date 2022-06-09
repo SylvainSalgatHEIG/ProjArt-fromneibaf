@@ -58,21 +58,23 @@ const allEvents = computed(() => {
   <h1>Actus</h1>
   <div id="events-cards">
     <div v-for="event in allEvents" class="event-card">
-      <p><img class="img" :src="event.imageLink" :alt="event.name" /></p>
-      
-        <span class="date">{{ event.date }}</span>
+      <a :href="event.link">
+        <p><img class="img" :src="event.imageLink" :alt="event.name" /></p>
+
+        <!-- <span class="date">{{ event.date }}</span> -->
         <div class="description">
           <h2 class="title">{{ event.name }}</h2>
-          <p class="event-link"><a class="link" :href="event.link">Lien vers l'événement</a></p>
-          
+          <p class="event-link">
+          <!-- <a class="link" :href="event.link">Lien vers l'événement</a> -->
+            <span class="date">{{ event.date }}</span>
+          </p>
         </div>
-    
+        </a>
     </div>
   </div>
 </template>
 
 <style scoped>
-
 #events-cards {
   display: flex;
   flex-wrap: wrap;
@@ -98,8 +100,8 @@ const allEvents = computed(() => {
   position: relative;
   width: 90px;
   height: 30px;
-  left: 20px;
-  top: -210px;
+  left: 5px;
+  top: 0px;
 
   font-family: "Inter";
   font-weight: bold;
@@ -127,11 +129,10 @@ const allEvents = computed(() => {
 }
 
 #events-cards .event-card p.event-link {
-    text-align: right;
+  text-align: right;
 }
 #events-cards .event-card .link {
   text-decoration: underline;
   font-size: 12px;
 }
-
 </style>
