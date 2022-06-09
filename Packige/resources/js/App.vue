@@ -53,8 +53,8 @@ const curComponent = computed(() => routes[curHash.value].component);
 
 <template>
 
-	  <the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
-
+  <div id="login"><a href="/login">Se connecter</a></div>
+	<the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
   <main>
     <template v-for="(route, hash) of routes">
       <div v-show="hash == curHash">
@@ -101,6 +101,8 @@ const curComponent = computed(() => routes[curHash.value].component);
     
     background: linear-gradient(#112A4A 22.56%, #F84E35 331.81%);
     backdrop-filter: blur(30px);
+
+    z-index: 100;
   }
 
   #mainMenu ul {
