@@ -70,9 +70,13 @@ const allEvents = computed(() => {
 </template>
 
 <style scoped>
-body {
-  margin: 30px;
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: auto;
 }
+
 #events-cards {
   display: flex;
   flex-wrap: wrap;
@@ -86,17 +90,13 @@ body {
     rgba(115, 195, 207, 0.6) 379.63%
   );
   box-shadow: -1px 1px 8px 4px rgba(0, 0, 0, 0.25);
+
   border-radius: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  margin-top: 12px;
   width: 330px;
   height: 240px;
 
-  /* width: 30%;
-		margin: 1%;
-		padding: 1%;
-		background-color: #fff;
-		border-radius: 5px;
-		box-shadow: 0px 0px 5px #000; */
 }
 
 #events-cards .event-card .date {
@@ -105,8 +105,8 @@ body {
 
   width: 90px;
   height: 30px;
-    left: 50px;
-	margin-top:25px;
+  left: 50px;
+	margin-top:20px;
 
   font-family: "Inter";
   font-weight: bold;
@@ -115,7 +115,7 @@ body {
   background: #f84e35;
   border-radius: 15px;
 }
-.img {
+#events-cards .event-card .img {
   border-radius: 15px;
   width: 300px;
   height: 145px;
@@ -126,19 +126,22 @@ body {
   margin-right: auto;
   margin-top:15px;
 }
-.title{
-  line-height: 350px;
-}
-a {
-  position: absolute;
-  left: 225px;
-  top: 315px;
 
+#events-cards .event-card a {
+  position: relative;
+  left: 195px;
+  top: 175px;
+  width: 130px;
   /* margin-top: 20px;
 margin-left: 20px; */
 }
-.link {
+#events-cards .event-card .link {
   text-decoration: underline;
   font-size: 12px;
+}
+#events-cards .event-card .title {
+  position: relative;
+  top: 175px;
+  left: 15px;
 }
 </style>
