@@ -100,7 +100,7 @@ class DeadlineController extends Controller
 
         $deadlineToAdd->users()->attach(Auth::id(), ['isChecked' => false]);
 
-        return $deadlineToAdd;
+        return $deadlineToAdd->id;
     }
 
     public function checkDeadline($deadlineId, $action)

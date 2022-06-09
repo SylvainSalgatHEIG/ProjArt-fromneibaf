@@ -2,7 +2,6 @@
 import { useFetch, usePost } from "../composables/fetch";
 import { computed, ref, watch, watchEffect } from "vue";
 import { deadlines } from "../stores/deadlines";
-
 const { data: coursesArray } = useFetch("/api/courses/");
 
 // const emit = defineEmits(["close"]);
@@ -189,8 +188,25 @@ function addOrEditDeadline() {
 function addTask(data) {
   // console.log(data);
   console.log(deadlines.value);
-  const { results: newDeadline } = usePost({ data: data, url: "/api/deadlines/add" });
-  console.log(newDeadline);
+  const { results: newDeadLineId } = usePost({
+    data: data,
+    url: "/api/deadlines/add",
+  });
+  console.log(newDeadLineId.value);
+
+  deadlines.value.push({
+    type: type.value,
+    description: description.value,
+    name: name.value,
+    start_date: date.value + " " + startTime.value,
+    end_date: date.value + " " + endTime.value,
+    check: [
+      {
+        isChecked: 0,
+      },
+    ],
+    group_id: props.groupId,
+  });
 }
 </script>
 
@@ -260,7 +276,7 @@ function addTask(data) {
                 <br />
                 <label for="course">Cours :</label><br />
                 <select id="course" v-model="course">
-                <!-- <select id="course" v-model="course" :disabled="disabledSelect"> -->
+                  <!-- <select id="course" v-model="course" :disabled="disabledSelect"> -->
                   <option
                     :value="course.courseShortName"
                     v-for="course in coursesArray"
