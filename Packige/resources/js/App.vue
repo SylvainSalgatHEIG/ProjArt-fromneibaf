@@ -57,6 +57,7 @@ const curComponent = computed(() => routes[curHash.value].component);
 	<the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
   <main>
     <template v-for="(route, hash) of routes">
+      <!-- v-if: recharge le composant lors du changement de page -->
       <div v-show="hash == curHash">
         <component :is="route.component" />
       </div>
@@ -68,11 +69,6 @@ const curComponent = computed(() => routes[curHash.value].component);
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
-  * {
-    overscroll-behavior: none;
-    -webkit-overflow-scrolling: none;
-  }
 
   body {
     background-color: #0C223F;
