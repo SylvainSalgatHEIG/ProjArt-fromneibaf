@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useFetch, usePost } from "../../composables/fetch";
 import { deadlines } from "../../stores/deadlines.js";
 
@@ -18,7 +18,44 @@ let currentDay = ref("");
 
 const todayDate = new Date(Date.now()).toISOString().split("T")[0];
 
-console.log(todayDate);
+const deadlineArray = computed(() => {
+  if (!deadlines.value) return [];
+
+  let array = deadlines.value;
+  let currentWeek = getWeekNumber(array[0].start_date);
+  let weekRange = getWeekStartEnd(array[0].start_date);
+
+  let deadlineArray = [];
+
+  let deadlineElement = {
+    week: currentWeek,
+    weekRange: weekRange,
+    deadlines: [],
+  };
+
+  array.forEach((deadline) => {
+    if (currentWeek == getWeekNumber(deadline.start_date)) {
+      deadlineElement.deadlines.push(deadline);
+    } else {
+      deadlineArray.push(deadlineElement);
+
+      currentWeek = getWeekNumber(deadline.start_date);
+      weekRange = getWeekStartEnd(deadline.start_date);
+
+      deadlineElement = {
+        week: currentWeek,
+        weekRange: weekRange,
+        deadlines: [],
+      };
+
+      deadlineElement.deadlines.push(deadline);
+    }
+  });
+
+  deadlineArray.push(deadlineElement);
+  console.log(deadlineArray);
+  return deadlineArray;
+});
 
 function getWeekNumber(date) {
   let currentDate = new Date(date.split(" ")[0]);
@@ -97,7 +134,7 @@ function addDeadline() {
     :groupId="groupSelected"
   />
   <button @click="addDeadline()">Ajouter une deadline</button>
-  
+
   <div class="inputRow">
     <select name="groups" id="groups" v-model="groupSelected">
       <option v-for="(group, index) in userGroups" :value="group[0].id">
@@ -105,23 +142,22 @@ function addDeadline() {
       </option>
     </select>
   </div>
-  <div class="content">
-    <div v-for="deadline in deadlines">
-      <h2
-        v-if="
-          deadline.group_id == groupSelected &&
-          currentWeek != getWeekStartEnd(deadline.start_date)
-        "
-      >
-        {{ (currentWeek = getWeekStartEnd(deadline.start_date)) }}
-      </h2>
+
+  <div v-for="week of deadlineArray">
+    <h2 v-if="week.deadlines[0].group_id == groupSelected">
+      {{ week.weekRange }}
+    </h2>
+
+    <div v-for="(deadline, index) of week.deadlines">
       <div v-if="deadline.group_id == groupSelected" class="deadline">
         <div
-          v-if="currentDay != deadline.end_date.split(' ')[0]"
-          class="date"
-          v-bind:class="
-            deadline.start_date.split(' ')[0] == todayDate ? 'currentDay' : ''
+          v-if="
+            deadline.end_date.split(' ')[0] !=
+              week.deadlines[
+                (index + week.deadlines.length - 1) % week.deadlines.length
+              ].end_date.split(' ')[0] || week.deadlines.length == 1
           "
+          class="date"
         >
           {{
             daysShort[new Date(deadline.end_date.split(" ")[0]).getDay() - 1]
@@ -131,9 +167,6 @@ function addDeadline() {
               new Date(deadline.end_date.split(" ")[0]).getDate()
             ).padStart(2, "0")
           }}
-          <div class="hidden">
-            {{ (currentDay = deadline.end_date.split(" ")[0]) }}
-          </div>
         </div>
 
         <div v-else class="date hidden"></div>
@@ -143,9 +176,8 @@ function addDeadline() {
           v-bind:class="deadline.type == 'rendu' ? 'rendu' : 'examen'"
           :class="deadline['check'][0].isChecked ? 'checked' : ''"
         >
-          <div class="name">
-            {{ deadline.name }}
-          </div>
+          <div class="name">{{ deadline.name }}</div>
+
           <!-- Same date = 1 hour -->
           <div class="time" v-if="deadline.start_date == deadline.end_date">
             {{
@@ -177,7 +209,6 @@ function addDeadline() {
               class="checkbox"
               v-bind:class="deadline['check'][0].isChecked ? 'checked' : ''"
             ></div>
-            <!-- <input @change="checkEvent($event)" :value="deadline.id" type="checkbox" :checked="deadline['check'][0].isChecked" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"> -->
           </div>
         </div>
       </div>

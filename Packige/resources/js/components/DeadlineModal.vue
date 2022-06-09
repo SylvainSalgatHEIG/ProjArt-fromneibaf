@@ -130,11 +130,30 @@ const props = defineProps({
 
 let name = ref("");
 let description = ref("");
-let type = ref("");
+let type = ref("rendu");
 let date = ref("");
 let startTime = ref("");
 let endTime = ref("");
+let endTimeComputed = computed(() => {
+  if (!displayEndTime.value) {
+    return startTime.value;
+  }
+  return endTime.value;
+});
 let course = ref("");
+let displayEndTime = computed(() => {
+  if (type.value == "examen") {
+    return true;
+  }
+  endTime.value = "";
+  return false;
+});
+let startTimeText = computed(() => {
+  if (displayEndTime.value) {
+    return "Heure de début";
+  }
+  return "Heure de rendu";
+});
 
 function addOrEditDeadline() {
   // let moduleName = "";
@@ -172,13 +191,14 @@ function addOrEditDeadline() {
   // }
   // emit("close");
   // console.log(props.groupId);
+
   const data = {
     name: name.value,
     description: description.value,
     type: type.value,
     date: date.value,
     startTime: startTime.value,
-    endTime: endTime.value,
+    endTime: endTimeComputed.value,
     course: course.value,
     groupId: props.groupId,
   };
@@ -192,20 +212,25 @@ function addTask(data) {
     data: data,
     url: "/api/deadlines/add",
   });
-  console.log(newDeadLineId.value);
-
-  deadlines.value.push({
-    type: type.value,
-    description: description.value,
-    name: name.value,
-    start_date: date.value + " " + startTime.value,
-    end_date: date.value + " " + endTime.value,
-    check: [
-      {
-        isChecked: 0,
-      },
-    ],
-    group_id: props.groupId,
+  let added = false;
+  watchEffect(() => {
+    if (newDeadLineId.value != null && !added) {
+      deadlines.value.push({
+        type: type.value,
+        description: description.value,
+        name: name.value,
+        start_date: date.value + " " + startTime.value,
+        end_date: date.value + " " + endTimeComputed.value,
+        check: [
+          {
+            isChecked: 0,
+          },
+        ],
+        group_id: props.groupId,
+        id: newDeadLineId.value,
+      });
+      added = true;
+    }
   });
 }
 </script>
@@ -258,19 +283,22 @@ function addTask(data) {
                   v-model="date"
                   required
                 />
-                <label for="startTime">Heure de début</label>
+                <label for="startTime">{{ startTimeText }}</label>
                 <input
                   type="time"
-                  name="date"
+                  name="startTime"
                   id="startTime"
                   v-model="startTime"
                 />
-                <label for="startTime">Heure de Fin</label>
+                <label for="endTime" v-if="displayEndTime"
+                  >Heure de Fin</label
+                >
                 <input
                   type="time"
-                  name="date"
+                  name="endTime"
                   id="endTime"
                   v-model="endTime"
+                  v-if="displayEndTime"
                   required
                 />
                 <br />
