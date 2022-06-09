@@ -241,7 +241,7 @@ const menusFormatted = computed(() => {
 
 	letter-spacing: -0.02em;
 
-	margin-top: 14px;
+	margin-top: 35px;
 	}
 
 	h4 {
