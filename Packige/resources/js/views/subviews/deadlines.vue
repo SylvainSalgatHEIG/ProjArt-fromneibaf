@@ -24,17 +24,21 @@ function getWeekNumber(date) {
     return weekNumber;
 }
 
-function checkEvent(event) {
-    event.target.classList.remove('checked');
+function checkEvent(event, deadlineId) {
 
-    let deadlineId = event.target.value;
-    if (event.currentTarget.checked) {
+    console.log();
+
+    //let deadlineId = event.target.value;
+    if (!event.target.classList.contains('checked')) {
         // Check
         useFetch("/api/deadline/check/" + deadlineId + "/check");
         event.target.classList.add('checked');
+        event.target.parentNode.parentNode.classList.add('checked');
     } else {
         // Uncheck
         useFetch("/api/deadline/check/" + deadlineId + "/uncheck");
+        event.target.classList.remove('checked');
+        event.target.parentNode.parentNode.classList.remove('checked');
     }
 }
 
@@ -77,42 +81,54 @@ function getWeekStartEnd(day) {
                 <option v-for="(group, index) in userGroups" :value="group[0].id">{{group[0].promotion.name}}-{{group[0].id}}</option>
             </select>
         </div>
-        
-        <div v-for="deadline in deadlinesArray" class="content">
-            <h2 v-if="deadline.group_id == groupSelected && currentWeek != getWeekStartEnd(deadline.start_date) ">{{currentWeek = getWeekStartEnd(deadline.start_date) }}</h2>
-            <div v-if="deadline.group_id == groupSelected" class="deadline" :class="deadline['check'][0].isChecked ? 'checked' : ''">
-                
-                <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date">
-                    {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
-                    {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
-                </div>
-                <div v-else class="date">
-                    currentDay = deadline.end_date.split(' ')[0]
-                </div>
-                <div class="info">
-                    {{deadline.name}}
-                
-                    <!-- Same date = 1 hour -->
-                    <div class="time" v-if="deadline.start_date == deadline.end_date">
-                        {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+        <div class="content">
+            <div v-for="deadline in deadlinesArray" >
+                <h2 v-if="deadline.group_id == groupSelected && currentWeek != getWeekStartEnd(deadline.start_date) ">{{currentWeek = getWeekStartEnd(deadline.start_date) }}</h2>
+                <div v-if="deadline.group_id == groupSelected" class="deadline">
+                    
+                    <div v-if="currentDay != deadline.end_date.split(' ')[0] " class="date">
+                        {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
+                        {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
+                        <div class="hidden">{{ currentDay = deadline.end_date.split(' ')[0] }}</div>
+                    </div>
+                    
+                    <div v-else class="date hidden">
+                        
                     </div>
 
-                    <!-- Different dates = Range of hours -->
-                    <div class="time" v-if="deadline.start_date != deadline.end_date">
-                        {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
-                        {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
-                    </div>
+                    <div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
+                        <div class="name">
+                            {{deadline.name}}
+                        </div>
+                        <!-- Same date = 1 hour -->
+                        <div class="time" v-if="deadline.start_date == deadline.end_date">
+                            {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                        </div>
 
-                    <div class="check" v-show="deadline.type == 'rendu'">
-                        <input @change="checkEvent($event)" :value="deadline.id" type="checkbox" :checked="deadline['check'][0].isChecked" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''">
+                        <!-- Different dates = Range of hours -->
+                        <div class="time" v-if="deadline.start_date != deadline.end_date">
+                            {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
+                            {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                        </div>
+
+                        <div class="check" v-show="deadline.type == 'rendu'">
+                            
+                            <div @click="checkEvent($event, deadline.id)" :value="deadline.id" class="checkbox" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"></div>
+                            <!-- <input @change="checkEvent($event)" :value="deadline.id" type="checkbox" :checked="deadline['check'][0].isChecked" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"> -->
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
 </template>
 
 <style scoped>
+
+    .deadline .name {
+        display: inline-block;
+        width: 90px;
+    }
+
 
     .inputRow {
         display: flex;
@@ -219,15 +235,23 @@ function getWeekStartEnd(day) {
     .deadline .info {
         width: 272px !important;
         height: 48px;
-        padding: 13px 0 13px 15px;
+        padding: 13px 0 13px 10px;
 
         background-color: #77b0c5;
         border-radius: 5px;
 
     }
 
+    .deadline .info.rendu {
+        border-left: 9px solid #6F83AA;
+    }
+
+    .deadline .info.examen {
+        border-left: 9px solid #F84E35;
+    }
+
     .deadline .check {
-        visibility: hidden;
+        visibility: visible;
         
         width: 36px;
         height: 36px;
@@ -236,50 +260,25 @@ function getWeekStartEnd(day) {
 
         float: right;
 
-        z-index: 1;
 
     }
 
-    /* Checked */
-    .deadline .check::after {
-
-        z-index: -1;
-
-        visibility: visible;
-
-        content: "";
-        display: block;
-        position: absolute;
-
-        top: -18%;
-        right: 25%;
-
+    .checkbox {
         width: 36px;
         height: 36px;
+        
+        top: -18%;
+        right: 20%;
+
+        position: relative;
+
+        float: right;
 
         border-radius: 7px;
         background: rgba(255, 255, 255, 0.5);
     }
 
-    /* Unchecked */
-    .deadline .check .checked::after {
-
-        z-index: 10;
-
-        visibility: visible;
-        content: "";
-        display: block;
-        position: absolute;
-
-        top: -18%;
-        right: 25%;
-
-        width: 36px;
-        height: 36px;
-
-        border-radius: 7px;
-        background: rgba(255, 255, 255, 0.5);
-
+    .checkbox.checked {
         background-image: url("data:image/svg+xml,%3Csvg width='21' height='22' viewBox='0 0 21 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17.143 5.4231L7.71442 15.3654L3.42871 10.8462' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
         background-repeat: no-repeat;
         background-position: center;
@@ -304,9 +303,26 @@ function getWeekStartEnd(day) {
         display: inline;
     }
 
-    .checked {
+    .deadline .info.checked {
         text-decoration: line-through;
     }
+
+    
+    .hidden {
+        visibility: hidden;
+    }
+
+    @media (min-width:480px) {
+    .content {
+        position: absolute;
+        left: 0; 
+        right: 0; 
+        margin-left: auto; 
+        margin-right: auto; 
+        width: 312px;
+    }
+    
+  }
 
 
 </style>
