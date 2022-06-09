@@ -34,8 +34,8 @@ class GradeController extends Controller
                 ->get();
 
             foreach ($courses as $course) {
-                $gradesArray[$module->name][$course->name]['weighting'] = $course->weighting;
-                $gradesArray[$module->name][$course->name]['grades'] = [];
+                $gradesArray[$module->name][$course->shortname]['weighting'] = $course->weighting;
+                $gradesArray[$module->name][$course->shortname]['grades'] = [];
 
                 $grades = DB::table('grades')
                     ->join('users', 'users.id', '=', 'grades.user_id')
@@ -46,9 +46,9 @@ class GradeController extends Controller
                     ->get();
 
                 foreach ($grades as $grade) {
-                    array_push($gradesArray[$module->name][$course->name]['grades'], ['id' => $grade->id, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
+                    array_push($gradesArray[$module->name][$course->shortname]['grades'], ['id' => $grade->id, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
                 }
-                $gradesArray[$module->name][$course->name]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->name]);
+                $gradesArray[$module->name][$course->shortname]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->shortname]);
             }
             $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
         }
