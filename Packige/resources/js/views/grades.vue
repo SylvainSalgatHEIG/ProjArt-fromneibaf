@@ -32,7 +32,7 @@ let showModal = ref(false);
         <h3>{{ courseName }}</h3>
         <span class="courseWeighting">{{ courseData.weighting }}</span>
         <br />
-        <div v-for="gradeData in courseData.grades" @click="editGrade(gradeData);">
+        <div v-for="gradeData in courseData.grades" @click="editGrade();">
           Note : {{ gradeData.grade }} | Pondération :
           {{ gradeData.coefficient }}
         </div>

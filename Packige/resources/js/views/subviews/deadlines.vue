@@ -76,6 +76,7 @@ function getWeekStartEnd(day) {
 }
 
 let deadlineId = ref(null);
+let showModal = ref(false);
 
 function editDeadline(note) {
   //   deadlineId.value = note.id;
@@ -86,18 +87,17 @@ function addDeadline() {
   deadlineId.value = null;
   showModal.value = true;
 }
-
-let showModal = ref(false);
 </script>
 
 <template>
-  <DeadlineModal
+  <deadline-modal
     v-show="showModal"
     @close="showModal = false"
     :deadlineId="deadlineId"
     :groupId="groupSelected"
   />
   <button @click="addDeadline()">Ajouter une deadline</button>
+  
   <div class="inputRow">
     <select name="groups" id="groups" v-model="groupSelected">
       <option v-for="(group, index) in userGroups" :value="group[0].id">
