@@ -7,7 +7,7 @@ const { data: coursesArray } = useFetch("/api/courses/");
 
 const emit = defineEmits(["close"]);
 const props = defineProps({
-  id: {}
+  id: {},
 });
 
 let btnText = ref("Ajouter");
@@ -64,7 +64,7 @@ function addOrEditGrade(id = props.id) {
     const data = {
       id: id,
     };
-    deleteGrade(data, courseFullName, moduleName)
+    deleteGrade(data, courseFullName, moduleName);
   } else if (id) {
     console.log("edit");
     const data = {
@@ -98,22 +98,33 @@ function editGrade(data, courseFullName, moduleName) {
 }
 
 function addGrade(data, courseFullName, moduleName) {
-  usePost({ url: "/api/grades/add", data: data });
-
-  // Faire un test si la note à été ajoutée à la base
-  grades.value[moduleName][courseFullName].grades.push({
-    grade: grade.value,
-    coefficient: coefficient.value,
+  const { results: newGradeId } = usePost({
+    url: "/api/grades/add",
+    data: data,
   });
+
+  watchEffect(() => {
+    if(newGradeId.value != null){grades.value[moduleName][courseFullName].grades.push({
+      grade: grade.value,
+      coefficient: coefficient.value,
+      id: newGradeId.value,
+    });}
+  });
+  // Faire un test si la note à été ajoutée à la base
+  console.log(grades.value);
 }
 
 function deleteGrade(data, courseFullName, moduleName) {
   // Supprimer la note de la base
   usePost({ url: "/api/grades/delete", data: data });
   // Supprimer la note du tableau
-  for(let i = 0; i < grades.value[moduleName][courseFullName].grades.length; i++){
-    if(grades.value[moduleName][courseFullName].grades[i].id == data.id){
-      grades.value[moduleName][courseFullName].grades.splice(i, 1)
+  for (
+    let i = 0;
+    i < grades.value[moduleName][courseFullName].grades.length;
+    i++
+  ) {
+    if (grades.value[moduleName][courseFullName].grades[i].id == data.id) {
+      grades.value[moduleName][courseFullName].grades.splice(i, 1);
     }
   }
 
@@ -127,7 +138,7 @@ function deleteGrade(data, courseFullName, moduleName) {
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <slot name="header"> {{btnText}} une note </slot>
+            <slot name="header"> {{ btnText }} une note </slot>
           </div>
           <div class="modal-body">
             <slot name="body">

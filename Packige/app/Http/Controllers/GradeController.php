@@ -110,7 +110,7 @@ class GradeController extends Controller
         if (!$grade) {
             return 'FAILED';
         }
-        return 'SUCCESS';
+        return $grade->id;
     }
 
     public function editGrade(Request $request)
