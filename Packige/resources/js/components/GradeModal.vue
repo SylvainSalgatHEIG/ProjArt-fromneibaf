@@ -7,10 +7,7 @@ const { data: coursesArray } = useFetch("/api/courses/");
 
 const emit = defineEmits(["close"]);
 const props = defineProps({
-  id: {
-    type: BigInt,
-    required: true,
-  },
+  id: {}
 });
 
 let btnText = ref("Ajouter");
@@ -130,12 +127,11 @@ function deleteGrade(data, courseFullName, moduleName) {
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <slot name="header"> Ajouter une note </slot>
+            <slot name="header"> {{btnText}} une note </slot>
           </div>
           <div class="modal-body">
             <slot name="body">
               <form @submit.prevent="addOrEditGrade()">
-                <!-- <form @submit.prevent="addOrEditGrade()"> -->
                 <label for="grade">Note :</label><br />
                 <input
                   type="number"

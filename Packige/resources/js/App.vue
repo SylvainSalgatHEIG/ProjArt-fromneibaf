@@ -15,28 +15,6 @@ let showModal = ref(false);
 const msg = ref("");
 let data = ref();
 
-<<<<<<< HEAD
-const routes = {
-  "#schedule": {
-    label: "Horaire",
-    component: scheduleVue,
-  },
-  "#grades": {
-    label: "Notes",
-    component: gradesVue,
-  },
-  "#events": {
-    label: "AGE",
-    component: eventsVue,
-  },
-  "#links": {
-    label: "Liens",
-    component: linksVue,
-  },
-  "/register": {
-    label: "Register",
-  },
-=======
  const routes = {
     '#schedule': {
       label: 'Planification',
@@ -58,7 +36,6 @@ const routes = {
       icon: 'chains',
       component: linksVue,
     }
->>>>>>> 6d59752d75f1eaaaf06c5104c59192ddda7b3acc
 };
 
 const hash = ref(window.location.hash);
@@ -75,14 +52,8 @@ const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
-<<<<<<< HEAD
-  <the-nav :routes="routes" :curHash="curHash"></the-nav>
-=======
 
 	  <the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
-
-	<main>
->>>>>>> 6d59752d75f1eaaaf06c5104c59192ddda7b3acc
 
   <main>
     <template v-for="(route, hash) of routes">
@@ -91,9 +62,6 @@ const curComponent = computed(() => routes[curHash.value].component);
       </div>
     </template>
   </main>
-<<<<<<< HEAD
-</template>
-=======
 
 </template>
 
@@ -172,4 +140,3 @@ const curComponent = computed(() => routes[curHash.value].component);
     
   }
 </style>
->>>>>>> 6d59752d75f1eaaaf06c5104c59192ddda7b3acc

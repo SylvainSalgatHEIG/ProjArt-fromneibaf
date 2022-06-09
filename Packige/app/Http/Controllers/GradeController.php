@@ -15,7 +15,6 @@ class GradeController extends Controller
     public function getGrades()
     {
 
-        // echo '<pre>';
         $modules = DB::table('modules')
             ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
             ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
@@ -27,7 +26,6 @@ class GradeController extends Controller
             ->get();
 
         $gradesArray = [];
-        $lastCourse = '';
         foreach ($modules as $module) {
             $gradesArray[$module->name] = [];
 
@@ -47,7 +45,6 @@ class GradeController extends Controller
                     ->select('grades.*')
                     ->get();
 
-                // print_r($grades);
                 foreach ($grades as $grade) {
                     array_push($gradesArray[$module->name][$course->name]['grades'], ['id' => $grade->id, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
                 }
@@ -56,11 +53,6 @@ class GradeController extends Controller
             $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
         }
 
-        // print_r($gradesArray);
-        // print_r($modules);
-        // echo '</pre>';
-        // echo Auth::id();
-        // return view('view_grades', compact('gradesArray'));
         return $gradesArray;
     }
 
@@ -97,8 +89,6 @@ class GradeController extends Controller
     public function addGrade(Request $request)
     {
 
-        // dd($request);
-
         $courseId = DB::table('courses')
             ->join('modules', 'modules.id', '=', 'courses.module_id')
             ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
@@ -121,7 +111,6 @@ class GradeController extends Controller
             return 'FAILED';
         }
         return 'SUCCESS';
-        // return redirect(route('grades.index'));
     }
 
     public function editGrade(Request $request)
