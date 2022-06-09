@@ -253,7 +253,7 @@ const menusFormatted = computed(() => {
 
 	letter-spacing: -0.02em;
 
-	margin: 14px auto 5px auto;
+	margin: 10px auto 5px auto;
 	}
 
 	.menu-day {
