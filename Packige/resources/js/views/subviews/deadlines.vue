@@ -242,17 +242,6 @@ let showModal = ref(false);
         outline: none;
     }
 
-    #groups {
-
-        -webkit-tap-highlight-color: transparent;
-        
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-
-        width: 78px;
-        height: 26px;
-
 #groups {
   -webkit-tap-highlight-color: transparent;
 
@@ -270,6 +259,7 @@ let showModal = ref(false);
 
   background-color: transparent;
   border: none;
+}
 
     #groups option {
         -webkit-appearance: none;
