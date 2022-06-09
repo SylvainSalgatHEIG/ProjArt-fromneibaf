@@ -57,6 +57,7 @@ const curComponent = computed(() => routes[curHash.value].component);
 	<the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
   <main>
     <template v-for="(route, hash) of routes">
+      <!-- v-if: recharge le composant lors du changement de page -->
       <div v-show="hash == curHash">
         <component :is="route.component" />
       </div>
