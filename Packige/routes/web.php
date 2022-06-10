@@ -35,7 +35,6 @@ Route::resource('grades', GradeController::class);
 
 Route::resource('deadlines', DeadlineController::class);
 
-
 Route::get('/api/courses', [CourseController::class,'getCourses']);
 
 Route::get('/api/groups', [GroupController::class,'getGroups']);
@@ -47,18 +46,18 @@ Route::post('/api/grades/delete', [GradeController::class,'deleteGrade']);
 
 Route::get('/api/deadlines/get', [DeadlineController::class,'getDeadlines']);
 Route::post('/api/deadlines/add', [DeadlineController::class,'addDeadline']);
+Route::post('/api/deadlines/edit', [DeadlineController::class,'editDeadline']);
+Route::post('/api/deadlines/delete', [DeadlineController::class,'deleteDeadline']);
 Route::post('deadlinesFiltered', [DeadlineController::class,'filter']);
 Route::get('/api/deadline/check/{deadlineId}/{action}', [DeadlineController::class,'checkDeadline']);
 
 Route::get('/api/usergroups', [GroupController::class,'getUserGroups']);
-
 
 Route::post('/api/register/validator', [RegisterController::class, 'validator']);
 
 Route::get('/api/events', [EventController::class,'getEvents']);
 
 Route::get('/api/user/links', [UserController::class,'getLinks']);
-
 Route::post('/api/user/link/add', [UserController::class,'addLink']);
 Route::post('/api/user/link/edit', [UserController::class,'editLink']);
 Route::post('/api/user/link/delete', [UserController::class,'deleteLink']);
