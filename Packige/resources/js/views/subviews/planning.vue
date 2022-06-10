@@ -280,7 +280,6 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
 }
 .content {
     margin: auto;
-    width: 350px;
   }
 
   .day-info .info {
@@ -300,12 +299,12 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
   }
 
   .day-info .info p.hours {
-    min-width: 110px;
+    min-width: 115px;
   }
 
   .day-info .info p.course {
     font-weight: bold;
-    min-width: 110px;
+    min-width: 115px;
 
   }
 
@@ -444,7 +443,7 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
         margin: 8px 0;
     }
 
-    .date, .info, .time {
+    .info, .time {
         display: inline;
         margin: auto 0 0 15px;
     }
