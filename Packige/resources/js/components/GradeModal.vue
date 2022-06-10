@@ -283,6 +283,17 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+input::placeholder {
+  color: #0C223F;
+  opacity: 0.6;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+}
+
 select {
   -webkit-tap-highlight-color: transparent;
         
@@ -296,7 +307,7 @@ select {
         background-position: calc(100% + .1rem);
         background-repeat: no-repeat;
 
-        width: 150px;
+        width: 250px;
 
         border: none;
         border-radius: 0%;
@@ -307,7 +318,7 @@ select {
 
         font-family: 'Inter';
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         font-size: 14px;
         line-height: 22px;
 
