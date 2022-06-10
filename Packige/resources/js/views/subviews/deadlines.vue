@@ -121,8 +121,8 @@ function getWeekStartEnd(day) {
 let deadlineId = ref(null);
 let showModal = ref(false);
 
-function editDeadline(note) {
-  //   deadlineId.value = note.id;
+function editDeadline(deadline) {
+  deadlineId.value = deadline.id;
   showModal.value = true;
 }
 
@@ -155,7 +155,7 @@ function addDeadline() {
         
 
             <div v-for="(deadline, index) of week.deadlines">
-                <div v-if="deadline.group_id == groupSelected" class="deadline">
+                <div v-if="deadline.group_id == groupSelected" class="deadline" @click="editDeadline(deadline)">
                     
                     <div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
                         {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}

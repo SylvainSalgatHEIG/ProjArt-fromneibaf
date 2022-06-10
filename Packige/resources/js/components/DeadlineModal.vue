@@ -11,33 +11,35 @@ const { data: coursesArray } = useFetch("/api/courses/");
 // let disabledSelect = ref(false);
 // let deleBtnPressed = ref(false);
 
-// watchEffect(() => {
-//   if (grades.value != null && coursesArray.value != null) {
-//     let pass = false;
-//     for (const courseData of coursesArray.value) {
-//       for (const gradeData of grades.value[courseData.moduleName][
-//         courseData.courseName
-//       ].grades) {
-//         if (gradeData.id === props.id) {
-//           console.log(gradeData);
-//           coefficient.value = gradeData.coefficient;
-//           grade.value = gradeData.grade;
-//           course.value = courseData.courseShortName;
-//           btnText.value = "Modifier";
-//           disabledSelect.value = true;
-//           pass = true;
-//         }
-//       }
-//     }
-//     if (!pass) {
-//       coefficient.value = "";
-//       grade.value = "";
-//       course.value = "";
-//       disabledSelect.value = false;
-//       btnText.value = "Ajouter";
-//     }
-//   }
-// });
+watchEffect(() => {
+  if (deadlines.value != null && coursesArray.value != null) {
+    console.log(deadlines.value);
+    console.log(coursesArray.value);
+    let pass = false;
+    for (const deadlineData of coursesArray.value) {
+      // console.log(courseData);
+      for (const deadlineData of deadlines) {
+        console.log(deadlineData);
+        if (deadlineData.id === props.id) {
+          console.log(gradeData);
+          coefficient.value = gradeData.coefficient;
+          grade.value = gradeData.grade;
+          course.value = courseData.courseShortName;
+          btnText.value = "Modifier";
+          disabledSelect.value = true;
+          pass = true;
+        }
+      }
+    }
+    if (!pass) {
+      coefficient.value = "";
+      grade.value = "";
+      course.value = "";
+      disabledSelect.value = false;
+      btnText.value = "Ajouter";
+    }
+  }
+});
 
 // function deleteBtnClicked() {
 //   deleBtnPressed.value = true;
@@ -204,6 +206,7 @@ function addTask(data) {
     data: data,
     url: "/api/deadlines/add",
   });
+
   let added = false;
   watchEffect(() => {
     if (newDeadLineId.value != null && !added) {
