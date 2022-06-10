@@ -58,12 +58,7 @@ class DeadlineController extends Controller
         return $deadlineArray;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function addDeadline(Request $request)
     {
         $deadlineToAdd = new Deadline;
@@ -81,7 +76,7 @@ class DeadlineController extends Controller
         $deadlineToAdd->start_date = $startDate;
         $deadlineToAdd->end_date = $endDate;
 
-        
+
         $courseId = DB::table('courses')
             ->join('modules', 'courses.module_id', '=', 'modules.id')
             ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
@@ -103,6 +98,21 @@ class DeadlineController extends Controller
         return $deadlineToAdd->id;
     }
 
+    public function editDeadline(Request $request)
+    {
+        $update = DB::table('deadlines')
+            ->where('id', $request->id)
+            ->update([
+                // 'grade' => $request->grade,
+                // 'coefficient' => $request->coefficient
+            ]);
+    }
+
+    public function deleteDeadline(Request $request)
+    {
+        $deleted = DB::table('deadlines')->where('id', '=', $request->id)->delete();
+    }
+
     public function checkDeadline($deadlineId, $action)
     {
         if ($action == "check") {
@@ -122,44 +132,6 @@ class DeadlineController extends Controller
         return ["success"];
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function index()
-    // {
-    //     $userId = Auth::id();
-    //     $user = User::where('id', $userId)->first();
-
-    //     $userGroups = $user->groups()->get();
-
-    //     $userPromotion = $userGroups[0]->promotion()->get();
-
-    //     $modulesList = $userPromotion[0]->modules()->get();
-    //     $coursesList = [];
-    //     foreach ($modulesList as $module) {
-    //         $courses = $module->courses()->get();
-    //         foreach ($courses as $course) {
-    //             array_push($coursesList, $course);
-    //         }
-    //     }
-
-    //     $groupSelected = $userGroups->first()->name;
-
-    //     $deadlines = $user->deadlines()->get();
-
-
-
-    //     foreach ($deadlines as $deadline) {
-    //         $course = Course::where('id', $deadline->course_id)->get();
-    //         $deadline->$course = $course;
-    //     }
-
-
-
-    //     return view('view_deadlines', compact('userGroups', 'userPromotion', 'deadlines', 'groupSelected', 'coursesList'));
-    // }
 
     public function filter(Request $request)
     {
