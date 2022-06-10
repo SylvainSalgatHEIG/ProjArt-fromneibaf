@@ -154,6 +154,7 @@ function deleteGrade(data, courseShortname, moduleName) {
                   id="grade"
                   step="0.01"
                   required
+                  placeholder="Note obtenue"
                 />
                 <label for="coefficient">Coefficient :</label><br />
                 <input
@@ -162,9 +163,11 @@ function deleteGrade(data, courseShortname, moduleName) {
                   id="coefficient"
                   step="0.01"
                   required
+                  placeholder="Pondération"
                 />
                 <label for="course">Cours :</label><br />
-                <select id="course" v-model="course" :disabled="disabledSelect">
+                <select id="course" v-model="course" :disabled="disabledSelect" placeholder="Branche">
+                <option value="" disabled selected>Branche</option>
                   <option
                     :value="course.courseShortName"
                     v-for="course in coursesArray"
@@ -173,7 +176,7 @@ function deleteGrade(data, courseShortname, moduleName) {
                   </option>
                 </select>
                 <br />
-                <button class="modal-default-button">
+                <button class="modal-default-button" v-bind:class="btnText == 'Ajouter' ? 'addButton': 'updateButton'">
                   {{ btnText }}
                 </button>
                 <button
@@ -189,10 +192,8 @@ function deleteGrade(data, courseShortname, moduleName) {
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
-                Fermer
-              </button>
+              <div class="modal-default-button closeButton" @click="$emit('close')">
+              </div>
             </slot>
           </div>
         </div>
@@ -202,10 +203,10 @@ function deleteGrade(data, courseShortname, moduleName) {
 </template>
 
 <style>
-.modal-mask {
+div.modal-mask {
   position: fixed;
   z-index: 9998;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -214,34 +215,90 @@ function deleteGrade(data, courseShortname, moduleName) {
   transition: opacity 0.3s ease;
 }
 
-.modal-wrapper {
+div.modal-wrapper {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: bottom;
+
+  width: 100%;
 }
 
-.modal-container {
-  width: 300px;
-  margin: 0px auto;
-  padding: 20px 30px;
+div.modal-container {
+  width: 100%;
+
+  margin: 0px;
+  padding: 0px 30px 44px 30px;
+
   background-color: #fff;
-  border-radius: 2px;
+
+  border-radius: 25px 25px 0px 0px;
+
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+div.modal-header {
+
+  display: inline-block;
+
+  width: 100%;
+
+  border-bottom: none;
+
+  margin-top: 44px;
+  padding-left: auto;
+
+  text-align: center;
+
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 36px;
 }
 
 .modal-body {
   margin: 20px 0;
 }
 
-.modal-default-button {
-  float: right;
+.addButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 50px;
+  gap: 10px;
+
+  width: 290px;
+  height: 45px;
+
+  margin-top: 88px;
+
+  background: #F84E35;
+  border-radius: 40px;
+
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+
+  color: #FFFFFF;
+
+  border: none;
 }
+
+.closeButton {
+
+  background-color: #F84E35;
+  height: 10px;
+  width: 10px;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
 
 /*
  * The following styles are auto-applied to elements with

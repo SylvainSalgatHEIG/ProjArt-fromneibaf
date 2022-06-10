@@ -123,4 +123,5 @@ let showModal = ref(false);
     font-size: 16px;
     line-height: 30px;
   }
+  
 </style>
