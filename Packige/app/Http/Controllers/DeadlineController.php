@@ -81,6 +81,7 @@ class DeadlineController extends Controller
         $deadlineToAdd->start_date = $startDate;
         $deadlineToAdd->end_date = $endDate;
 
+        
         $courseId = DB::table('courses')
             ->join('modules', 'courses.module_id', '=', 'modules.id')
             ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
@@ -89,7 +90,6 @@ class DeadlineController extends Controller
             ->join('users', 'users.id', '=', 'group_user.user_id')
             ->select('courses.id')
             ->where('users.id', '=', Auth::id())
-            ->where('modules.semester', '=', 4)
             ->where('courses.shortname', '=', $request->course)
             ->first();
 

@@ -4,14 +4,6 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { deadlines } from "../stores/deadlines";
 const { data: coursesArray } = useFetch("/api/courses/");
 
-// const emit = defineEmits(["close"]);
-// const props = defineProps({
-//   id: {
-//     type: BigInt,
-//     required: true,
-//   },
-// });
-
 // let btnText = ref("Ajouter");
 // let coefficient = ref("");
 // let grade = ref("");
@@ -134,13 +126,14 @@ let type = ref("rendu");
 let date = ref("");
 let startTime = ref("");
 let endTime = ref("");
+let course = ref("");
+
 let endTimeComputed = computed(() => {
   if (!displayEndTime.value) {
     return startTime.value;
   }
   return endTime.value;
 });
-let course = ref("");
 let displayEndTime = computed(() => {
   if (type.value == "examen") {
     return true;
@@ -206,7 +199,6 @@ function addOrEditDeadline() {
 }
 
 function addTask(data) {
-  // console.log(data);
   console.log(deadlines.value);
   const { results: newDeadLineId } = usePost({
     data: data,
@@ -311,9 +303,7 @@ function addTask(data) {
                   id="startTime"
                   v-model="startTime"
                 />
-                <label for="endTime" v-if="displayEndTime"
-                  >Heure de Fin</label
-                >
+                <label for="endTime" v-if="displayEndTime">Heure de Fin</label>
                 <input
                   type="time"
                   name="endTime"
