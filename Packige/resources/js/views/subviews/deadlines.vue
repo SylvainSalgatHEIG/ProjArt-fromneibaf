@@ -139,7 +139,7 @@ function addDeadline() {
     :deadlineId="deadlineId"
     :groupId="groupSelected"
   />
-  <button @click="addDeadline()">Ajouter une deadline</button>
+  <div @click="addDeadline()" id="btnAddDeadline"></div>
   
   <div class="inputRow">
     <select name="groups" id="groups" v-model="groupSelected">
@@ -194,6 +194,26 @@ function addDeadline() {
 </template>
 
 <style scoped>
+
+#btnAddDeadline {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 50%;
+    background-color: #FF3820;
+
+    position: fixed;
+
+    bottom: 100px;
+
+    right: 5%;
+    
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1V15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1 8H15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px;
+  }
+
 .inputRow {
   display: flex;
   align-items: flex-end;
