@@ -18,7 +18,7 @@ let type = ref("rendu");
 let date = ref("");
 let startTime = ref("");
 let endTime = ref("");
-let course = ref("");
+let course = ref("branche");
 let endTimeComputed = computed(() => {
   if (!displayEndTime.value) {
     return startTime.value;
@@ -44,18 +44,26 @@ watchEffect(() => {
     let pass = false;
     for (const deadlineData of deadlines.value) {
       if (deadlineData.id === props.deadlineId) {
-        console.log(deadlineData);
         name.value = deadlineData.name;
         description.value = deadlineData.description;
         type.value = deadlineData.type;
         course.value = deadlineData.course[0].shortname;
-        console.log(course.value);
+        date.value = deadlineData.start_date.split(" ")[0];
+        startTime.value = deadlineData.start_date.split(" ")[1];
+        endTime.value = deadlineData.start_date.split(" ")[1];
         btnText.value = "Modifier";
         disabledSelect.value = true;
         pass = true;
       }
     }
     if (!pass) {
+      name.value = "";
+      description.value = "";
+      type.value = "rendu";
+      course.value = "branche";
+      date.value = "";
+      startTime.value = "";
+      endTime.value = "";
       disabledSelect.value = false;
       btnText.value = "Ajouter";
     }
@@ -64,43 +72,6 @@ watchEffect(() => {
 
 // function deleteBtnClicked() {
 //   deleBtnPressed.value = true;
-// }
-
-// function addOrEditGrade(id = props.id) {
-//   let moduleName = "";
-//   let courseFullName = "";
-
-//   for (const courseData of coursesArray.value) {
-//     if (courseData.courseShortName === course.value) {
-//       courseFullName = courseData.courseName;
-//       moduleName = courseData.moduleName;
-//     }
-//   }
-//   if (id && deleBtnPressed.value) {
-//     console.log("delete");
-//     const data = {
-//       id: id,
-//     };
-//     deleteGrade(data, courseFullName, moduleName)
-//   } else if (id) {
-//     console.log("edit");
-//     const data = {
-//       grade: grade.value,
-//       coefficient: coefficient.value,
-//       course: course.value,
-//       id: id,
-//     };
-//     editGrade(data, courseFullName, moduleName);
-//   } else {
-//     console.log("add");
-//     const data = {
-//       grade: grade.value,
-//       coefficient: coefficient.value,
-//       course: course.value,
-//     };
-//     addGrade(data, courseFullName, moduleName);
-//   }
-//   emit("close");
 // }
 
 // function editGrade(data, courseFullName, moduleName) {
@@ -137,7 +108,7 @@ watchEffect(() => {
 //   deleBtnPressed.value = false;
 // }
 
-function addOrEditDeadline() {
+function addOrEditDeadline(id = props.deadlineId) {
   // let moduleName = "";
   // let courseFullName = "";
 
@@ -153,41 +124,38 @@ function addOrEditDeadline() {
   //     id: id,
   //   };
   //   deleteGrade(data, courseFullName, moduleName);
-  // } else if (id) {
-  //   console.log("edit");
-  //   const data = {
-  //     grade: grade.value,
-  //     coefficient: coefficient.value,
-  //     course: course.value,
-  //     id: id,
-  //   };
-  //   editGrade(data, courseFullName, moduleName);
-  // } else {
-  //   console.log("add");
-  //   const data = {
-  //     grade: grade.value,
-  //     coefficient: coefficient.value,
-  //     course: course.value,
-  //   };
-  //   addGrade(data, courseFullName, moduleName);
-  // }
-  // emit("close");
+  // } else
+  if (id) {
+    console.log("edit");
+    const data = {
+      name: name.value,
+      description: description.value,
+      date: date.value,
+      startTime: startTime.value,
+      endTime: endTimeComputed.value,
+      groupId: props.groupId,
+      deadlineId: id,
+    };
+    editDeadline(data);
+  } else {
+    console.log("add");
+    const data = {
+      name: name.value,
+      description: description.value,
+      type: type.value,
+      date: date.value,
+      startTime: startTime.value,
+      endTime: endTimeComputed.value,
+      course: course.value,
+      groupId: props.groupId,
+    };
+    addDeadline(data);
+  }
+  emit("close");
   // console.log(props.groupId);
-
-  const data = {
-    name: name.value,
-    description: description.value,
-    type: type.value,
-    date: date.value,
-    startTime: startTime.value,
-    endTime: endTimeComputed.value,
-    course: course.value,
-    groupId: props.groupId,
-  };
-  addTask(data);
 }
 
-function addTask(data) {
+function addDeadline(data) {
   const { results: newDeadLineId } = usePost({
     data: data,
     url: "/api/deadlines/add",
@@ -214,47 +182,85 @@ function addTask(data) {
     }
   });
 }
+
+function editDeadline(data) {
+  const { results: editedDeadLineId } = usePost({
+    data: data,
+    url: "/api/deadlines/edit",
+  });
+
+  // for (const gradeData of grades.value[moduleName][courseFullName].grades) {
+  //   if (gradeData.id === data.id) {
+  //     gradeData.grade = grade.value;
+  //     gradeData.coefficient = coefficient.value;
+  //   }
+  // }
+}
 </script>
 
 <template>
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-block">
+          <div
+            class="modal-default-button closeButton"
+            @click="$emit('close')"
+          ></div>
+
           <div class="modal-header">
-            <slot name="header"> Ajouter une tâche </slot>
+            <slot name="header"> {{ btnText }} une tâche </slot>
           </div>
           <div class="modal-body">
             <slot name="body">
               <form @submit.prevent="addOrEditDeadline()">
-                <label for="name">Nom :</label><br />
-                <input type="text" v-model="name" id="name" required />
-                <label for="description">Description :</label><br />
+                <input
+                  type="text"
+                  v-model="name"
+                  id="name"
+                  required
+                  placeholder="Nom de la tâche"
+                />
+                <br />
+                <!-- <select id="course" v-model="course"> -->
+                <select id="course" v-model="course" :disabled="disabledSelect">
+                  <option value="branche" disabled selected>Branche</option>
+                  <option
+                    :value="course.courseShortName"
+                    v-for="course in coursesArray"
+                  >
+                    {{ course.courseShortName }}
+                  </option>
+                </select>
+                <br />
                 <textarea
                   v-model="description"
                   id="description"
                   rows="6"
                   cols="25"
                   required
+                  placeholder="Décris la tâche..."
                 ></textarea>
 
-                <label for="type">Type de tâche :</label><br />
+                <label for="deadline">Rendu</label>
                 <input
                   type="radio"
                   id="deadline"
                   name="type"
                   value="rendu"
                   v-model="type"
+                  :disabled="disabledSelect"
                 />
-                <label for="deadline">Rendu</label>
+                <label for="exam">Examen</label>
                 <input
                   type="radio"
                   id="exam"
                   name="type"
                   value="examen"
                   v-model="type"
+                  :disabled="disabledSelect"
                 />
-                <label for="exam">Examen</label>
+
                 <br />
                 <label for="date">Date</label>
                 <input
@@ -281,20 +287,10 @@ function addTask(data) {
                   required
                 />
                 <br />
-                <label for="course">Cours :</label><br />
-                <select id="course" v-model="course">
-                  <!-- <select id="course" v-model="course" :disabled="disabledSelect"> -->
-                  <option
-                    :value="course.courseShortName"
-                    v-for="course in coursesArray"
-                  >
-                    {{ course.courseShortName }}
-                  </option>
-                </select>
-                <br />
-                <button class="modal-default-button">
+
+                <button class="modal-default-button addButton">
                   <!-- {{ btnText }} -->
-                  {{btnText}}
+                  {{ btnText }}
                 </button>
                 <!-- <button
                   class="modal-default-button"
@@ -306,26 +302,17 @@ function addTask(data) {
               </form>
             </slot>
           </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
-                Fermer
-              </button>
-            </slot>
-          </div>
         </div>
       </div>
     </div>
   </transition>
 </template>
 
-<style>
-.modal-mask {
+<style scoped>
+div.modal-mask {
   position: fixed;
-  z-index: 9998;
-  top: 0;
+  z-index: 9999;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -333,37 +320,223 @@ function addTask(data) {
   display: table;
   transition: opacity 0.3s ease;
 }
-
-.modal-wrapper {
+div.modal-wrapper {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: bottom;
+  max-width: 500px;
 }
-
-.modal-container {
-  width: 300px;
-  margin: 0px auto;
-  padding: 20px 30px;
+div.modal-block {
+  max-width: 500px !important;
+  margin: auto;
+  padding: 0px 0px 10px 0px;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 25px 25px 0px 0px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-  color: black;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
 }
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+div.modal-header {
+  display: inline-block;
+  width: 100%;
+  border-bottom: none;
+  padding-left: 0 auto;
+  text-align: center;
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 36px;
+  color: #0c223f;
 }
-
 .modal-body {
-  margin: 20px 0;
+  margin: 0 !important;
+  padding-top: 0;
 }
-
-.modal-default-button {
+.modal-body form {
+  width: 250px;
+  margin: auto;
+}
+input {
+  border: none;
+  border-bottom: 1px solid #0c223f;
+  width: 100px;
+  margin-bottom: 15px;
+}
+input#name {
+  width: 100%;
+}
+input#description {
+  width: 250px;
+  border-radius: 50px;
+}
+input#course {
+  width: 125px;
+}
+input#date {
+  border: none;
   float: right;
+  margin-bottom: 0;
 }
+/*
+input#date {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: rebeccapurple;
+}
+*/
+/* Remove arrow input type number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input::placeholder {
+  color: #0c223f;
+  opacity: 0.6;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+}
+select {
+  -webkit-tap-highlight-color: transparent;
 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin-bottom: 15px;
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-size: 25px;
+  background-position: calc(100% + 0.1rem);
+  background-repeat: no-repeat;
+  width: 50%;
+  border: none;
+  border-radius: 0%;
+  border-bottom: 1px solid #0c223f;
+  color: #0c223f;
+  opacity: 0.6;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+}
+textarea {
+  margin-bottom: 15px;
+  background: rgba(12, 34, 63, 0.1);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #0c223f;
+  padding: 4px;
+  max-width: 250px;
+  max-height: 100px;
+}
+input#startTime {
+  float: right;
+  margin-top: 5px;
+  width: 60px;
+  padding: 2px;
+  border: 2px #77b0c5 solid;
+  border-radius: 34px;
+  margin-bottom: 10px;
+}
+label[for="startTime"] {
+  margin-top: 15px;
+  width: 120px;
+}
+input#endTime {
+  float: right;
+  margin-top: 5px;
+  width: 60px;
+  padding: 2px;
+  border: 2px #77b0c5 solid;
+  border-radius: 34px;
+}
+label[for="endTime"] {
+  margin-top: 15px;
+  width: 120px;
+}
+input[type="radio"] {
+  height: 25px;
+  width: 25px;
+  appearance: none;
+  background-color: #fff;
+  margin: 0;
+  color: #0c223f;
+  border: 0.15em solid #c8d7f4;
+  border-radius: 50%;
+  margin: 0 0px -6px 15px;
+}
+input[type="radio"]:first {
+  margin-right: 35px;
+}
+input[type="radio"]:nth-of-type(2n) {
+  margin-right: 35px;
+}
+input[type="radio"]:checked {
+  border: 2px solid #77b0c5;
+  background-color: #77b0c5;
+  box-shadow: 0px 0px 0px 4px #fff inset;
+}
+.container input:checked .checkmark {
+  background-color: #2196f3;
+}
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark {
+  width: 12px;
+}
+label {
+  color: #0c223f;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 15px;
+}
+label.labelRadio {
+  padding-bottom: 2px;
+  margin-bottom: 35px;
+}
+.addButton {
+  margin: 50px auto 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 290px;
+  height: 45px;
+  background: #f84e35;
+  border-radius: 40px;
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+  color: #ffffff;
+  border: none;
+}
+.closeButton {
+  height: 35px;
+  width: 35px;
+  margin: 10px 10px auto auto;
+  background-image: url("data:image/svg+xml,%3Csvg width='34' height='36' viewBox='0 0 34 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.3205 25.6075C10.9392 25.6075 10.5579 25.4587 10.2568 25.14C9.67481 24.5237 9.67481 23.5037 10.2568 22.8875L21.6161 10.86C22.1981 10.2437 23.1615 10.2437 23.7435 10.86C24.3255 11.4762 24.3255 12.4962 23.7435 13.1125L12.3842 25.14C12.1032 25.4587 11.7018 25.6075 11.3205 25.6075Z' fill='%230C223F'/%3E%3Cpath d='M22.6798 25.6075C22.2985 25.6075 21.9172 25.4587 21.6161 25.14L10.2568 13.1125C9.67481 12.4962 9.67481 11.4762 10.2568 10.86C10.8388 10.2437 11.8022 10.2437 12.3842 10.86L23.7435 22.8875C24.3255 23.5037 24.3255 24.5237 23.7435 25.14C23.4424 25.4587 23.0611 25.6075 22.6798 25.6075Z' fill='%230C223F'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+}
+div.modal-footer {
+  border-top: none;
+  width: 100%;
+}
 /*
  * The following styles are auto-applied to elements with
  * transition="modal" when their visibility is toggled
@@ -372,15 +545,12 @@ function addTask(data) {
  * You can easily play with the modal transition by editing
  * these styles.
  */
-
 .modal-enter {
   opacity: 0;
 }
-
 .modal-leave-active {
   opacity: 0;
 }
-
 .modal-enter .modal-container,
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);

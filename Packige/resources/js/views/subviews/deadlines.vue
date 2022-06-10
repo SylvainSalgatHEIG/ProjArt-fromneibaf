@@ -240,21 +240,33 @@ function addDeadline() {
 
 #groups {
   -webkit-tap-highlight-color: transparent;
+        
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
 
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+        width: 78px;
+        height: 26px;
 
-  width: 78px;
-  height: 26px;
+        background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+        background-size: 25px;
+        background-position: calc(100% + .1rem);
+        background-repeat: no-repeat;
 
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
-  background-size: 25px;
-  background-position: calc(100% + 0.1rem);
-  background-repeat: no-repeat;
+        background-color: transparent;
+        border: none;
 
-  background-color: transparent;
-  border: none;
+        color: #FFFFFF;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22px;
+
+        margin-top: 20px;
+        margin-bottom: 20px;
+        
+        margin-left: auto;
 }
 
 #groups option {
