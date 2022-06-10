@@ -334,7 +334,7 @@ function addTask(data) {
   </transition>
 </template>
 
-<style>
+<style scoped>
 div.modal-mask {
   position: fixed;
   z-index: 9999;
