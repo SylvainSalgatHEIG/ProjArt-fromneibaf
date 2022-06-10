@@ -6,7 +6,7 @@ import { apiSchedules} from '../../config/apiUrls.js';
 
 
 const {data: schedules} = useFetch(apiSchedules);
-const {value: theSchedule} = useLocalstorage('schedules', schedules.value);
+// const {value: theSchedule} = useLocalstorage('schedules', schedules.value);
 const todayDate = ref(new Date(Date.now()));
 
 const showPast = ref(false);
@@ -106,23 +106,24 @@ const groupNames = computed(() => {
 
 // const schedulesFutur
 const schedulesFiltered = computed(() => {
-  if (!theSchedule.value) {
-    theSchedule.value = schedules.value;
-  }
+  if (!schedules.value) return [];
+  // if (!theSchedule.value) {
+  //   theSchedule.value = schedules.value;
+  // }
   let events = {};
   // filter to get only after today, and sort by date
   if (!showPast.value) {
-    events = theSchedule.value.filter(isInTheFuture);
+    events = schedules.value.filter(isInTheFuture);
   }else {
-    events = theSchedule.value;
+    events = schedules.value;
   }
 
   events = events.sort(compareEvents);
   
   // filter to get only the courses of the specific group.
   if (groupSelected) {
-    events = events.filter(theSchedule => {
-      return theSchedule.class === groupSelected.value;
+    events = events.filter(schedules => {
+      return schedules.class === groupSelected.value;
     });
     // return events;
   }
@@ -161,7 +162,7 @@ function getDateRange(dates) {
 
 const schedulesShowable = computed(() => {
   if (!schedulesFiltered.value) return [];
-  console.log(schedulesFiltered.value);
+  // console.log(schedulesFiltered.value);
   let allWeeks = [... new Set(schedulesFiltered.value.map(value => value.weekNumber))];
   let myArray = {};
 
@@ -169,7 +170,7 @@ const schedulesShowable = computed(() => {
     let weekCourses = schedulesFiltered.value.filter(value => value.weekNumber === week);
     let dateRange = getDateRange(weekCourses.map(value => value.date));
     let daysCourse = weekDaysShort.map(day => {
-      console.log(day);
+      // console.log(day);
       let hasCourses = true;
       // let dayNb = daysShort.indexOf(day) -1;
       // if (dayNb == -1) dayNb = 6;
@@ -187,7 +188,7 @@ const schedulesShowable = computed(() => {
           hasCourses = false;
         }else {
           // console.log(formatTwoDigits(new Date(courses[0].date).getUTCDate()))
-          console.log(courses[0].date);
+          // console.log(courses[0].date);
           dayTwoDigits = formatTwoDigits(new Date(courses[0].date).getUTCDate())
         }
       return { day,courses, hasCourses, dayTwoDigits: dayTwoDigits}
@@ -253,59 +254,24 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
         <!-- {{schedulesShowable}} -->
       </label>
 
-        <div v-for="(schedule, weekNb) of schedulesShowable">
-          <h2>{{schedule.dates}}</h2>
-            <div v-for="event of schedule.daysCourse" class="planning"  v-show="event.hasCourses">
-              <div class="date" v-bind:class="formatDate(new Date(event.courses[0].date)) == formatDate(new Date(todayDate)) ? 'currentDay':''">{{event.day}} {{event.dayTwoDigits}}</div>
-              
-              <div class="day-info">
-                  <div v-for="course of event.courses" class="info">
-                    <p class="hours">{{course.hours}}</p>
-                    <p class="course">{{course.course}} </p>
-                    <p class="room">{{course.room}}</p>
-                  </div>
-                  <div class="info" v-show="!event.hasCourses">
-                    Il n'y a pas de cours aujourd'hui
-                  </div>
+      <div v-for="(schedule, weekNb) of schedulesShowable">
+        <h2><span>{{schedule.dates}}</span></h2>
+          <div v-for="event of schedule.daysCourse" class="planning"  v-show="event.hasCourses">
+            <div class="date" v-bind:class="formatDate(new Date(event.courses[0].date)) == formatDate(new Date(todayDate)) ? 'currentDay':''">{{event.day}} {{event.dayTwoDigits}}</div>
+            
+            <div class="day-info">
+                <div v-for="course of event.courses" class="info">
+                  <p class="hours">{{course.hours}}</p>
+                  <p class="course">{{course.course}} </p>
+                  <p class="room">{{course.room}}</p>
                 </div>
-            </div>
-        </div>
-      <!-- </div> -->
-    <!-- <div id="listSchedule">
-      <ul>
-        <li v-for="event of schedulesFiltered">
-          <span class="date" v-if="currentWeek != event.weekNumber">
-            semaine: {{currentWeek = event.weekNumber}}
-            </span>
-          <span class="day" v-if="currentDay != event.day">
-            Jour: {{currentDay = event.day}}
-          </span>
-          <span class="date">date: {{event.dateFr}}</span>
-        {{event.hours}}
-          {{event.course} 
-          {{event.room}}
-        </li>
-      </ul>
-    </div>
-    <table id="schedule">
-      <thead>
-            <tr class="template template-course">
-              <th class="date">Date</th>
-              <th class="hours">Heure</th>
-              <th class="course">Cours</th>
-              <th class="room">Classe</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="template template-course" v-for="course of schedules">
-              <td class="date">{{course.start}}</td>
-              <td class="hours">{{course.hours}}</td>
-              <td class="course">{{course.course}}</td>
-              <td class="room">{{course.room}}</td>
-            </tr>
-          </tbody>
-        </table> -->
-        </div>
+                <div class="info" v-if="!event.hasCourses">
+                  Il n'y a pas de cours aujourd'hui
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </template>
 
 <style scoped>
@@ -313,9 +279,8 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
   background-color: #F84E35 !important;
 }
 .content {
-    margin-left: auto;
-    margin-right: auto;
-    width: 312px;
+    margin: auto;
+    width: 350px;
   }
 
   .day-info .info {
@@ -323,6 +288,11 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
     padding: 13px 0 0 0;
     justify-content: space-between;
     /* column-gap: 40px; */
+  }
+
+  .planning:not(:last-child) .info:last-child {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #345771;
   }
 
   .day-info .info p {
@@ -408,15 +378,21 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
         line-height: 22px;
     }
 
+    h2 span {
+        display: inline-block;
+        width: 105px;
+    }
+
     h2:after {
         content: "";
         display: inline-block;
         height: 0.7em;
         vertical-align: bottom;
-        width: 196px;
+        width: 194px;
         margin-right: -100%;
-        margin-left: 10px;
-        border-top: 1px solid white;
+        margin-left: 13px;
+        border-top: 2px solid white;
+        opacity: 0.6;
     }  
     
     h2:not(:first-of-type) {
