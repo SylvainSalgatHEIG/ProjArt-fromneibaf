@@ -178,8 +178,6 @@ function deleteGrade(data, courseShortname, moduleName) {
                   </option>
                 </select>
                 <br />
-                  
-              </form>
               <button class="" v-bind:class="btnText == 'Ajouter' ? 'addButton': 'updateButton'">
                   {{ btnText }}
                   </button>
@@ -190,6 +188,8 @@ function deleteGrade(data, courseShortname, moduleName) {
                 >
                   del
                 </button>
+                  
+              </form>
             </slot>
           </div>
 
