@@ -4,16 +4,16 @@ import { useFetch } from "../composables/fetch.js";
 import GradeModal from "../components/GradeModal.vue";
 import { grades } from "../stores/grades.js";
 
-let id = ref(null);
+let gradeId = ref(null);
 
-function editGrade(note) {
-  console.log(note.id);
-  id.value = note.id;
+function editGrade(gradeToEdit) {
+  // console.log(gradeToEdit.id);
+  gradeId.value = gradeToEdit.id;
   showModal.value = true;
 }
 
 function addGrade(){
-  id.value = null;
+  gradeId.value = null;
   showModal.value = true;
 }
 
@@ -23,17 +23,17 @@ let showModal = ref(false);
 
 <template>
   <h1>Notes</h1>
-  <GradeModal v-show="showModal" @close="showModal = false" :id="id" />
+  <GradeModal v-show="showModal" @close="showModal = false" :id="gradeId" />
   <div @click="addGrade()" id="btnAddGrade"></div>
 
   <div v-for="(moduleData, moduleName) in grades" class="module">
     <h2>{{ moduleName }}</h2>
     <div v-for="(courseData, courseName) in moduleData">
-      <div v-if="courseName != 'average'">
+      <div v-if="courseName != 'average' && courseName != 'id'">
         <h3>{{ courseName }}</h3>
         <span class="courseWeighting">{{ courseData.weighting }}</span>
         <br />
-        <div v-for="gradeData in courseData.grades" @click="editGrade(gradeData);">
+        <div v-for="gradeData in courseData.grades" @click="editGrade(gradeData)" id="editGrade">
           Note : {{ gradeData.grade }} | Pondération :
           {{ gradeData.coefficient }}
         </div>
