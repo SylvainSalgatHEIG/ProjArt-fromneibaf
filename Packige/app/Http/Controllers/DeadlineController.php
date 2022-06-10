@@ -100,12 +100,25 @@ class DeadlineController extends Controller
 
     public function editDeadline(Request $request)
     {
+
+        $date = $request->date;
+        $startTime = $request->startTime;
+        $endTime = $request->endTime;
+        $startDate = date('Y-m-d H:i:s', strtotime("$date $startTime"));
+        $endDate = date('Y-m-d H:i:s', strtotime("$date $endTime"));
+
         $update = DB::table('deadlines')
-            ->where('id', $request->id)
+            ->where('id', $request->deadlineId)
             ->update([
-                // 'grade' => $request->grade,
-                // 'coefficient' => $request->coefficient
+                'name' => $request->name,
+                'description' => $request->description,
+                'description' => $request->description,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'group_id' => $request->groupId,
             ]);
+
+        return $update;
     }
 
     public function deleteDeadline(Request $request)

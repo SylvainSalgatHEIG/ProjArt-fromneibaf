@@ -112,23 +112,25 @@ class GradeController extends Controller
     public function addGrade(Request $request)
     {
 
-        $courseId = DB::table('courses')
-            ->join('modules', 'modules.id', '=', 'courses.module_id')
-            ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
-            ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
-            ->join('group_user', 'group_user.group_id', '=', 'groups.id')
-            ->join('users', 'users.id', '=', 'group_user.user_id')
-            ->select('courses.id')
-            ->where('users.id', '=', Auth::id())
-            ->where('courses.shortname', '=', $request->course)
-            ->first();
+        // dd($request->course);
+
+        // $courseId = DB::table('courses')
+        //     ->join('modules', 'modules.id', '=', 'courses.module_id')
+        //     ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
+        //     ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
+        //     ->join('group_user', 'group_user.group_id', '=', 'groups.id')
+        //     ->join('users', 'users.id', '=', 'group_user.user_id')
+        //     ->select('courses.id')
+        //     ->where('users.id', '=', Auth::id())
+        //     ->where('courses.shortname', '=', $request->course)
+        //     ->first();
 
         $grade = new Grade;
 
         $grade->coefficient = $request->coefficient;
         $grade->grade = $request->grade;
         $grade->user_id = Auth::id();
-        $grade->course_id = $courseId->id;
+        $grade->course_id = $request->course;
         $grade->save();
         if (!$grade) {
             return 'FAILED';
@@ -141,10 +143,16 @@ class GradeController extends Controller
         $update = DB::table('grades')
             ->where('id', $request->id)
             ->update(['grade' => $request->grade, 'coefficient' => $request->coefficient]);
+        if ($update) {
+            return 'success';
+        }else {
+            return 'erreur';
+        }
     }
 
     public function deleteGrade(Request $request)
     {
         $deleted = DB::table('grades')->where('id', '=', $request->id)->delete();
+        return 'success';
     }
 }

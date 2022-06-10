@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useFetch } from "../composables/fetch.js";
 import GradeModal from "../components/GradeModal.vue";
 import { grades } from "../stores/grades.js";
@@ -19,6 +19,21 @@ function addGrade(){
 
 let showModal = ref(false);
 
+const averages = computed(() => {
+  if (!grades.value) return [];
+  console.log(grades.value);
+  // grades.value.foreach((moduleData, moduleName) => {
+  //   console.log(moduleData);
+  // })
+  // grades.value.foreach((grade) => {
+  //   return {
+  //     ...grade,
+  //     edit: () => editGrade(grade),
+  //   };
+  // });
+  return [];
+});
+
 </script>
 
 <template>
@@ -33,7 +48,7 @@ let showModal = ref(false);
         <h3>{{ courseName }}</h3>
         <span class="courseWeighting">{{ courseData.weighting }}</span>
         <br />
-        <div v-for="gradeData in courseData.grades" @click="editGrade(gradeData)" id="editGrade">
+        <div v-for="gradeData in courseData.grades" @click="editGrade(gradeData)" id="btnEditGrade">
           Note : {{ gradeData.grade }} | Pondération :
           {{ gradeData.coefficient }}
         </div>
