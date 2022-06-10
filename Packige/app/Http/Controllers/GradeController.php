@@ -15,15 +15,36 @@ class GradeController extends Controller
     public function getGrades()
     {
 
-        $modules = DB::table('modules')
+        // get group user with promotion and group
+        $groupsUsers = DB::table('group_user')
+                    ->join('groups', 'groups.id', 'group_user.group_id')
+                    ->join('promotions', 'promotions.id', 'groups.promotion_id')
+                    ->where('user_id', Auth::id())->get();
+
+        $modules = [];
+
+        // get all modules from the right semester
+        foreach($groupsUsers as $group) {
+        
+            $semester = (date('Y') - date('Y', strtotime($group->start_year))) * 2;
+            if (intval(date('m')) >= 9 || intval(date('m')) < 3) {
+                $semester -= 1;
+            }
+            
+            $modulesQuery = DB::table('modules')
             ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
             ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
             ->join('group_user', 'group_user.group_id', '=', 'groups.id')
             ->join('users', 'users.id', '=', 'group_user.user_id')
             ->select('modules.name', 'modules.semester', 'modules.id')
             ->where('users.id', '=', Auth::id())
-            ->where('modules.semester', '=', 4)
+            ->where('modules.semester', '=', $semester)
+            ->where('groups.id', '=', $group->group_id)
             ->get();
+            foreach ($modulesQuery as $module) {
+                array_push($modules, $module);	
+            }
+        }
 
         $gradesArray = [];
         foreach ($modules as $module) {
@@ -52,7 +73,8 @@ class GradeController extends Controller
             }
             $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
         }
-
+        
+        // dd($gradesArray);
         return $gradesArray;
     }
 

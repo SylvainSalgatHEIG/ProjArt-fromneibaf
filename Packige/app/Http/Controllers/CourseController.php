@@ -14,16 +14,38 @@ class CourseController extends Controller
     public function getCourses()
     {
 
-        $courses = DB::table('courses')
+        // get group user with promotion and group
+        $groupsUsers = DB::table('group_user')
+        ->join('groups', 'groups.id', 'group_user.group_id')
+        ->join('promotions', 'promotions.id', 'groups.promotion_id')
+        ->where('user_id', Auth::id())->get();
+        $courses = [];
+        // get all courses from the right semester
+        foreach($groupsUsers as $group) {
+        
+            $semester = (date('Y') - date('Y', strtotime($group->start_year))) * 2;
+            if (intval(date('m')) >= 9 || intval(date('m')) < 3) {
+                $semester -= 1;
+            }
+            
+            $coursesQuery = DB::table('courses')
             ->join('modules', 'modules.id', '=', 'courses.module_id')
             ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
             ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
             ->join('group_user', 'group_user.group_id', '=', 'groups.id')
             ->join('users', 'users.id', '=', 'group_user.user_id')
-            ->select('courses.name as courseName', 'courses.shortname as courseShortName', 'modules.name AS moduleName')
+            ->select('courses.name as courseName', 'courses.shortname as courseShortName', 'modules.name AS moduleName', 'courses.id as courseId')
             ->where('users.id', '=', Auth::id())
-            ->where('modules.semester', '=', 4)
+            ->where('modules.semester', '=', $semester)
+            ->where('groups.id', '=', $group->group_id)
             ->get();
+            foreach ($coursesQuery as $course) {
+                array_push($courses, $course);	
+            }
+        }
+        // dd($courses);
+        
+        
 
         return $courses;
     }

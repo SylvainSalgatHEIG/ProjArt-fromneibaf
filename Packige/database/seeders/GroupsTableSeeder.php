@@ -22,11 +22,6 @@ class GroupsTableSeeder extends Seeder
             'password' => Hash::make('123456'),
             'promotion_id' => '1'
         ]);
-        DB::table('groups')->insert([
-            'name' => '2',
-            'password' => Hash::make('123456'),
-            'promotion_id' => '1'
-        ]);
 
         DB::table('groups')->insert([
             'name' => '1',
@@ -38,6 +33,18 @@ class GroupsTableSeeder extends Seeder
             'name' => '2',
             'password' => Hash::make('123456'),
             'promotion_id' => '2'
+        ]);
+
+        DB::table('groups')->insert([
+            'name' => '1',
+            'password' => Hash::make('123456'),
+            'promotion_id' => '3'
+        ]);
+
+        DB::table('groups')->insert([
+            'name' => '2',
+            'password' => Hash::make('123456'),
+            'promotion_id' => '3'
         ]);
 
         DB::table('groups')->insert([
