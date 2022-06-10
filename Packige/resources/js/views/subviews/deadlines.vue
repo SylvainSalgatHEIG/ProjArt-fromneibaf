@@ -373,13 +373,9 @@ h2:not(:first-of-type) {
   visibility: hidden;
 }
 
-  .content {
+.content {
     margin-left: auto;
     margin-right: auto;
     width: 312px;
-  }
-
-.checked {
-  text-decoration: line-through;
 }
 </style>

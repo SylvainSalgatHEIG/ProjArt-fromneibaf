@@ -64,12 +64,12 @@ const allEvents = computed(() => {
         <!-- <span class="date">{{ event.date }}</span> -->
         <div class="description">
           <h2 class="title">{{ event.name }}</h2>
-          <p class="event-link">
+          <!-- <p class="event-link"> -->
           <!-- <a class="link" :href="event.link">Lien vers l'événement</a> -->
-            <span class="date">{{ event.date }}</span>
-          </p>
+          <span class="date">{{ event.date }}</span>
+          <!-- </p> -->
         </div>
-        </a>
+      </a>
     </div>
   </div>
 </template>
@@ -96,12 +96,12 @@ const allEvents = computed(() => {
 }
 
 #events-cards .event-card .date {
-  padding: 3px;
+  padding: 5px;
   position: relative;
   width: 90px;
   height: 30px;
-  left: 5px;
-  top: 0px;
+  left: 95px;
+  top: -90px;
 
   font-family: "Inter";
   font-weight: bold;
@@ -119,8 +119,10 @@ const allEvents = computed(() => {
 }
 
 #events-cards .event-card div.description {
-  margin: 0 auto 10px auto;
+  margin: 0 auto -10px auto;
   width: 300px;
+  text-align: center;
+  color: white;
 }
 
 #events-cards .event-card p {
@@ -134,5 +136,9 @@ const allEvents = computed(() => {
 #events-cards .event-card .link {
   text-decoration: underline;
   font-size: 12px;
+}
+
+a:hover {
+  color: white;
 }
 </style>
