@@ -4,37 +4,58 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { deadlines } from "../stores/deadlines";
 const { data: coursesArray } = useFetch("/api/courses/");
 
-// let btnText = ref("Ajouter");
-// let coefficient = ref("");
-// let grade = ref("");
-// let course = ref("");
-// let disabledSelect = ref(false);
-// let deleBtnPressed = ref(false);
+let btnText = ref("Ajouter");
+let disabledSelect = ref(false);
+let deleBtnPressed = ref(false);
+const emit = defineEmits(["close"]);
+const props = defineProps({
+  deadlineId: {},
+  groupId: {},
+});
+let name = ref("");
+let description = ref("");
+let type = ref("rendu");
+let date = ref("");
+let startTime = ref("");
+let endTime = ref("");
+let course = ref("");
+let endTimeComputed = computed(() => {
+  if (!displayEndTime.value) {
+    return startTime.value;
+  }
+  return endTime.value;
+});
+let displayEndTime = computed(() => {
+  if (type.value == "examen") {
+    return true;
+  }
+  endTime.value = "";
+  return false;
+});
+let startTimeText = computed(() => {
+  if (displayEndTime.value) {
+    return "Heure de début";
+  }
+  return "Heure de rendu";
+});
 
 watchEffect(() => {
-  if (deadlines.value != null && coursesArray.value != null) {
-    console.log(deadlines.value);
-    console.log(coursesArray.value);
+  if (deadlines.value != null) {
     let pass = false;
-    for (const deadlineData of coursesArray.value) {
-      // console.log(courseData);
-      for (const deadlineData of deadlines) {
+    for (const deadlineData of deadlines.value) {
+      if (deadlineData.id === props.deadlineId) {
         console.log(deadlineData);
-        if (deadlineData.id === props.id) {
-          console.log(gradeData);
-          coefficient.value = gradeData.coefficient;
-          grade.value = gradeData.grade;
-          course.value = courseData.courseShortName;
-          btnText.value = "Modifier";
-          disabledSelect.value = true;
-          pass = true;
-        }
+        name.value = deadlineData.name;
+        description.value = deadlineData.description;
+        type.value = deadlineData.type;
+        course.value = deadlineData.course[0].shortname;
+        console.log(course.value);
+        btnText.value = "Modifier";
+        disabledSelect.value = true;
+        pass = true;
       }
     }
     if (!pass) {
-      coefficient.value = "";
-      grade.value = "";
-      course.value = "";
       disabledSelect.value = false;
       btnText.value = "Ajouter";
     }
@@ -116,40 +137,6 @@ watchEffect(() => {
 //   deleBtnPressed.value = false;
 // }
 
-const emit = defineEmits(["close"]);
-const props = defineProps({
-  deadlineId: {},
-  groupId: {},
-});
-
-let name = ref("");
-let description = ref("");
-let type = ref("rendu");
-let date = ref("");
-let startTime = ref("");
-let endTime = ref("");
-let course = ref("");
-
-let endTimeComputed = computed(() => {
-  if (!displayEndTime.value) {
-    return startTime.value;
-  }
-  return endTime.value;
-});
-let displayEndTime = computed(() => {
-  if (type.value == "examen") {
-    return true;
-  }
-  endTime.value = "";
-  return false;
-});
-let startTimeText = computed(() => {
-  if (displayEndTime.value) {
-    return "Heure de début";
-  }
-  return "Heure de rendu";
-});
-
 function addOrEditDeadline() {
   // let moduleName = "";
   // let courseFullName = "";
@@ -201,7 +188,6 @@ function addOrEditDeadline() {
 }
 
 function addTask(data) {
-  console.log(deadlines.value);
   const { results: newDeadLineId } = usePost({
     data: data,
     url: "/api/deadlines/add",
@@ -234,42 +220,25 @@ function addTask(data) {
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-block">
-          <div class="modal-default-button closeButton" @click="$emit('close')"></div>
-
+        <div class="modal-container">
           <div class="modal-header">
             <slot name="header"> Ajouter une tâche </slot>
           </div>
           <div class="modal-body">
             <slot name="body">
               <form @submit.prevent="addOrEditDeadline()">
-                <br />
-                <input type="text" v-model="name" id="name" required placeholder="Nom de la tâche" />
-              
-
-                <select id="course" v-model="course">
-                  <!-- <select id="course" v-model="course" :disabled="disabledSelect"> -->
-                  <option
-                    :value="course.courseShortName"
-                    v-for="course in coursesArray"
-                  >
-                    {{ course.courseShortName }}
-                  </option>
-                </select>
-                <br />
-
+                <label for="name">Nom :</label><br />
+                <input type="text" v-model="name" id="name" required />
+                <label for="description">Description :</label><br />
                 <textarea
                   v-model="description"
                   id="description"
                   rows="6"
                   cols="25"
                   required
-                  placeholder="Décris la tâche..."
                 ></textarea>
 
-                <br />
-                <span class="checkmark"></span>
-                <label for="deadline" class="labelRadio">Rendu</label>
+                <label for="type">Type de tâche :</label><br />
                 <input
                   type="radio"
                   id="deadline"
@@ -277,8 +246,7 @@ function addTask(data) {
                   value="rendu"
                   v-model="type"
                 />
-                <span class="checkmark"></span>
-                <label for="exam" class="labelRadio">Examen</label>
+                <label for="deadline">Rendu</label>
                 <input
                   type="radio"
                   id="exam"
@@ -286,7 +254,7 @@ function addTask(data) {
                   value="examen"
                   v-model="type"
                 />
-                
+                <label for="exam">Examen</label>
                 <br />
                 <label for="date">Date</label>
                 <input
@@ -294,11 +262,8 @@ function addTask(data) {
                   name="date"
                   id="date"
                   v-model="date"
-                  value=""
                   required
                 />
-
-                <br />
                 <label for="startTime">{{ startTimeText }}</label>
                 <input
                   type="time"
@@ -316,9 +281,20 @@ function addTask(data) {
                   required
                 />
                 <br />
-                <button class="modal-default-button addButton">
+                <label for="course">Cours :</label><br />
+                <select id="course" v-model="course">
+                  <!-- <select id="course" v-model="course" :disabled="disabledSelect"> -->
+                  <option
+                    :value="course.courseShortName"
+                    v-for="course in coursesArray"
+                  >
+                    {{ course.courseShortName }}
+                  </option>
+                </select>
+                <br />
+                <button class="modal-default-button">
                   <!-- {{ btnText }} -->
-                  Ajouter
+                  {{btnText}}
                 </button>
                 <!-- <button
                   class="modal-default-button"
@@ -331,327 +307,62 @@ function addTask(data) {
             </slot>
           </div>
 
+          <div class="modal-footer">
+            <slot name="footer">
+              default footer
+              <button class="modal-default-button" @click="$emit('close')">
+                Fermer
+              </button>
+            </slot>
+          </div>
         </div>
       </div>
     </div>
   </transition>
 </template>
 
-<style scoped>
-div.modal-mask {
+<style>
+.modal-mask {
   position: fixed;
-  z-index: 9999;
-  bottom: 0;
+  z-index: 9998;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
   transition: opacity 0.3s ease;
-
 }
 
-div.modal-wrapper {
+.modal-wrapper {
   display: table-cell;
-  vertical-align: bottom;
-
-  max-width: 500px;
+  vertical-align: middle;
 }
 
-div.modal-block {
-  max-width: 500px !important;
-
-  margin: auto;
-  padding: 0px 0px 10px 0px;
-
+.modal-container {
+  width: 300px;
+  margin: 0px auto;
+  padding: 20px 30px;
   background-color: #fff;
-
-  border-radius: 25px 25px 0px 0px;
-
+  border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 22px;
+  font-family: Helvetica, Arial, sans-serif;
+  color: black;
 }
 
-div.modal-header {
-
-  display: inline-block;
-
-  width: 100%;
-
-  border-bottom: none;
-
-  padding-left: 0 auto;
-
-  text-align: center;
-
-  font-family: 'Outfit';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 36px;
-
-  color: #0C223F;
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
 }
 
 .modal-body {
-  margin: 0 !important;
-  padding-top: 0;
+  margin: 20px 0;
 }
 
-.modal-body form {
-  width: 250px;
-  margin: auto;
-}
-
-input {
-  border: none;
-  border-bottom: 1px solid #0C223F;
-  width: 100px;
-  margin-bottom: 15px;
-}
-
-input#name {
-  width: 100%;
-}
-
-input#description {
-  width: 250px;
-  border-radius: 50px;
-}
-
-input#course {
-  width: 125px;
-}
-
-input#date {
-  border: none;
+.modal-default-button {
   float: right;
-  margin-bottom: 0;
 }
-
-
-/*
-input#date {
-  height: 36px;
-  width: 36px;
-  border-radius: 50%;
-  background-color: rebeccapurple;
-
-}
-*/
-
-/* Remove arrow input type number */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-input::placeholder {
-  color: #0C223F;
-  opacity: 0.6;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 22px;
-}
-
-select {
-  -webkit-tap-highlight-color: transparent;
-  
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  margin-bottom: 15px;
-
-
-  background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
-  background-size: 25px;
-  background-position: calc(100% + .1rem);
-  background-repeat: no-repeat;
-
-  width: 50%;
-
-  border: none;
-  border-radius: 0%;
-  border-bottom: 1px solid #0C223F;
-
-  color: #0C223F;
-  opacity: 0.6;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 22px;
-
-}
-
-
-textarea {
-  margin-bottom: 15px;
-  background: rgba(12, 34, 63, 0.1);
-  border: 1px solid transparent;
-  border-radius: 6px; 
-  color: #0C223F;
-  padding: 4px;
-  max-width: 250px;
-  max-height: 100px;
-}
-
-input#startTime {
-  float: right;
-  margin-top: 5px;
-  width: 60px;
-
-  padding: 2px;
-
-  border: 2px #77B0C5 solid;
-  border-radius: 34px;
-
-  margin-bottom: 10px;
-}
-
-label[for=startTime] {
-  margin-top: 15px;
-  width: 120px;
-}
-
-input#endTime {
-  float: right;
-  margin-top: 5px;
-  width: 60px;
-
-  padding: 2px;
-
-  border: 2px #77B0C5 solid;
-  border-radius: 34px;
-}
-
-label[for=endTime] {
-  margin-top: 15px;
-  width: 120px;
-}
-
-
-input[type="radio"] {
-  height: 25px;
-  width: 25px;
-
-  appearance: none;
-  background-color: #fff;
-  margin: 0;
-  color: #0C223F;
-  border: 0.15em solid #C8D7F4;
-  border-radius: 50%;
-
-  margin: 0 0px -6px 15px;
-}
-
-input[type="radio"]:first {
-  margin-right: 35px;
-}
-
-input[type="radio"]:nth-of-type(2n) {
-  margin-right: 35px;
-}
-
-input[type="radio"]:checked {
-  border: 2px solid #77B0C5;
-  background-color: #77B0C5;
-  box-shadow:0px 0px 0px 4px #FFF inset;
-}
-
-
-.container input:checked .checkmark {
-  background-color: #2196F3;
-}
-
-/* Create the indicator (the dot/circle - hidden when not checked) */
-.checkmark {
-  width: 12px;
-}
-
-
-label {
-  color: #0C223F;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 22px;
-
-  margin-bottom: 15px;
-}
-
-label.labelRadio {
-  padding-bottom: 2px;
-  margin-bottom: 35px;
-}
-
-
-
-
-.addButton {
-
-  margin: 50px auto 0 auto;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-
-  width: 290px;
-  height: 45px;
-
-  background: #F84E35;
-  border-radius: 40px;
-
-  font-family: 'Outfit';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 25px;
-
-  color: #FFFFFF;
-
-  border: none;
-}
-
-.closeButton {
-
-
-  height: 35px;
-  width: 35px;
-
-  margin: 10px 10px auto auto;
-
-  background-image: url("data:image/svg+xml,%3Csvg width='34' height='36' viewBox='0 0 34 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.3205 25.6075C10.9392 25.6075 10.5579 25.4587 10.2568 25.14C9.67481 24.5237 9.67481 23.5037 10.2568 22.8875L21.6161 10.86C22.1981 10.2437 23.1615 10.2437 23.7435 10.86C24.3255 11.4762 24.3255 12.4962 23.7435 13.1125L12.3842 25.14C12.1032 25.4587 11.7018 25.6075 11.3205 25.6075Z' fill='%230C223F'/%3E%3Cpath d='M22.6798 25.6075C22.2985 25.6075 21.9172 25.4587 21.6161 25.14L10.2568 13.1125C9.67481 12.4962 9.67481 11.4762 10.2568 10.86C10.8388 10.2437 11.8022 10.2437 12.3842 10.86L23.7435 22.8875C24.3255 23.5037 24.3255 24.5237 23.7435 25.14C23.4424 25.4587 23.0611 25.6075 22.6798 25.6075Z' fill='%230C223F'/%3E%3C/svg%3E%0A");
-  background-repeat: no-repeat;
-  
-}
-
-div.modal-footer {
-  border-top: none;
-  width: 100%;
-  
-}
-
 
 /*
  * The following styles are auto-applied to elements with
