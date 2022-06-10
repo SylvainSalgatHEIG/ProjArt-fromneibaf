@@ -294,7 +294,6 @@ function addTask(data) {
                   name="date"
                   id="date"
                   v-model="date"
-                  value=""
                   required
                 />
 
