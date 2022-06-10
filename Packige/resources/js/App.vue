@@ -78,6 +78,12 @@ main {
   padding-bottom: 93px;
 }
 
+.content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 312px;
+}
+
 h1 {
   margin-top: 55px;
   font-family: "outfit", sans-serif;
@@ -140,4 +146,44 @@ h1 {
   margin-left: 82.5%; 
   margin-right: 0;
 }
+
+.card {
+  background-color: #0c223f;
+}
+
+.form-login {
+  width: 312px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  outline: 0;
+  border-width: 0 0 1px;
+  border-color: white;
+  background-color: #0c223f;
+  color: white;
+}
+
+.form-check {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  padding-left: 0px;
+}
+
+.btn-primary {
+  padding: 16px 50px;
+  gap: 10px;
+  position: absolute;
+  width: 330px;
+  bottom: 30px;
+  background: #f84e35;
+  border-radius: 40px;
+}
+
+.password-forgotten{
+  font-size: small;
+  font-weight: 300;
+  opacity:80%;
+  color: white;
+}
+
 </style>
+
