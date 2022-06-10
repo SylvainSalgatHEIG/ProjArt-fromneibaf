@@ -6,7 +6,7 @@ import { apiUserLinks } from "../config/apiUrls.js";
 
 let currentCategory = "";
 const menusCafet = ref(null);
-const { value: theLinks } = useLocalstorage("links", null);
+// const { value: theLinks } = useLocalstorage("links", null);
 
 const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
 fetch(menuCafetUrl, {
@@ -72,9 +72,9 @@ const mainLinks = ref([
 ]);
 
 const links = computed(() => {
-  if (!theLinks.value) {
-    theLinks.value = mainLinks.value;
-  }
+  // if (!theLinks.value) {
+  //   theLinks.value = mainLinks.value;
+  // }
   if (!userLinks.value) return mainLinks.value;
   // let links = mainLinks.value;
   userLinks.value.forEach((link, index, array) => {
@@ -83,11 +83,11 @@ const links = computed(() => {
       category: "Mes liens",
       link: link.link,
     };
-    if (theLinks.value.findIndex((l) => l.name == link.name) === -1) {
-      theLinks.value.unshift(aLink);
+    if (mainLinks.value.findIndex((l) => l.name == link.name) === -1) {
+      mainLinks.value.unshift(aLink);
     }
   });
-  return theLinks.value;
+  return mainLinks.value;
 });
 
 /**

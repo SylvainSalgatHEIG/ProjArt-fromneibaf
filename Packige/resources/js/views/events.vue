@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useFetch } from "../composables/fetch";
-import { useLocalstorage } from "../composables/localstorage";
+// import { useLocalstorage } from "../composables/localstorage";
 import { apiEvents } from "../config/apiUrls.js";
 
 const { data: events } = useFetch(apiEvents);
 const year = ref(new Date().getFullYear());
 
-const { value: theEvents } = useLocalstorage("events", events.value);
+// const { value: theEvents } = useLocalstorage("events", events.value);
 const months = [
   "janvier",
   "février",
@@ -39,18 +39,20 @@ function formatTwoDigits(date) {
 }
 
 const allEvents = computed(() => {
-  if (!theEvents.value) {
-    theEvents.value = events.value;
-    return [];
-  }
-  theEvents.value.forEach((value, index, array) => {
+  if (!events.value) return [];
+  // if (!theEvents.value) {
+  //   theEvents.value = events.value;
+  //   return [];
+  // }
+
+  events.value.forEach((value, index, array) => {
     value.date = getFormattedDate(
       value.day,
       value.month,
       new Date().getFullYear()
     );
   });
-  return theEvents.value;
+  return events.value;
 });
 </script>
 
