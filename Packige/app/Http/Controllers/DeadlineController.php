@@ -118,12 +118,19 @@ class DeadlineController extends Controller
                 'group_id' => $request->groupId,
             ]);
 
-        return $update;
+        return $request->deadlineId;
     }
 
     public function deleteDeadline(Request $request)
     {
+        $deleted = DB::table('deadline_user')
+        ->where('deadline_id', '=', $request->id)
+        ->where('user_id', '=', Auth::id())
+        ->delete();
+
         $deleted = DB::table('deadlines')->where('id', '=', $request->id)->delete();
+
+        return $request->id;
     }
 
     public function checkDeadline($deadlineId, $action)

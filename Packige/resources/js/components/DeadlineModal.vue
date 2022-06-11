@@ -18,7 +18,7 @@ let type = ref("rendu");
 let date = ref("");
 let startTime = ref("");
 let endTime = ref("");
-let course = ref("branche");
+let course = ref("");
 let endTimeComputed = computed(() => {
   if (!displayEndTime.value) {
     return startTime.value;
@@ -59,8 +59,8 @@ watchEffect(() => {
     if (!pass) {
       name.value = "";
       description.value = "";
+	  course.value = "";
       type.value = "rendu";
-      course.value = "branche";
       date.value = "";
       startTime.value = "";
       endTime.value = "";
@@ -70,62 +70,18 @@ watchEffect(() => {
   }
 });
 
-// function deleteBtnClicked() {
-//   deleBtnPressed.value = true;
-// }
-
-// function editGrade(data, courseFullName, moduleName) {
-//   usePost({ url: "/api/grades/edit", data: data });
-
-//   for (const gradeData of grades.value[moduleName][courseFullName].grades) {
-//     if (gradeData.id === data.id) {
-//       gradeData.grade = grade.value;
-//       gradeData.coefficient = coefficient.value;
-//     }
-//   }
-// }
-
-// function addGrade(data, courseFullName, moduleName) {
-//   usePost({ url: "/api/grades/add", data: data });
-
-//   // Faire un test si la note à été ajoutée à la base
-//   grades.value[moduleName][courseFullName].grades.push({
-//     grade: grade.value,
-//     coefficient: coefficient.value,
-//   });
-// }
-
-// function deleteGrade(data, courseFullName, moduleName) {
-//   // Supprimer la note de la base
-//   usePost({ url: "/api/grades/delete", data: data });
-//   // Supprimer la note du tableau
-//   for(let i = 0; i < grades.value[moduleName][courseFullName].grades.length; i++){
-//     if(grades.value[moduleName][courseFullName].grades[i].id == data.id){
-//       grades.value[moduleName][courseFullName].grades.splice(i, 1)
-//     }
-//   }
-
-//   deleBtnPressed.value = false;
-// }
+function deleteBtnClicked() {
+  deleBtnPressed.value = true;
+}
 
 function addOrEditDeadline(id = props.deadlineId) {
-  // let moduleName = "";
-  // let courseFullName = "";
-
-  // for (const courseData of coursesArray.value) {
-  //   if (courseData.courseShortName === course.value) {
-  //     courseFullName = courseData.courseName;
-  //     moduleName = courseData.moduleName;
-  //   }
-  // }
-  // if (id && deleBtnPressed.value) {
-  //   console.log("delete");
-  //   const data = {
-  //     id: id,
-  //   };
-  //   deleteGrade(data, courseFullName, moduleName);
-  // } else
-  if (id) {
+  if (id && deleBtnPressed.value) {
+    console.log("delete");
+    const data = {
+      id: id,
+    };
+    deleteDeadline(data);
+  } else if (id) {
     console.log("edit");
     const data = {
       name: name.value,
@@ -152,7 +108,6 @@ function addOrEditDeadline(id = props.deadlineId) {
     addDeadline(data);
   }
   emit("close");
-  // console.log(props.groupId);
 }
 
 function addDeadline(data) {
@@ -177,6 +132,9 @@ function addDeadline(data) {
         ],
         group_id: props.groupId,
         id: newDeadLineId.value,
+		course: [
+			{shortname : course.value}
+		]
       });
       added = true;
     }
@@ -189,12 +147,44 @@ function editDeadline(data) {
     url: "/api/deadlines/edit",
   });
 
-  // for (const gradeData of grades.value[moduleName][courseFullName].grades) {
-  //   if (gradeData.id === data.id) {
-  //     gradeData.grade = grade.value;
-  //     gradeData.coefficient = coefficient.value;
-  //   }
-  // }
+  let edited = false;
+  watchEffect(() => {
+    if (editedDeadLineId.value != null && !edited) {
+      for (const deadline of deadlines.value) {
+        if (deadline.id == editedDeadLineId.value) {
+          deadline.name = data.name;
+          deadline.description = data.description;
+          deadline.start_date = data.date + " " + data.startTime;
+          deadline.end_date = data.date + " " + data.endTime;
+        }
+      }
+
+      edited = true;
+    }
+  });
+}
+
+function deleteDeadline(data, courseFullName, moduleName) {
+  // Supprimer la note de la base
+  const { results: deletedDeadLineId } = usePost({
+    data: data,
+    url: "/api/deadlines/delete",
+  });
+  // Supprimer la note du tableau
+  let deleted = false;
+  watchEffect(() => {
+    if (deletedDeadLineId.value != null && !deleted) {
+		console.log(deadlines.value.length)
+		for(let i = 0; i < deadlines.value.length; i ++){
+			if(deadlines.value[i].id == deletedDeadLineId.value){
+				deadlines.value.splice(i, 1);
+			}
+		}
+      deleted = true;
+    }
+  })
+
+  deleBtnPressed.value = false;
 }
 </script>
 
@@ -223,8 +213,8 @@ function editDeadline(data) {
                 />
                 <br />
                 <!-- <select id="course" v-model="course"> -->
-                <select id="course" v-model="course" :disabled="disabledSelect">
-                  <option value="branche" disabled selected>Branche</option>
+                <select id="course" v-model="course" :disabled="disabledSelect" required>
+                  <option value="" disabled selected>Branche</option>
                   <option
                     :value="course.courseShortName"
                     v-for="course in coursesArray"
@@ -289,16 +279,15 @@ function editDeadline(data) {
                 <br />
 
                 <button class="modal-default-button addButton">
-                  <!-- {{ btnText }} -->
                   {{ btnText }}
                 </button>
-                <!-- <button
+                <button
                   class="modal-default-button"
                   v-show="disabledSelect"
                   @click="deleteBtnClicked"
                 >
                   del
-                </button> -->
+                </button>
               </form>
             </slot>
           </div>

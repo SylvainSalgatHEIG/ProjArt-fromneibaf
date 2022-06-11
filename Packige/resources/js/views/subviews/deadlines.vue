@@ -20,8 +20,9 @@ const todayDate = new Date(Date.now()).toISOString().split("T")[0];
 
 
 const dealinesArray = computed(() => {
-
+    console.log(deadlines.value);
     if (!deadlines.value) return [];
+    if (deadlines.value.length == 0) return [];
 
     let array = deadlines.value;
     let currentWeek = getWeekNumber(array[0].start_date);
