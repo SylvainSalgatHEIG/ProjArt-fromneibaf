@@ -13,33 +13,39 @@ const props = defineProps({
 let btnText = ref("Ajouter");
 let coefficient = ref("");
 let grade = ref("");
-let course = ref("");
+let courseShortName = ref('');
+let courseId = ref("");
 let disabledSelect = ref(false);
 let deleBtnPressed = ref(false);
 
 watchEffect(() => {
   if (grades.value != null && coursesArray.value != null) {
-    console.log(coursesArray);
+    // console.log(coursesArray);
     let pass = false;
     for (const courseData of coursesArray.value) {
-      for (const gradeData of grades.value[courseData.moduleName][
-        courseData.courseShortName
-      ].grades) {
+      // console.log(courseData);
+      // console.log(grades.value[courseData.moduleName][courseData.courseShortName].grades);
+      for (const gradeData of grades.value[courseData.moduleName][courseData.courseShortName].grades) {
+        // console.log(props.id + "props")
+
+        // WHEN EDITING. props.id is the gradeId. Not null when editing a grade.
         if (gradeData.id === props.id) {
-          console.log(gradeData);
+          // console.log(gradeData);
           coefficient.value = gradeData.coefficient;
           grade.value = gradeData.grade;
-          course.value = courseData.courseShortName;
+          courseShortName.value = courseData.courseShortName;
+          courseId.value = courseData.courseId;
           btnText.value = "Modifier";
           disabledSelect.value = true;
           pass = true;
         }
       }
     }
+    // WHEN ADDING A GRADE. pass is set to true if it's a grade editing.
     if (!pass) {
       coefficient.value = "";
       grade.value = "";
-      course.value = "";
+      courseId.value = "";
       disabledSelect.value = false;
       btnText.value = "Ajouter";
     }
@@ -55,10 +61,14 @@ function addOrEditGrade(id = props.id) {
   let courseShortname = "";
 
   for (const courseData of coursesArray.value) {
-    if (courseData.courseShortName === course.value) {
+    // console.log(courseId.value + "vvv");
+    if (courseData.courseId === courseId.value) {
       moduleName = courseData.moduleName;
+      courseShortname = courseData.courseShortName
     }
   }
+  
+  // WHEN DELETING A GRADE.
   if (id && deleBtnPressed.value) {
     console.log("delete");
     const data = {
@@ -70,7 +80,7 @@ function addOrEditGrade(id = props.id) {
     const data = {
       grade: grade.value,
       coefficient: coefficient.value,
-      course: course.value,
+      // course: courseId.value,
       id: id,
     };
     editGrade(data, courseShortname, moduleName);
@@ -79,7 +89,7 @@ function addOrEditGrade(id = props.id) {
     const data = {
       grade: grade.value,
       coefficient: coefficient.value,
-      course: course.value,
+      course: courseId.value,
     };
     addGrade(data, courseShortname, moduleName);
   }
@@ -89,7 +99,7 @@ function addOrEditGrade(id = props.id) {
 function editGrade(data, courseShortname, moduleName) {
   usePost({ url: "/api/grades/edit", data: data });
 
-  for (const gradeData of grades.value[moduleName][course.value].grades) {
+  for (const gradeData of grades.value[moduleName][courseShortname].grades) {
     if (gradeData.id === data.id) {
       gradeData.grade = grade.value;
       gradeData.coefficient = coefficient.value;
@@ -105,15 +115,15 @@ function addGrade(data, courseShortname, moduleName) {
   let added = false;
   watchEffect(() => {
     if (newGradeId.value != null && !added) {
-      console.log(newGradeId.value);
-      grades.value[moduleName][course.value].grades.push({
+      // console.log(courseShortname)
+      grades.value[moduleName][courseShortname].grades.push({
         id: newGradeId.value,
         grade: grade.value,
         coefficient: coefficient.value,
       });
       added = true;
     }
-    console.log(grades.value);
+    // console.log(grades.value);
   });
   // Faire un test si la note à été ajoutée à la base
 }
@@ -124,11 +134,11 @@ function deleteGrade(data, courseShortname, moduleName) {
   // Supprimer la note du tableau
   for (
     let i = 0;
-    i < grades.value[moduleName][course.value].grades.length;
+    i < grades.value[moduleName][courseShortname].grades.length;
     i++
   ) {
-    if (grades.value[moduleName][course.value].grades[i].id == data.id) {
-      grades.value[moduleName][course.value].grades.splice(i, 1);
+    if (grades.value[moduleName][courseShortname].grades[i].id == data.id) {
+      grades.value[moduleName][courseShortname].grades.splice(i, 1);
     }
   }
 
@@ -157,6 +167,8 @@ function deleteGrade(data, courseShortname, moduleName) {
                   v-model="grade"
                   id="grade"
                   step="0.01"
+                  min="1"
+                  max="6"
                   required
                   placeholder="Note obtenue"
                 />
@@ -178,7 +190,7 @@ function deleteGrade(data, courseShortname, moduleName) {
                 >
                   <option value="" disabled selected>Branche</option>
                   <option
-                    :value="course.courseShortName"
+                    :value="course.courseId"
                     v-for="course in coursesArray"
                   >
                     {{ course.courseShortName }}
@@ -198,7 +210,7 @@ function deleteGrade(data, courseShortname, moduleName) {
                   v-show="disabledSelect"
                   @click="deleteBtnClicked"
                 >
-                  del
+                  Supprimer
                 </button>
               </form>
             </slot>

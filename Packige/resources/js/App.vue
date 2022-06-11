@@ -176,6 +176,18 @@ h1 {
   bottom: 30px;
   background: #f84e35;
   border-radius: 40px;
+
+  margin: 50px auto 0 auto;
+
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+
+  color: #FFFFFF;
+
+  border: none;
 }
 
 .password-forgotten{
@@ -183,6 +195,20 @@ h1 {
   font-weight: 300;
   opacity:80%;
   color: white;
+}
+
+
+
+.nav-link{
+  color: white !important;
+}
+
+.login-title{
+  margin-top: 10px;
+}
+
+.back-button {
+  display:inline-block;
 }
 
 </style>
