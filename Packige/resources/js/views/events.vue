@@ -60,7 +60,7 @@ const allEvents = computed(() => {
   <h1>Actus</h1>
   <div id="events-cards">
     <div v-for="event in allEvents" class="event-card">
-      <a :href="event.link">
+      <a :href="event.link" target="_blank">
         <p><img class="img" :src="event.imageLink" :alt="event.name" /></p>
 
         <!-- <span class="date">{{ event.date }}</span> -->

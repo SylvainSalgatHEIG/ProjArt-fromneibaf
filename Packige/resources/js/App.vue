@@ -143,7 +143,7 @@ h1 {
   width: 44px;
   background-position: calc(50%);
   position: absolute;
-  margin-left: 82.5%; 
+  margin-left: 82.5%;
   margin-right: 0;
 }
 
@@ -179,37 +179,80 @@ h1 {
 
   margin: 50px auto 0 auto;
 
-  font-family: 'Outfit';
+  font-family: "Outfit";
   font-style: normal;
   font-weight: 600;
   font-size: 20px;
   line-height: 25px;
 
-  color: #FFFFFF;
+  color: #ffffff;
 
   border: none;
 }
 
-.password-forgotten{
+.password-forgotten {
   font-size: small;
   font-weight: 300;
-  opacity:80%;
+  opacity: 80%;
   color: white;
 }
 
-
-
-.nav-link{
+.nav-link {
   color: white !important;
 }
 
-.login-title{
+.login-title {
   margin-top: 10px;
 }
 
-.back-button {
-  display:inline-block;
+
+.back{
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  padding: 0px 10px 10px 40px;
 }
 
+.back div{
+  top: 10px; 
+  left: 30px;
+  content: '';
+  width: 30px;
+  height: 30px;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(1);
+  background-color: #E9E7F2;
+  transition: 
+    transform 400ms 0s cubic-bezier(0.2, 0, 0, 1.6);
+}
+
+.back div::after{
+  top: 0;
+  left: 0;
+  content: '';
+  width: 60px; 
+  height: 30px;
+  position: absolute;
+  background-position: 0 0;
+  background-image: url('https://s3-eu-west-1.amazonaws.com/thomascullen-codepen/back.svg');
+  transition: 
+    transform 400ms 0s cubic-bezier(0.2, 0, 0, 1);
+}
+
+
+.back:hover div{
+  transform: scale(1.1);
+  background-color: white;
+  box-shadow:
+    0 2px 10px 0 rgba(185,182,198,0.00),
+    0 1px 3px 0 rgba(175,172,189,0.25);
+}
+
+.back:hover div::after{
+  transform: translateX(-30px);
+}
 </style>
 
