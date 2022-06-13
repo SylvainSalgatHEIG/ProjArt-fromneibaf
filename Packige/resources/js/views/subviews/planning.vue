@@ -240,6 +240,12 @@ const spacingMarge = 7;
 function margeEvent(time) 
  {
 
+  if (typeof time == 'undefined') {
+    return 0;
+  }
+
+  time = time.split('-')[0];
+
   const startDay = new Date("November 22 1963 08:30");
 
   const paramTime = new Date("November 22 1963 " + time);
@@ -253,6 +259,13 @@ function margeEvent(time)
 
 function courseDurationMarge(startTime, endTime) {
 
+  if (typeof startTime == 'undefined' || typeof endTime == 'undefined') {
+    return 0;
+  }
+
+  startTime = startTime.split('-')[0];
+  endTime = endTime.split('-')[1]
+
   startTime = new Date("November 22 1963 " + startTime);
   endTime = new Date("November 22 1963 " + endTime);
 
@@ -263,6 +276,11 @@ function courseDurationMarge(startTime, endTime) {
 }
 
 function formatDateShort(date) {
+
+  if (date == 'Invalid Date') {
+    return 0;
+  }
+
   let day = date.toLocaleDateString("en-US").split("/")[1].padStart(2, "0");
   let month = date.toLocaleDateString("en-US").split("/")[0].padStart(2, "0");
   let year = date.toLocaleDateString("en-US").split("/")[2].substr(-2);
@@ -378,7 +396,7 @@ let selectedWeek = ref(24);
 
       <div id="planningView">
         <div v-for="(course) in schedulesShowable[selectedWeek].daysCourse" class="column row" id="rowDates">
-          <div :style="{ 'margin-top': margeEvent(courseOfDay.hours.split('-')[0]) + 'px', 'height': courseDurationMarge(courseOfDay.hours.split('-')[0], courseOfDay.hours.split('-')[1]) + 'px'}" v-for="(courseOfDay, index) in course.courses" class="courseCalendar">
+          <div :style="{ 'margin-top': margeEvent(courseOfDay.hours) + 'px', 'height': courseDurationMarge(courseOfDay.hours, courseOfDay.hours) + 'px'}" v-for="(courseOfDay, index) in course.courses" class="courseCalendar">
             <p class="courseNameVertical">{{courseOfDay.course}} <b>{{courseOfDay.room}}</b></p>
           </div>
         </div>
