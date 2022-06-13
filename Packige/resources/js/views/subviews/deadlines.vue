@@ -214,6 +214,8 @@ function addDeadline() {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 24px;
+
+    cursor: pointer;
   }
 
 .inputRow {
@@ -372,6 +374,8 @@ h2:not(:first-of-type) {
 
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.5);
+
+  cursor: pointer;
 }
 
 .checkbox.checked {
@@ -396,6 +400,12 @@ h2:not(:first-of-type) {
   margin: auto 0 0 15px;
 
   height: 35px;
+  
+}
+
+.name, .time {
+  cursor: pointer;
+  
 }
 
 .check {
