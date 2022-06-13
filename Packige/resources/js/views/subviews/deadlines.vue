@@ -156,9 +156,9 @@ function addDeadline() {
         
 
             <div v-for="(deadline, index) of week.deadlines">
-                <div v-if="deadline.group_id == groupSelected" class="deadline" @click="editDeadline(deadline)">
+                <div v-if="deadline.group_id == groupSelected" class="deadline">
                     
-                    <div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
+                    <div @click="editDeadline(deadline)" v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
                         {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
                         {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
                     </div>
@@ -166,15 +166,15 @@ function addDeadline() {
                     <div v-else class="date hidden"></div>
 
                     <div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
-                        <div class="name"> {{deadline.name}} </div>
+                        <div @click="editDeadline(deadline)" class="name"> {{deadline.name}} </div>
 
                         <!-- Same date = 1 hour -->
-                        <div class="time" v-if="deadline.start_date == deadline.end_date">
+                        <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date == deadline.end_date">
                             {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
                         </div>
 
                         <!-- Different dates = Range of hours -->
-                        <div class="time" v-if="deadline.start_date != deadline.end_date">
+                        <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date != deadline.end_date">
                             {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
                             {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
                         </div>
@@ -225,6 +225,7 @@ function addDeadline() {
 .deadline .name {
   display: inline-block;
   width: 90px;
+  height: 35px;
 }
 
 .inputRow {
@@ -392,6 +393,8 @@ h2:not(:first-of-type) {
 .time {
   display: inline;
   margin: auto 0 0 15px;
+
+  height: 35px;
 }
 
 .check {
