@@ -358,12 +358,13 @@ let selectedWeek = ref(24);
   
 
 
-  <div v-if="schedulesShowable[selectedWeek] && scheduleType == 'calendar'" id="weekSelector">
+  <div v-if="scheduleType == 'calendar'" id="weekSelector">
       
       <div id="weekIndication">Semaine {{selectedWeek}}</div>
       <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
 
-      <div id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div>
+      <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div>
+      <div v-else id="weekRange"></div>
 
       <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
     </div>
@@ -404,16 +405,28 @@ let selectedWeek = ref(24);
       </div>
 
     </div>
+
+    <div v-else class="noCourseMessage">Aucun cours</div>
   </div>
 
 </template>
 
 <style scoped>
 
+.noCourseMessage {
+  margin-top: 20px;
+
+  width: 100%;
+  height: 100%;
+
+  text-align: center;
+}
+
 #weekRange {
   display: inline-block;
 
   height: 30px;
+  min-width: 127px;
 
   vertical-align: middle;
 
@@ -430,6 +443,8 @@ let selectedWeek = ref(24);
 #weekIndication {
   width: 190px;
   text-align: center;
+  font-weight: 600;
+font-size: 16px;
 }
 
 #previousButton {
