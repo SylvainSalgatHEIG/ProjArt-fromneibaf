@@ -160,7 +160,7 @@ const menusFormatted = computed(() => {
       <h2 v-if="link.category != currentCategory">
         {{ (currentCategory = link.category) }}
       </h2>
-      <a :href="link.link">{{ link.name }}</a>
+      <a :href="link.link" target="_blank">{{ link.name }}</a>
     </div>
   </div>
 
