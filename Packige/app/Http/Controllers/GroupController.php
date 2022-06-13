@@ -10,12 +10,20 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
-    public function getGroups() {
+    public function getGroups()
+    {
+        if (Auth::id() == null) {
+            return [];
+        }
         $groups = Group::with('promotion')->get();
         return $groups;
     }
 
-    public function getUserGroups() {
+    public function getUserGroups()
+    {
+        if (Auth::id() == null) {
+            return [];
+        }
         $userGroups = [];
 
         $userGroupsIds = DB::table('groups')
@@ -25,9 +33,9 @@ class GroupController extends Controller
             ->select('groups.id')
             ->get();
         foreach ($userGroupsIds as $groupId) {
-            array_push($userGroups, Group::with('promotion')->where('groups.id',$groupId->id)->get());
+            array_push($userGroups, Group::with('promotion')->where('groups.id', $groupId->id)->get());
         }
-        
+
         return $userGroups;
     }
 }

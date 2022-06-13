@@ -16,6 +16,9 @@ class DeadlineController extends Controller
 
     public function getDeadlines()
     {
+        if (Auth::id() == null) {
+            return [];
+        }
         $deadlineArray = [];
 
         $userId = Auth::id();
@@ -124,9 +127,9 @@ class DeadlineController extends Controller
     public function deleteDeadline(Request $request)
     {
         $deleted = DB::table('deadline_user')
-        ->where('deadline_id', '=', $request->id)
-        ->where('user_id', '=', Auth::id())
-        ->delete();
+            ->where('deadline_id', '=', $request->id)
+            ->where('user_id', '=', Auth::id())
+            ->delete();
 
         $deleted = DB::table('deadlines')->where('id', '=', $request->id)->delete();
 

@@ -14,7 +14,9 @@ class GradeController extends Controller
 
     public function getGrades()
     {
-
+        if (Auth::id() == null) {
+            return [];
+        }
         // get group user with promotion and group
         $groupsUsers = DB::table('group_user')
             ->join('groups', 'groups.id', 'group_user.group_id')
@@ -145,7 +147,7 @@ class GradeController extends Controller
             ->update(['grade' => $request->grade, 'coefficient' => $request->coefficient]);
         if ($update) {
             return 'success';
-        }else {
+        } else {
             return 'erreur';
         }
     }

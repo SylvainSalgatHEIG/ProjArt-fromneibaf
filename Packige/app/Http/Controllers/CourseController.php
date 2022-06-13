@@ -13,7 +13,9 @@ class CourseController extends Controller
 {
     public function getCourses()
     {
-
+        if(Auth::id() == null){
+            return [];
+        }
         // get group user with promotion and group
         $groupsUsers = DB::table('group_user')
         ->join('groups', 'groups.id', 'group_user.group_id')
@@ -45,8 +47,6 @@ class CourseController extends Controller
         }
         // dd($courses);
         
-        
-
         return $courses;
     }
 

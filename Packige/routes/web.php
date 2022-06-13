@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +33,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::resource('grades', GradeController::class);
-
-Route::resource('deadlines', DeadlineController::class);
 
 Route::get('/api/courses', [CourseController::class,'getCourses']);
 
@@ -59,9 +56,12 @@ Route::post('/api/register/validator', [RegisterController::class, 'validator'])
 
 Route::get('/api/events', [EventController::class,'getEvents']);
 
+Route::get('/api/user/get', [UserController::class,'getUser']);
 Route::get('/api/user/links', [UserController::class,'getLinks']);
 Route::post('/api/user/link/add', [UserController::class,'addLink']);
 Route::post('/api/user/link/edit', [UserController::class,'editLink']);
 Route::post('/api/user/link/delete', [UserController::class,'deleteLink']);
 
 Route::get('/api/connexion/status', [ConnexionController::class, 'getConnexionStatus']);
+
+Route::get('/logout', [LogoutController::class, 'perform']);

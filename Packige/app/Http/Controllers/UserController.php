@@ -14,12 +14,37 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
+    public function getUser()
     {
-        $this->middleware('auth');
+        if (Auth::id() == null) {
+            return [];
+        }
+        $query = DB::table('users')
+            ->join('group_user', 'group_user.user_id', 'users.id')
+            ->join('groups', 'group_user.group_id', 'groups.id')
+            ->join('promotions', 'promotions.id', 'groups.promotion_id')
+            ->where('users.id', '=', Auth::id())
+            ->select('users.lastname', 'users.firstname', 'users.email', 'promotions.name as promotionName', 'groups.name as groupName')
+            ->get();
+
+        $userInfos['fullname'] = $query[0]->firstname . ' ' . $query[0]->lastname;
+        $userInfos['email'] = $query[0]->email;
+        foreach ($query as $key => $group) {
+            $userInfos['groups'][$key] = $group->promotionName . '-' . $group->groupName;
+        }
+        return $userInfos;
     }
 
-    public function getLinks() {   
+    public function getLinks()
+    {
+        if (Auth::id() == null) {
+            return [];
+        }
         $userId = Auth::id();
         $userLinks = DB::table('links')
             ->where('user_id', '=', Auth::id())
@@ -27,7 +52,8 @@ class UserController extends Controller
         return $userLinks;
     }
 
-    public function addLink(Request $request) {
+    public function addLink(Request $request)
+    {
         // A REVOIR
         $link = new Link;
 
@@ -48,7 +74,8 @@ class UserController extends Controller
             ->update(['link' => $request->link, 'name' => $request->name]);
     }
 
-    public function deleteLink(Request $request){
+    public function deleteLink(Request $request)
+    {
         $deleted = DB::table('links')->where('id', '=', $request->id)->delete();
     }
 }
