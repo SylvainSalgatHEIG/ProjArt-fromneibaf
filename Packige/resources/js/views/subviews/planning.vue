@@ -232,7 +232,41 @@ const schedulesShowable = computed(() => {
   return myArray;
 });
 
+// PAUL
+console.log(schedulesShowable);
+
+const spacingMarge = 7;
+
+function margeEvent(time) 
+ {
+
+  const startDay = new Date("November 22 1963 08:30");
+
+  const paramTime = new Date("November 22 1963 " + time);
+
+  let diff = (paramTime.getTime() - startDay.getTime()) / 1000;
+  diff /= 60;
+
+  return Math.abs(Math.round(diff)) * 0.88 + 2 * spacingMarge;
+  
+ }
+
+function courseDurationMarge(startTime, endTime) {
+
+  startTime = new Date("November 22 1963 " + startTime);
+  endTime = new Date("November 22 1963 " + endTime);
+
+  let diff = (endTime.getTime() - startTime.getTime()) / 1000;
+  diff /= 60;
+
+  return Math.abs(Math.round(diff)) * 0.88 - spacingMarge;
+}
+
+// PAUL
+
 const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
+
+let selectedWeek = ref(24);
 
 </script>
 
@@ -272,9 +306,240 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
           </div>
       </div>
   </div>
+
+  
+
+  <h1>Calendar</h1>
+  <div id="calendar">
+    <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
+    <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
+    Semaine {{selectedWeek}}
+
+
+    <div v-if="schedulesShowable[selectedWeek]" id="scheduleView">
+
+      <div id="timeArea">
+        <div id="columnTime">
+          <div class="rowTime"></div>
+          <div class="rowTime">08:30<br/>09:15</div>
+          <div class="rowTime">09:15<br/>10:00</div>
+          <div class="rowTime">10:00<br/>10:45</div>
+          <div class="rowTime">10:45<br/>11:30</div>
+          <div class="rowTime">11:30<br/>12:15</div>
+          <div class="rowTime">12:15<br/>13:00</div>
+          <div class="rowTime">13:00<br/>13:45</div>
+          <div class="rowTime">13:45<br/>14:30</div>
+          <div class="rowTime">14:30<br/>15:15</div>
+          <div class="rowTime">15:15<br/>16:00</div>
+          <div class="rowTime">16:00<br/>16:45</div>
+        </div>
+
+      </div>
+
+      <div v-for="(course) in schedulesShowable[selectedWeek].daysCourse" class="column row columnDate rowDate" id="rowDates" v-bind:class="formatDate(new Date(course.courses[0].date)) == formatDate(new Date(todayDate)) ? 'currentDay':''">{{ course.day }}<br />{{ course.dayTwoDigits }}</div>
+
+      <div id="planningView">
+        <div v-for="(course) in schedulesShowable[selectedWeek].daysCourse" class="column row" id="rowDates">
+          <div :style="{ 'margin-top': margeEvent(courseOfDay.hours.split('-')[0]) + 'px', 'height': courseDurationMarge(courseOfDay.hours.split('-')[0], courseOfDay.hours.split('-')[1]) + 'px'}" v-for="(courseOfDay, index) in course.courses" class="courseCalendar">
+            <p class="courseNameVertical">{{courseOfDay.course}} <b>{{courseOfDay.room}}</b></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- <pre>{{schedulesShowable[24]}}</pre> -->
 </template>
 
 <style scoped>
+
+#previousButton {
+  height: 30px;
+  width: 30px;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+
+  display: inline-block;
+}
+
+#nextButton {
+  height: 30px;
+  width: 30px;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+
+  display: inline-block;
+}
+
+.rowTime {
+
+  display: inline-block;
+
+  position: relative;
+
+  width: 330px;
+  height: 40px;
+
+
+  margin: 0;
+
+  font-size: 12px;
+  text-align: left;
+  padding-left: 6px;
+
+  border-color: rgb(256, 256, 256, 0.6);
+  border-style: solid;
+  border-width: 0 0 1px 0;
+
+  color: rgb(256, 256, 256, 0.6);
+
+}
+
+.rowTime:before {
+   content: '';
+   display: block;
+   position: absolute;
+   background-color: #ffffff;
+   border-radius: 666px;
+   width: 3px;
+   height: 3px;
+   box-shadow: 0 0px 0 0 #fff
+}
+.rowTime:before {
+   left: -1px;
+   top: -2.5px;
+}
+
+
+.rowTime:last-of-type {
+  border: none;
+}
+
+.rowTime:first-of-type {
+  margin-bottom: -7px;
+}
+
+.rowTime:first-of-type:before, .orange:after {
+   content: '';
+   display: none;
+   position: absolute;
+   background-color: #ffffff;
+   border-radius: 666px;
+   width: 3px;
+   height: 3px;
+   box-shadow: 0 0px 0 0 #fff
+}
+
+#timeArea {
+
+  position: absolute;
+
+  width: 330px;
+  height: 480px;
+
+  right: 10px;
+
+}
+
+#columnTime {
+
+  position: absolute;
+
+  width: 50px;
+  height: 480px;
+
+  right: 280px;
+}
+
+#calendar {
+  margin: 0 16% 0 16%;
+
+  width: 300px;
+  padding: 10px;
+  position: relative;
+}
+
+@media (min-width: 415px) {
+  #calendar {
+    margin: 0 auto;
+  }
+}
+
+#scheduleView {
+
+  width: 280px;
+  height: 480px;
+}
+
+
+.courseNameVertical {
+
+  position: absolute;
+    top: 50%;
+    left: 50%;
+  
+  
+  transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+
+  white-space: nowrap;
+  word-spacing: 10px;
+
+  color: #0C223F;
+}
+
+.courseCalendar {
+  position: absolute;
+
+  width: 40px;
+  height: 120px;
+
+  margin: auto 8px;
+  
+  background-color: #F2F7FF;
+  
+
+  border-radius: 3px;
+}
+
+.column {
+  display:inline-flex;
+  width: 56px;
+  margin: 0;
+  text-align: center;
+}
+
+.row {
+  height: 40px;
+}
+
+.columnDate {
+  text-align: center;
+  line-height: 16px;
+  padding: 2px;
+
+
+  margin: auto 13px;
+  width: 30px;
+  height: 33px;
+
+  /* background-color: #F84E35; */
+
+  border-radius: 5px;
+}
+
+.columnDate:nth-of-type(5) {
+  padding-left: 5px;
+}
+
+.rowDate {
+  text-align: center;
+}
+
+
+
+
 .currentDay {
   background-color: #F84E35 !important;
 }
