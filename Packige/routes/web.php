@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DeadlineController;
 use App\Http\Controllers\GradeController;
 use Illuminate\Support\Facades\Route;
@@ -8,6 +9,7 @@ use App\Http\Controllers\GroupController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TestApi;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;
 
@@ -62,4 +64,4 @@ Route::post('/api/user/link/add', [UserController::class,'addLink']);
 Route::post('/api/user/link/edit', [UserController::class,'editLink']);
 Route::post('/api/user/link/delete', [UserController::class,'deleteLink']);
 
-
+Route::get('/api/connexion/status', [ConnexionController::class, 'getConnexionStatus']);
