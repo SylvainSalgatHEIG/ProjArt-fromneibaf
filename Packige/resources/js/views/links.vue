@@ -32,42 +32,42 @@ const mainLinks = ref([
   {
     name: "Attestation d'études",
     category: "Semestre",
-    link: "https://www.heig-vd.ch",
+    link: "https://intra.heig-vd.ch/academique/attestation-etude/Pages/default.aspx",
   },
   {
     name: "Calendrier Académique",
     category: "Semestre",
-    link: "https://www.heig-vd.ch",
+    link: "https://intra.heig-vd.ch/academique/calendriers-academiques/Pages/calendriers-academiques.aspx",
   },
   {
     name: "Justificatif d'absences",
     category: "Absences",
-    link: "https://www.heig-vd.ch",
+    link: "https://intra.heig-vd.ch/academique/formulaire-absence/Pages/default.aspx",
   },
   {
     name: "Webmail",
     category: "Absences",
-    link: "https://www.heig-vd.ch",
+    link: "https://webmail.heig-vd.ch/owa/auth/logon.aspx?replaceCurrent=1&reason=3&url=https%3a%2f%2fwebmail.heig-vd.ch%2fowa%2f",
   },
   {
     name: "Bulletin",
     category: "Notes",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/notes/bulletin.php?id=17484&format=pdf&timestamp=1655105738532",
   },
   {
     name: "Contrôles continus",
     category: "Notes",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/controlescontinus/consultation.php?idst=17484",
   },
   {
     name: "Enseignement à choix",
     category: "Enseignement",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/choixOption/",
   },
   {
     name: "Eval. des enseignants",
     category: "Enseignement",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/evaluationenseignements/index.php",
   },
 ]);
 
