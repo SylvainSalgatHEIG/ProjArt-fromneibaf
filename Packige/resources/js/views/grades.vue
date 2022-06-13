@@ -21,23 +21,51 @@ let showModal = ref(false);
 
 const averages = computed(() => {
   if (!grades.value) return [];
-  console.log(grades.value);
-  // grades.value.foreach((moduleData, moduleName) => {
-  //   console.log(moduleData);
-  // })
-  // grades.value.foreach((grade) => {
-  //   return {
-  //     ...grade,
-  //     edit: () => editGrade(grade),
-  //   };
-  // });
-  return [];
+  let allAverages = [];
+  for (const moduleName in grades.value) {
+    // console.log(grades.value[moduleName]);
+    // format: { "moduleName": "moduleAverage": 3.4, 0: ["gradeName1": 2.3, "gradeName2": 3.4] }
+      let moduleAverageGradesTotal = 0;
+      let moduleAverageDivision = 0;
+      let result = 0;
+      let gradeAverage = [];
+    for (const grade in grades.value[moduleName]) {
+      if (grade !== "average" && grade !== "id") {
+        let resultGrade = 0;
+        allAverages[moduleName] = [];
+        let gradesAverageTotal = 0;
+        let gradesAverageDivision = 0;
+        if (grades.value[moduleName][grade].grades.length > 0){
+          for (const theGradeData of grades.value[moduleName][grade].grades) {
+            gradesAverageTotal += theGradeData.grade * theGradeData.coefficient;
+            gradesAverageDivision += theGradeData.coefficient;
+          }
+          resultGrade = Math.round((gradesAverageTotal / gradesAverageDivision) * 10) / 10;
+          moduleAverageGradesTotal += resultGrade * grades.value[moduleName][grade].weighting;
+          moduleAverageDivision += grades.value[moduleName][grade].weighting;
+        } else {
+          moduleAverageGradesTotal = 0;
+          moduleAverageDivision = 0;
+        }
+        gradeAverage[grade] = resultGrade;
+      }
+    }
+        allAverages[moduleName].push(gradeAverage);
+    if (moduleAverageDivision > 0) {
+        allAverages[moduleName]['moduleAverage'] = moduleAverageGradesTotal / moduleAverageDivision;
+    } else {
+        allAverages[moduleName]['moduleAverage'] = 0;
+    }
+  }
+  // console.log(allAverages);
+  return allAverages;
 });
 
 </script>
 
 <template>
   <h1>Notes</h1>
+  {{ averages}}
   <GradeModal v-show="showModal" @close="showModal = false" :id="gradeId" />
   <div @click="addGrade()" id="btnAddGrade"></div>
 
@@ -52,11 +80,11 @@ const averages = computed(() => {
           Note : {{ gradeData.grade }} | Pondération :
           {{ gradeData.coefficient }}
         </div>
-        <span class="course">Moyenne : {{ courseData.average }}</span>
+        <span class="course">Moyenne : {{ averages[moduleName][0][courseName] }}</span>
       </div>
     </div>
     <div class="moduleAverage">
-      Moyenne de module : {{ moduleData.average }}
+      Moyenne de module : {{ averages[moduleName]['moduleAverage'] }}
     </div>
     
   </div>

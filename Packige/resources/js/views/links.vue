@@ -114,6 +114,15 @@ function getDayFr(date) {
   return dayFr.charAt(0).toUpperCase() + dayFr.slice(1);
 }
 
+function getCurrentDayIndex() {
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+
+ return today.getDay()-1;
+}
+
+getCurrentDayIndex();
+
 const menusFormatted = computed(() => {
   if (!menusCafet.value) return [];
 
@@ -166,30 +175,32 @@ const menusFormatted = computed(() => {
 
   <div class="menu-cafeteria">
     <h1>Cafétéria - Semaine {{ menusFormatted.week }}</h1>
-    <div class="menu-day" v-for="menu of menusFormatted.days">
-      <div class="big-line"></div>
-      <h2>{{ menu.dayFr }} : {{ menu.date }}</h2>
-      <p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
-      <div v-for="meal of menu.menus" v-show="menu.hasMeals">
-        <h3>| Menu {{ meal.index }} |</h3>
-        <h4>Entrée</h4>
-        <p>{{ meal.starter }}</p>
-        <div class="smallline"></div>
-        <h4>Plat</h4>
-        <!-- <ul> -->
-        <div v-for="mainCourse of meal.mainCourse">{{ mainCourse }}</div>
-        <!-- <li v-for="mainCourse of meal.mainCourse">{{mainCourse}}</li>
-					</ul> -->
-        <div class="porc" v-show="meal.containsPork">
-          *Ce menu contient du porc
+    <div class="menu-day" v-for="(menu, index) of menusFormatted.days" >
+      <div v-if="index >= getCurrentDayIndex()">
+        <div class="big-line"></div>
+        <h2>{{ menu.dayFr }} : {{ menu.date }}</h2>
+        <p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
+        <div v-for="meal of menu.menus" v-show="menu.hasMeals">
+          <h3>| Menu {{ meal.index }} |</h3>
+          <h4>Entrée</h4>
+          <p>{{ meal.starter }}</p>
+          <div class="smallline"></div>
+          <h4>Plat</h4>
+          <!-- <ul> -->
+          <div v-for="mainCourse of meal.mainCourse">{{ mainCourse }}</div>
+          <!-- <li v-for="mainCourse of meal.mainCourse">{{mainCourse}}</li>
+            </ul> -->
+          <div class="porc" v-show="meal.containsPork">
+            *Ce menu contient du porc
+          </div>
+          <div class="smallline"></div>
+          <h4>Dessert</h4>
+          <p>{{ meal.dessert }}</p>
+          <br />
+          <!-- <p>------------- SEPARATION MENUS ----------------------</p> -->
         </div>
-        <div class="smallline"></div>
-        <h4>Dessert</h4>
-        <p>{{ meal.dessert }}</p>
-        <br />
-        <!-- <p>------------- SEPARATION MENUS ----------------------</p> -->
+        <!-- <p>----------- SEPARATION JOURS----------------</p> -->
       </div>
-      <!-- <p>----------- SEPARATION JOURS----------------</p> -->
     </div>
   </div>
 </template>
