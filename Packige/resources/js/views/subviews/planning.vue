@@ -312,6 +312,8 @@ function getWeekStartEnd(day) {
 
 const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
 
+const {value: scheduleType} = useLocalstorage('scheduleType', 'calendar');
+
 let selectedWeek = ref(24);
 
 </script>
@@ -328,13 +330,13 @@ let selectedWeek = ref(24);
         </select>
       </div>
 
-      <label for="showPast">
-        <input type="checkbox" v-model="showPast" id="showPast">
+      <label v-if="scheduleType == 'list'" for="showPast">
+        <input v-if="scheduleType == 'list'" type="checkbox" v-model="showPast" id="showPast">
         Afficher l'historique
         <!-- {{schedulesShowable}} -->
       </label>
 
-      <div v-for="(schedule, weekNb) of schedulesShowable">
+      <div v-if="scheduleType == 'list'" v-for="(schedule, weekNb) of schedulesShowable">
         <h2><span>{{schedule.dates}}</span></h2>
           <div v-for="event of schedule.daysCourse" class="planning"  v-show="event.hasCourses">
             <div class="date" v-bind:class="formatDate(new Date(event.courses[0].date)) == formatDate(new Date(todayDate)) ? 'currentDay':''">{{event.day}} {{event.dayTwoDigits}}</div>
@@ -355,9 +357,8 @@ let selectedWeek = ref(24);
 
   
 
-  <h1>Calendar</h1>
 
-  <div v-if="schedulesShowable[selectedWeek]" id="weekSelector">
+  <div v-if="schedulesShowable[selectedWeek] && scheduleType == 'calendar'" id="weekSelector">
       
       <div id="weekIndication">Semaine {{selectedWeek}}</div>
       <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
@@ -368,7 +369,7 @@ let selectedWeek = ref(24);
     </div>
 
 
-  <div id="calendar">
+  <div id="calendar" v-if="scheduleType == 'calendar'">
     
 
 
@@ -707,6 +708,10 @@ let selectedWeek = ref(24);
         margin-bottom: 20px;
         
         margin-left: auto;
+
+        position: absolute;
+top: 250px;
+right: 25px;
 
     }
 
