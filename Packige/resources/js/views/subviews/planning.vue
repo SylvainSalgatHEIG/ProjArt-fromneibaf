@@ -235,7 +235,7 @@ const schedulesShowable = computed(() => {
 // PAUL
 console.log(schedulesShowable);
 
-const spacingMarge = 7;
+const spacingMarge = 6;
 
 function margeEvent(time) 
  {
