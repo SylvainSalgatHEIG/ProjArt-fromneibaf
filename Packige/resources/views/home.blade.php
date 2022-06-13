@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    {{ __('Vous êtes maintenant connecté à l'application Packige !') }}
+                    {{ __('Vous êtes maintenant connecté à l\'application Packige !') }}
                 </div>
             </div>
         </div>
