@@ -32,42 +32,42 @@ const mainLinks = ref([
   {
     name: "Attestation d'études",
     category: "Semestre",
-    link: "https://www.heig-vd.ch",
+    link: "https://intra.heig-vd.ch/academique/attestation-etude/Pages/default.aspx",
   },
   {
     name: "Calendrier Académique",
     category: "Semestre",
-    link: "https://www.heig-vd.ch",
+    link: "https://intra.heig-vd.ch/academique/calendriers-academiques/Pages/calendriers-academiques.aspx",
   },
   {
     name: "Justificatif d'absences",
     category: "Absences",
-    link: "https://www.heig-vd.ch",
+    link: "https://intra.heig-vd.ch/academique/formulaire-absence/Pages/default.aspx",
   },
   {
     name: "Webmail",
     category: "Absences",
-    link: "https://www.heig-vd.ch",
+    link: "https://webmail.heig-vd.ch/owa/auth/logon.aspx?replaceCurrent=1&reason=3&url=https%3a%2f%2fwebmail.heig-vd.ch%2fowa%2f",
   },
   {
     name: "Bulletin",
     category: "Notes",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/notes/bulletin.php?id=17484&format=pdf&timestamp=1655105738532",
   },
   {
     name: "Contrôles continus",
     category: "Notes",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/controlescontinus/consultation.php?idst=17484",
   },
   {
     name: "Enseignement à choix",
     category: "Enseignement",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/choixOption/",
   },
   {
     name: "Eval. des enseignants",
     category: "Enseignement",
-    link: "https://www.heig-vd.ch",
+    link: "https://gaps.heig-vd.ch/consultation/evaluationenseignements/index.php",
   },
 ]);
 
@@ -113,6 +113,15 @@ function getDayFr(date) {
   // first letter uppercase
   return dayFr.charAt(0).toUpperCase() + dayFr.slice(1);
 }
+
+function getCurrentDayIndex() {
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+
+ return today.getDay()-1;
+}
+
+getCurrentDayIndex();
 
 const menusFormatted = computed(() => {
   if (!menusCafet.value) return [];
@@ -160,36 +169,38 @@ const menusFormatted = computed(() => {
       <h2 v-if="link.category != currentCategory">
         {{ (currentCategory = link.category) }}
       </h2>
-      <a :href="link.link">{{ link.name }}</a>
+      <a :href="link.link" target="_blank">{{ link.name }}</a>
     </div>
   </div>
 
   <div class="menu-cafeteria">
     <h1>Cafétéria - Semaine {{ menusFormatted.week }}</h1>
-    <div class="menu-day" v-for="menu of menusFormatted.days">
-      <div class="big-line"></div>
-      <h2>{{ menu.dayFr }} : {{ menu.date }}</h2>
-      <p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
-      <div v-for="meal of menu.menus" v-show="menu.hasMeals">
-        <h3>| Menu {{ meal.index }} |</h3>
-        <h4>Entrée</h4>
-        <p>{{ meal.starter }}</p>
-        <div class="smallline"></div>
-        <h4>Plat</h4>
-        <!-- <ul> -->
-        <div v-for="mainCourse of meal.mainCourse">{{ mainCourse }}</div>
-        <!-- <li v-for="mainCourse of meal.mainCourse">{{mainCourse}}</li>
-					</ul> -->
-        <div class="porc" v-show="meal.containsPork">
-          *Ce menu contient du porc
+    <div class="menu-day" v-for="(menu, index) of menusFormatted.days" >
+      <div v-if="index >= getCurrentDayIndex()">
+        <div class="big-line"></div>
+        <h2>{{ menu.dayFr }} : {{ menu.date }}</h2>
+        <p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
+        <div v-for="meal of menu.menus" v-show="menu.hasMeals">
+          <h3>| Menu {{ meal.index }} |</h3>
+          <h4>Entrée</h4>
+          <p>{{ meal.starter }}</p>
+          <div class="smallline"></div>
+          <h4>Plat</h4>
+          <!-- <ul> -->
+          <div v-for="mainCourse of meal.mainCourse">{{ mainCourse }}</div>
+          <!-- <li v-for="mainCourse of meal.mainCourse">{{mainCourse}}</li>
+            </ul> -->
+          <div class="porc" v-show="meal.containsPork">
+            *Ce menu contient du porc
+          </div>
+          <div class="smallline"></div>
+          <h4>Dessert</h4>
+          <p>{{ meal.dessert }}</p>
+          <br />
+          <!-- <p>------------- SEPARATION MENUS ----------------------</p> -->
         </div>
-        <div class="smallline"></div>
-        <h4>Dessert</h4>
-        <p>{{ meal.dessert }}</p>
-        <br />
-        <!-- <p>------------- SEPARATION MENUS ----------------------</p> -->
+        <!-- <p>----------- SEPARATION JOURS----------------</p> -->
       </div>
-      <!-- <p>----------- SEPARATION JOURS----------------</p> -->
     </div>
   </div>
 </template>

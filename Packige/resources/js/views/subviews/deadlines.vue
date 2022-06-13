@@ -4,8 +4,11 @@ import { useFetch, usePost } from "../../composables/fetch";
 import { deadlines } from "../../stores/deadlines.js";
 
 import DeadlineModal from "../../components/DeadlineModal.vue";
+import NotConnected from "../../components/NotConnected.vue";
 
 const msg = ref("");
+
+const { data: connexionStatus } = useFetch('/api/connexion/status')
 
 const { data: userGroups } = useFetch("/api/usergroups/");
 
@@ -17,7 +20,6 @@ let currentWeek = ref("");
 let currentDay = ref("");
 
 const todayDate = new Date(Date.now()).toISOString().split("T")[0];
-
 
 const dealinesArray = computed(() => {
     console.log(deadlines.value);
@@ -60,7 +62,6 @@ const dealinesArray = computed(() => {
 
     deadlineArray.push(deadlineElement);
 
-
     return deadlineArray;
 })
 
@@ -75,7 +76,6 @@ function getWeekNumber(date) {
 }
 
 function checkEvent(event, deadlineId) {
-  console.log();
 
   //let deadlineId = event.target.value;
   if (!event.target.classList.contains("checked")) {
@@ -134,47 +134,47 @@ function addDeadline() {
 </script>
 
 <template>
-  <deadline-modal
-    v-show="showModal"
-    @close="showModal = false"
-    :deadlineId="deadlineId"
-    :groupId="groupSelected"
-  />
-  <div @click="addDeadline()" id="btnAddDeadline"></div>
-  
-  <div class="inputRow">
-    <select name="groups" id="groups" v-model="groupSelected">
-      <option v-for="(group, index) in userGroups" :value="group[0].id">
-        {{ group[0].promotion.name }}-{{ group[0].id }}
-      </option>
-    </select>
-  </div>
-<div class="content">
-    <div v-for="(week) of dealinesArray">
-        <h2 v-if="week.deadlines[0].group_id == groupSelected">{{week.weekRange}}</h2>
-
-        
-
-            <div v-for="(deadline, index) of week.deadlines">
-                <div v-if="deadline.group_id == groupSelected" class="deadline" @click="editDeadline(deadline)">
-                    
-                    <div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
-                        {{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
-                        {{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
-                    </div>
-
-                    <div v-else class="date hidden"></div>
-
-                    <div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
-                        <div class="name"> {{deadline.name}} </div>
+	<div id="notConnected" v-if="!connexionStatus">
+		<not-connected></not-connected>
+	</div>
+	<div id="connected" v-if="connexionStatus">
+		<deadline-modal
+		v-show="showModal"
+		@close="showModal = false"
+		:deadlineId="deadlineId"
+		:groupId="groupSelected"
+		/>
+		<div @click="addDeadline()" id="btnAddDeadline"></div>
+		<div class="inputRow">
+		<select name="groups" id="groups" v-model="groupSelected">
+			<option v-for="(group, index) in userGroups" :value="group[0].id">
+			{{ group[0].promotion.name }}-{{ group[0].id }}
+			</option>
+		</select>
+		</div>
+		<div class="content">
+			<div v-for="(week) of dealinesArray">
+				<h2 v-if="week.deadlines[0].group_id == groupSelected">{{week.weekRange}}</h2>
+					<div v-for="(deadline, index) of week.deadlines">
+						<div v-if="deadline.group_id == groupSelected" class="deadline" @click="editDeadline(deadline)">
+							
+							<div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
+								{{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
+								{{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
+							</div>
+	
+							<div v-else class="date hidden"></div>
+	
+							<div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
+                        <div @click="editDeadline(deadline)" class="name"> {{deadline.name}} </div>
 
                         <!-- Same date = 1 hour -->
-                        <div class="time" v-if="deadline.start_date == deadline.end_date">
+                        <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date == deadline.end_date">
                             {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
                         </div>
 
                         <!-- Different dates = Range of hours -->
-                        <div class="time" v-if="deadline.start_date != deadline.end_date">
+                        <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date != deadline.end_date">
                             {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
                             {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
                         </div>
@@ -184,13 +184,14 @@ function addDeadline() {
                         </div>
 
                     </div>
-
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+	
+						</div>
+					</div>
+	
+				</div>
+	
+		</div>
+	</div>
 
 </template>
 
@@ -213,6 +214,8 @@ function addDeadline() {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 24px;
+
+    cursor: pointer;
   }
 
 .inputRow {
@@ -225,6 +228,7 @@ function addDeadline() {
 .deadline .name {
   display: inline-block;
   width: 90px;
+  height: 35px;
 }
 
 .inputRow {
@@ -246,7 +250,7 @@ function addDeadline() {
         -moz-appearance: none;
         appearance: none;
 
-        width: 78px;
+        width: 90px;
         height: 26px;
 
         background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
@@ -370,6 +374,8 @@ h2:not(:first-of-type) {
 
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.5);
+
+  cursor: pointer;
 }
 
 .checkbox.checked {
@@ -392,6 +398,14 @@ h2:not(:first-of-type) {
 .time {
   display: inline;
   margin: auto 0 0 15px;
+
+  height: 35px;
+  
+}
+
+.name, .time {
+  cursor: pointer;
+  
 }
 
 .check {

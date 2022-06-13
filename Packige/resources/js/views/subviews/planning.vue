@@ -235,10 +235,16 @@ const schedulesShowable = computed(() => {
 // PAUL
 console.log(schedulesShowable);
 
-const spacingMarge = 7;
+const spacingMarge = 6;
 
 function margeEvent(time) 
  {
+
+  if (typeof time == 'undefined') {
+    return 0;
+  }
+
+  time = time.split('-')[0];
 
   const startDay = new Date("November 22 1963 08:30");
 
@@ -253,6 +259,13 @@ function margeEvent(time)
 
 function courseDurationMarge(startTime, endTime) {
 
+  if (typeof startTime == 'undefined' || typeof endTime == 'undefined') {
+    return 0;
+  }
+
+  startTime = startTime.split('-')[0];
+  endTime = endTime.split('-')[1]
+
   startTime = new Date("November 22 1963 " + startTime);
   endTime = new Date("November 22 1963 " + endTime);
 
@@ -262,9 +275,44 @@ function courseDurationMarge(startTime, endTime) {
   return Math.abs(Math.round(diff)) * 0.88 - spacingMarge;
 }
 
+function formatDateShort(date) {
+
+  if (date == 'Invalid Date') {
+    return 0;
+  }
+
+  let day = date.toLocaleDateString("en-US").split("/")[1].padStart(2, "0");
+  let month = date.toLocaleDateString("en-US").split("/")[0].padStart(2, "0");
+  let year = date.toLocaleDateString("en-US").split("/")[2].substr(-2);
+
+  let dateFormated = day + "." + month + "." + year;
+
+  return dateFormated;
+}
+
+function getWeekStartEnd(day) {
+
+  day = new Date(day);
+
+  let first = day.getDate() - day.getDay() + 1;
+  let last = first + 4;
+
+  let firstDay = new Date(day.setDate(first));
+  let lastDay = new Date(day.setDate(last));
+
+  firstDay = formatDateShort(firstDay);
+  lastDay = formatDateShort(lastDay);
+
+  let week = firstDay + " - " + lastDay;
+
+  return week;
+}
+
 // PAUL
 
 const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
+
+const {value: scheduleType} = useLocalstorage('scheduleType', 'calendar');
 
 let selectedWeek = ref(24);
 
@@ -282,13 +330,13 @@ let selectedWeek = ref(24);
         </select>
       </div>
 
-      <label for="showPast">
-        <input type="checkbox" v-model="showPast" id="showPast">
+      <label v-if="scheduleType == 'list'" for="showPast">
+        <input v-if="scheduleType == 'list'" type="checkbox" v-model="showPast" id="showPast">
         Afficher l'historique
         <!-- {{schedulesShowable}} -->
       </label>
 
-      <div v-for="(schedule, weekNb) of schedulesShowable">
+      <div v-if="scheduleType == 'list'" v-for="(schedule, weekNb) of schedulesShowable">
         <h2><span>{{schedule.dates}}</span></h2>
           <div v-for="event of schedule.daysCourse" class="planning"  v-show="event.hasCourses">
             <div class="date" v-bind:class="formatDate(new Date(event.courses[0].date)) == formatDate(new Date(todayDate)) ? 'currentDay':''">{{event.day}} {{event.dayTwoDigits}}</div>
@@ -309,11 +357,21 @@ let selectedWeek = ref(24);
 
   
 
-  <h1>Calendar</h1>
-  <div id="calendar">
-    <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
-    <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
-    Semaine {{selectedWeek}}
+
+  <div v-if="scheduleType == 'calendar'" id="weekSelector">
+      
+      <div id="weekIndication">Semaine {{selectedWeek}}</div>
+      <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
+
+      <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div>
+      <div v-else id="weekRange"></div>
+
+      <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
+    </div>
+
+
+  <div id="calendar" v-if="scheduleType == 'calendar'">
+    
 
 
     <div v-if="schedulesShowable[selectedWeek]" id="scheduleView">
@@ -340,37 +398,83 @@ let selectedWeek = ref(24);
 
       <div id="planningView">
         <div v-for="(course) in schedulesShowable[selectedWeek].daysCourse" class="column row" id="rowDates">
-          <div :style="{ 'margin-top': margeEvent(courseOfDay.hours.split('-')[0]) + 'px', 'height': courseDurationMarge(courseOfDay.hours.split('-')[0], courseOfDay.hours.split('-')[1]) + 'px'}" v-for="(courseOfDay, index) in course.courses" class="courseCalendar">
+          <div :style="{ 'margin-top': margeEvent(courseOfDay.hours) + 'px', 'height': courseDurationMarge(courseOfDay.hours, courseOfDay.hours) + 'px'}" v-for="(courseOfDay, index) in course.courses" class="courseCalendar">
             <p class="courseNameVertical">{{courseOfDay.course}} <b>{{courseOfDay.room}}</b></p>
           </div>
         </div>
       </div>
 
     </div>
+
+    <div v-else class="noCourseMessage">Aucun cours</div>
   </div>
 
-
-  <!-- <pre>{{schedulesShowable[24]}}</pre> -->
 </template>
 
 <style scoped>
 
-#previousButton {
+.noCourseMessage {
+  margin-top: 20px;
+
+  width: 100%;
+  height: 100%;
+
+  text-align: center;
+}
+
+#weekRange {
+  display: inline-block;
+
   height: 30px;
-  width: 30px;
+  min-width: 127px;
+
+  vertical-align: middle;
+
+  padding-top: 5px;
+}
+
+#weekSelector {
+  display: block;
+
+  margin-left: 14px;
+
+}
+
+#weekIndication {
+  width: 190px;
+  text-align: center;
+  font-weight: 600;
+font-size: 16px;
+}
+
+#previousButton {
+  height: 44px;
+  width: 44px;
 
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: center;
 
   display: inline-block;
+
+  margin-right: 2px;
+
+  vertical-align: middle;
 }
 
 #nextButton {
-  height: 30px;
-  width: 30px;
+  height: 44px;
+  width: 44px;
 
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: center;
 
   display: inline-block;
+
+  margin-left: 2px;
+
+  vertical-align: middle;
 }
 
 .rowTime {
@@ -601,7 +705,7 @@ let selectedWeek = ref(24);
         -moz-appearance: none;
         appearance: none;
 
-        width: 78px;
+        width: 90px;
         height: 26px;
 
         background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
@@ -623,6 +727,10 @@ let selectedWeek = ref(24);
         margin-bottom: 20px;
         
         margin-left: auto;
+
+        position: absolute;
+top: 250px;
+right: 25px;
 
     }
 

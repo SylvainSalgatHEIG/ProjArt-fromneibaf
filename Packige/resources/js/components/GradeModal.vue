@@ -211,6 +211,9 @@ function deleteGrade(data, courseShortname, moduleName) {
                   v-model="courseId"
                   :disabled="disabledSelect"
                   placeholder="Branche"
+                  v-bind:class="
+                    btnText == 'Modifier' ? 'hideArrowSelect' : ''
+                  "
                 >
                   <option value="" disabled selected>Branche</option>
                   <option
@@ -222,6 +225,14 @@ function deleteGrade(data, courseShortname, moduleName) {
                 </select>
                 <br />
                 <button
+                  class="modal-default-button deleteButton"
+                  v-show="disabledSelect"
+                  @click="deleteBtnClicked"
+                >
+                  Supprimer
+                </button>
+
+                <button
                   class=""
                   v-bind:class="
                     btnText == 'Ajouter' ? 'addButton' : 'updateButton'
@@ -229,13 +240,7 @@ function deleteGrade(data, courseShortname, moduleName) {
                 >
                   {{ btnText }}
                 </button>
-                <button
-                  class="modal-default-button"
-                  v-show="disabledSelect"
-                  @click="deleteBtnClicked"
-                >
-                  Supprimer
-                </button>
+                
               </form>
             </slot>
           </div>
@@ -365,6 +370,10 @@ select {
   line-height: 22px;
 }
 
+.hideArrowSelect {
+  background-image: none;
+}
+
 .addButton {
   margin: 50px auto 0 auto;
 
@@ -389,6 +398,44 @@ select {
   color: #ffffff;
 
   border: none;
+}
+
+.updateButton {
+  margin: auto auto 0 0;
+  display: inline;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 160px;
+  height: 45px;
+  background: #f84e35;
+  border-radius: 40px;
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+  color: #ffffff;
+  border: none;
+
+  position: absolute;
+  right: 10%;
+
+  margin-top: 20px;
+}
+
+.deleteButton {
+  display: inline;
+  border: none;
+  padding: 0;
+  background-color: inherit;
+  font-size: 16px;
+  color: #F84E35;
+  cursor: pointer;
+
+  height: 45px;
+  
+  margin-top: 20px;
 }
 
 .closeButton {

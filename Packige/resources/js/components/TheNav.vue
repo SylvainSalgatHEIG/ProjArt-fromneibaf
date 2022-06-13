@@ -18,7 +18,7 @@
     <ul>
       <li v-for="(route, hash) of routes" :class="{ active: hash == curHash }">
         
-        <a :href="hash" :class="{ active: hash == curHash }">
+        <a :href="hash" :class="{ active: hash == curHash }" >
           <img v-if="route.icon" class="icon" :class="{ active: hash == curHash }" :src="'/images/' + route.icon + '.svg'"><br>
           {{ route.label }}
         </a>

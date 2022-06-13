@@ -6,6 +6,7 @@ import eventsVue from "./views/events.vue";
 import gradesVue from "./views/grades.vue";
 import linksVue from "./views/links.vue";
 import scheduleVue from "./views/schedule.vue";
+import profileVue from "./views/profile.vue";
 import registerVue from "./views/register.vue";
 
 import Modal from "./components/Modal.vue";
@@ -36,7 +37,18 @@ const routes = {
     icon: "chains",
     component: linksVue,
   },
+  "#profile": {
+    label: "Profile",
+    icon: "chains",
+    component: profileVue,
+  },
 };
+
+const navRoutes = computed(() => {
+  let baseRoute = ref({...routes});
+  delete baseRoute.value["#profile"];
+  return baseRoute.value;
+});
 
 const hash = ref(window.location.hash);
 
@@ -52,10 +64,10 @@ const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
-  <a href="/login">
+  <a href="#profile">
     <div id="login"></div>
   </a>
-  <the-nav id="mainMenu" :routes="routes" :curHash="curHash"></the-nav>
+  <the-nav id="mainMenu" :routes="navRoutes" :curHash="curHash"></the-nav>
   <main>
     <template v-for="(route, hash) of routes">
       <!-- v-if: recharge le composant lors du changement de page -->
@@ -93,6 +105,14 @@ h1 {
   line-height: 36px;
   text-align: center;
   letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 #mainMenu {
@@ -143,7 +163,7 @@ h1 {
   width: 44px;
   background-position: calc(50%);
   position: absolute;
-  margin-left: 82.5%; 
+  margin-left: 82.5%;
   margin-right: 0;
 }
 
@@ -153,7 +173,7 @@ h1 {
 
 .form-login {
   width: 312px;
-  margin: 8px 0;
+  margin: 20px 0;
   box-sizing: border-box;
   outline: 0;
   border-width: 0 0 1px;
@@ -179,36 +199,100 @@ h1 {
 
   margin: 50px auto 0 auto;
 
-  font-family: 'Outfit';
+  font-family: "Outfit";
   font-style: normal;
   font-weight: 600;
   font-size: 20px;
   line-height: 25px;
 
-  color: #FFFFFF;
+  color: #ffffff;
 
   border: none;
 }
 
-.password-forgotten{
+.password-forgotten {
   font-size: small;
   font-weight: 300;
-  opacity:80%;
+  opacity: 80%;
   color: white;
 }
 
-
-
-.nav-link{
+.nav-link {
   color: white !important;
 }
 
-.login-title{
+.login-title {
   margin-top: 10px;
+  margin-bottom: 30px;
 }
 
-.back-button {
-  display:inline-block;
+.register-subtitle {
+  font-family: "outfit", sans-serif;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 17px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-bottom: 30px;
+}
+
+.register-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.back {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  padding: 0px 10px 10px 40px;
+}
+
+.back div {
+  top: 10px;
+  left: 30px;
+  content: "";
+  width: 30px;
+  height: 30px;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(1);
+  background-color: #e9e7f2;
+  transition: transform 400ms 0s cubic-bezier(0.2, 0, 0, 1.6);
+}
+
+.back div::after {
+  top: 0;
+  left: 0;
+  content: "";
+  width: 60px;
+  height: 30px;
+  position: absolute;
+  background-position: 0 0;
+  background-image: url("https://s3-eu-west-1.amazonaws.com/thomascullen-codepen/back.svg");
+  transition: transform 400ms 0s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.back:hover div {
+  transform: scale(1.1);
+  background-color: white;
+  box-shadow: 0 2px 10px 0 rgba(185, 182, 198, 0),
+    0 1px 3px 0 rgba(175, 172, 189, 0.25);
+}
+
+.back:hover div::after {
+  transform: translateX(-30px);
+}
+
+#group-name {
+  margin: 20px 0;
+  background: #0c223f;
+  color: rgba(255, 255, 255, 0.6);
+  outline:0px;
+  border-width: 0 0 1px;
+  border-color: white;
 }
 
 </style>
