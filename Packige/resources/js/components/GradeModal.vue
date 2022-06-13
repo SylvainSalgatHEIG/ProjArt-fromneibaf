@@ -211,6 +211,9 @@ function deleteGrade(data, courseShortname, moduleName) {
                   v-model="courseId"
                   :disabled="disabledSelect"
                   placeholder="Branche"
+                  v-bind:class="
+                    btnText == 'Modifier' ? 'hideArrowSelect' : ''
+                  "
                 >
                   <option value="" disabled selected>Branche</option>
                   <option
@@ -365,6 +368,10 @@ select {
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
+}
+
+.hideArrowSelect {
+  background-image: none;
 }
 
 .addButton {

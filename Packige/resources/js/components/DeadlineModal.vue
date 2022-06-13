@@ -213,7 +213,7 @@ function deleteDeadline(data, courseFullName, moduleName) {
                 />
                 <br />
                 <!-- <select id="course" v-model="course"> -->
-                <select id="course" v-model="course" :disabled="disabledSelect" required>
+                <select id="course" v-model="course" :disabled="disabledSelect" required v-bind:class="btnText == 'Modifier' ? 'hideArrowSelect' : ''">
                   <option value="" disabled selected>Branche</option>
                   <option
                     :value="course.courseShortName"
@@ -422,6 +422,11 @@ select {
   font-size: 14px;
   line-height: 22px;
 }
+
+.hideArrowSelect {
+  background-image: none;
+}
+
 textarea {
   margin-bottom: 15px;
   background: rgba(12, 34, 63, 0.1);
