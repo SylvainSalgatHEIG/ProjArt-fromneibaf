@@ -70,44 +70,44 @@ class GradeController extends Controller
                 foreach ($grades as $grade) {
                     array_push($gradesArray[$module->name][$course->shortname]['grades'], ['id' => $grade->id, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
                 }
-                $gradesArray[$module->name][$course->shortname]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->shortname]);
+                // $gradesArray[$module->name][$course->shortname]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->shortname]);
             }
-            $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
+            // $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
             $gradesArray[$module->name]['id'] = $module->id;
         }
 
         return $gradesArray;
     }
 
-    public function getCourseAverage($courseGrades)
-    {
-        if (empty($courseGrades['grades'])) {
-            return 0;
-        }
-        $sum = 0;
-        $gradeCounter = 0;
-        foreach ($courseGrades['grades'] as $grade) {
-            $sum += $grade['grade'] * $grade['coefficient'];
-            $gradeCounter += $grade['coefficient'];
-        }
-        $average = $sum / $gradeCounter;
-        return round($average, 1);
-    }
+    // public function getCourseAverage($courseGrades)
+    // {
+    //     if (empty($courseGrades['grades'])) {
+    //         return 0;
+    //     }
+    //     $sum = 0;
+    //     $gradeCounter = 0;
+    //     foreach ($courseGrades['grades'] as $grade) {
+    //         $sum += $grade['grade'] * $grade['coefficient'];
+    //         $gradeCounter += $grade['coefficient'];
+    //     }
+    //     $average = $sum / $gradeCounter;
+    //     return round($average, 1);
+    // }
 
-    public function getModuleAverage($moduleData)
-    {
-        $sum = 0;
-        $gradeCounter = 0;
-        foreach ($moduleData as $course) {
-            $sum += $course['average'] * $course['weighting'];
-            $gradeCounter += $course['weighting'];
-        }
-        if ($gradeCounter == 0) {
-            return 0;
-        }
-        $average = $sum / $gradeCounter;
-        return round($average * 2) / 2;
-    }
+    // public function getModuleAverage($moduleData)
+    // {
+    //     $sum = 0;
+    //     $gradeCounter = 0;
+    //     foreach ($moduleData as $course) {
+    //         $sum += $course['average'] * $course['weighting'];
+    //         $gradeCounter += $course['weighting'];
+    //     }
+    //     if ($gradeCounter == 0) {
+    //         return 0;
+    //     }
+    //     $average = $sum / $gradeCounter;
+    //     return round($average * 2) / 2;
+    // }
 
     public function addGrade(Request $request)
     {
