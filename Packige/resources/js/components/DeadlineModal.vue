@@ -278,16 +278,19 @@ function deleteDeadline(data, courseFullName, moduleName) {
                 />
                 <br />
 
-                <button class="modal-default-button addButton">
-                  {{ btnText }}
-                </button>
                 <button
-                  class="modal-default-button"
+                  class="modal-default-button deleteButton"
                   v-show="disabledSelect"
                   @click="deleteBtnClicked"
                 >
-                  del
+                  Supprimer
                 </button>
+
+                <button class="modal-default-button" :class="btnText == 'Ajouter' ? 'addButton' : 'updateButton'">
+                  {{ btnText }}
+                </button>
+                
+                
               </form>
             </slot>
           </div>
@@ -515,6 +518,45 @@ label.labelRadio {
   color: #ffffff;
   border: none;
 }
+
+.updateButton {
+  margin: auto auto 0 0;
+  display: inline;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 160px;
+  height: 45px;
+  background: #f84e35;
+  border-radius: 40px;
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+  color: #ffffff;
+  border: none;
+
+  position: absolute;
+  right: 16px;
+
+  margin-top: 20px;
+}
+
+.deleteButton {
+  display: inline;
+  border: none;
+  padding: 0;
+  background-color: inherit;
+  font-size: 16px;
+  color: #F84E35;
+  cursor: pointer;
+
+  height: 45px;
+  
+  margin-top: 20px;
+}
+
 .closeButton {
   height: 35px;
   width: 35px;
