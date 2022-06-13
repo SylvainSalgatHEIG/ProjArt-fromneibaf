@@ -17,6 +17,9 @@ let courseShortName = ref('');
 let courseId = ref("");
 let disabledSelect = ref(false);
 let deleBtnPressed = ref(false);
+// let actionDone = ref(false);
+let error = ref(false);
+let errorMsg = ref('');
 
 watchEffect(() => {
   if (grades.value != null && coursesArray.value != null) {
@@ -75,6 +78,7 @@ function addOrEditGrade(id = props.id) {
       id: id,
     };
     deleteGrade(data, courseShortname, moduleName);
+    // WHEN EDITING A GRADE
   } else if (id) {
     console.log("edit");
     const data = {
@@ -84,6 +88,7 @@ function addOrEditGrade(id = props.id) {
       id: id,
     };
     editGrade(data, courseShortname, moduleName);
+    // WHEN ADDING A GRADE
   } else {
     console.log("add");
     const data = {
@@ -93,7 +98,10 @@ function addOrEditGrade(id = props.id) {
     };
     addGrade(data, courseShortname, moduleName);
   }
-  emit("close");
+  if (!error.value) {
+    emit("close");
+  }
+  
 }
 
 function editGrade(data, courseShortname, moduleName) {
@@ -105,6 +113,8 @@ function editGrade(data, courseShortname, moduleName) {
       gradeData.coefficient = coefficient.value;
     }
   }
+  // TODO: check if no error on editing the grade.
+  error.value = false;
 }
 
 function addGrade(data, courseShortname, moduleName) {
@@ -114,7 +124,9 @@ function addGrade(data, courseShortname, moduleName) {
   });
   let added = false;
   watchEffect(() => {
-    if (newGradeId.value != null && !added) {
+    // console.log(newGradeId.value);
+    // if (newGradeId.value != null && !added) {
+    if (typeof(newGradeId.value) === 'number' && !added) {
       // console.log(courseShortname)
       grades.value[moduleName][courseShortname].grades.push({
         id: newGradeId.value,
@@ -122,6 +134,14 @@ function addGrade(data, courseShortname, moduleName) {
         coefficient: coefficient.value,
       });
       added = true;
+      // actionDone.value = true;
+      error.value = false;
+      errorMsg.value = "";
+    } else if (!added) {
+      // actionDone.value = true;
+      errorMsg.value = "Une erreur est survenue lors de l'ajout de la note.";
+      error.value = true;
+      console.error('Erreur dans l\'ajout de la note');
     }
     // console.log(grades.value);
   });
@@ -141,7 +161,8 @@ function deleteGrade(data, courseShortname, moduleName) {
       grades.value[moduleName][courseShortname].grades.splice(i, 1);
     }
   }
-
+  // TODO: check if no error on deleting the grade.
+  error.value = false;
   deleBtnPressed.value = false;
 }
 </script>
@@ -158,6 +179,9 @@ function deleteGrade(data, courseShortname, moduleName) {
 
           <div class="modal-header">
             <slot name="header"> {{ btnText }} une note </slot>
+          </div>
+          <div class="modal-error">
+            <p class="error" v-if="error">{{ errorMsg }}</p>
           </div>
           <div class="modal-body">
             <slot name="body">
@@ -184,7 +208,7 @@ function deleteGrade(data, courseShortname, moduleName) {
                 <br />
                 <select
                   id="course"
-                  v-model="course"
+                  v-model="courseId"
                   :disabled="disabledSelect"
                   placeholder="Branche"
                 >
