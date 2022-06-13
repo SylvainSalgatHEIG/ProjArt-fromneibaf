@@ -107,6 +107,14 @@ h1 {
   letter-spacing: -0.02em;
 }
 
+h2 {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+}
+
 #mainMenu {
   position: fixed;
   width: 100%;
@@ -165,7 +173,7 @@ h1 {
 
 .form-login {
   width: 312px;
-  margin: 8px 0;
+  margin: 20px 0;
   box-sizing: border-box;
   outline: 0;
   border-width: 0 0 1px;
@@ -215,6 +223,22 @@ h1 {
 
 .login-title {
   margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.register-subtitle {
+  font-family: "outfit", sans-serif;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 17px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-bottom: 30px;
+}
+
+.register-title {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .back {
@@ -261,5 +285,15 @@ h1 {
 .back:hover div::after {
   transform: translateX(-30px);
 }
+
+#group-name {
+  margin: 20px 0;
+  background: #0c223f;
+  color: rgba(255, 255, 255, 0.6);
+  outline:0px;
+  border-width: 0 0 1px;
+  border-color: white;
+}
+
 </style>
 
