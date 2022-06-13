@@ -74,7 +74,11 @@
                 </div>
             </div>
         </nav> -->
-        <a href="/login">Back</a>
+        <!-- <div class="back-button"><a href="/login">Back</a></div> -->
+        <a href="/" class="back">
+            <div></div>
+        </a>
+
 
         <main class="py-4">
             @yield('content')
