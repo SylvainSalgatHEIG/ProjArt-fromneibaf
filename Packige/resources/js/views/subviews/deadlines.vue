@@ -250,7 +250,7 @@ function addDeadline() {
         -moz-appearance: none;
         appearance: none;
 
-        width: 78px;
+        width: 90px;
         height: 26px;
 
         background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");

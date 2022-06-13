@@ -448,10 +448,12 @@ font-size: 16px;
 }
 
 #previousButton {
-  height: 30px;
-  width: 30px;
+  height: 44px;
+  width: 44px;
 
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: center;
 
   display: inline-block;
 
@@ -461,10 +463,12 @@ font-size: 16px;
 }
 
 #nextButton {
-  height: 30px;
-  width: 30px;
+  height: 44px;
+  width: 44px;
 
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: center;
 
   display: inline-block;
 
@@ -701,7 +705,7 @@ font-size: 16px;
         -moz-appearance: none;
         appearance: none;
 
-        width: 78px;
+        width: 90px;
         height: 26px;
 
         background-image: url("data:image/svg+xml,%3Csvg width='24' height='26' viewBox='0 0 24 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9.75L12 16.25L18 9.75' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
