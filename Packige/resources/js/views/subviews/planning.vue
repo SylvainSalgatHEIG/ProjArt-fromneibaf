@@ -262,6 +262,34 @@ function courseDurationMarge(startTime, endTime) {
   return Math.abs(Math.round(diff)) * 0.88 - spacingMarge;
 }
 
+function formatDateShort(date) {
+  let day = date.toLocaleDateString("en-US").split("/")[1].padStart(2, "0");
+  let month = date.toLocaleDateString("en-US").split("/")[0].padStart(2, "0");
+  let year = date.toLocaleDateString("en-US").split("/")[2].substr(-2);
+
+  let dateFormated = day + "." + month + "." + year;
+
+  return dateFormated;
+}
+
+function getWeekStartEnd(day) {
+
+  day = new Date(day);
+
+  let first = day.getDate() - day.getDay() + 1;
+  let last = first + 4;
+
+  let firstDay = new Date(day.setDate(first));
+  let lastDay = new Date(day.setDate(last));
+
+  firstDay = formatDateShort(firstDay);
+  lastDay = formatDateShort(lastDay);
+
+  let week = firstDay + " - " + lastDay;
+
+  return week;
+}
+
 // PAUL
 
 const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
@@ -310,10 +338,20 @@ let selectedWeek = ref(24);
   
 
   <h1>Calendar</h1>
+
+  <div v-if="schedulesShowable[selectedWeek]" id="weekSelector">
+      
+      <div id="weekIndication">Semaine {{selectedWeek}}</div>
+      <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
+
+      <div id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div>
+
+      <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
+    </div>
+
+
   <div id="calendar">
-    <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
-    <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
-    Semaine {{selectedWeek}}
+    
 
 
     <div v-if="schedulesShowable[selectedWeek]" id="scheduleView">
@@ -349,11 +387,31 @@ let selectedWeek = ref(24);
     </div>
   </div>
 
-
-  <!-- <pre>{{schedulesShowable[24]}}</pre> -->
 </template>
 
 <style scoped>
+
+#weekRange {
+  display: inline-block;
+
+  height: 30px;
+
+  vertical-align: middle;
+
+  padding-top: 5px;
+}
+
+#weekSelector {
+  display: block;
+
+  margin-left: 14px;
+
+}
+
+#weekIndication {
+  width: 190px;
+  text-align: center;
+}
 
 #previousButton {
   height: 30px;
@@ -362,6 +420,10 @@ let selectedWeek = ref(24);
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
 
   display: inline-block;
+
+  margin-right: 2px;
+
+  vertical-align: middle;
 }
 
 #nextButton {
@@ -371,6 +433,10 @@ let selectedWeek = ref(24);
   background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
 
   display: inline-block;
+
+  margin-left: 2px;
+
+  vertical-align: middle;
 }
 
 .rowTime {
