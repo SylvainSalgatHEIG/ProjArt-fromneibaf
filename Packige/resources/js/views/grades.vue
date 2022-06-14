@@ -73,19 +73,23 @@ const averages = computed(() => {
   <div id="notConnected" v-if="!connexionStatus">
     <not-connected></not-connected>
   </div>
-  <div class="content"></div>
-  <div id="connected" v-if="connexionStatus">
-    <grade-modal v-show="showModal" @close="showModal = false" :id="gradeId" />
-    <div @click="addGrade()" id="btnAddGrade"></div>
+  <div class="content">
+    <div id="connected" v-if="connexionStatus">
+      <grade-modal
+        v-show="showModal"
+        @close="showModal = false"
+        :id="gradeId"
+      />
+      <div @click="addGrade()" id="btnAddGrade"></div>
 
-    <div v-for="(moduleData, moduleName) in grades" class="module">
-      <h2>{{ moduleName }}</h2>
-      <div v-for="(courseData, courseName) in moduleData">
-        <div v-if="courseName != 'average' && courseName != 'id'">
-          <h3>{{ courseName }}</h3>
-          <span class="courseWeighting">{{ courseData.weighting }}</span>
-          <br />
-          <!-- <div
+      <div v-for="(moduleData, moduleName) in grades" class="module">
+        <h2>{{ moduleName }}</h2>
+        <div v-for="(courseData, courseName) in moduleData">
+          <div v-if="courseName != 'average' && courseName != 'id'">
+            <h3>{{ courseName }}</h3>
+            <span class="courseWeighting">{{ courseData.weighting }}</span>
+            <br />
+            <!-- <div
             v-for="gradeData in courseData.grades"
             @click="editGrade(gradeData)"
             id="btnEditGrade"
@@ -93,32 +97,33 @@ const averages = computed(() => {
             Note : {{ gradeData.grade }} | Pondération :
             {{ gradeData.coefficient }}
           </div> -->
-          <div v-if="courseData.grades.length != 0">
-            <table class="tb-grades">
-              <tr>
-                <th>Note</th>
-                <th>Pondération</th>
-              </tr>
-              <tr
-                v-for="gradeData in courseData.grades"
-                @click="editGrade(gradeData)"
-                class="btnEditGrade"
-              >
-                <td class="bold">{{ gradeData.grade }}</td>
-                <td>{{ gradeData.coefficient }}%</td>
-              </tr>
-            </table>
-            <div class="courseAverage">
-              <span>Moyenne : {{ averages[moduleName][0][courseName] }}</span>
+            <div v-if="courseData.grades.length != 0">
+              <table class="tb-grades">
+                <tr>
+                  <th>Note</th>
+                  <th>Pondération</th>
+                </tr>
+                <tr
+                  v-for="gradeData in courseData.grades"
+                  @click="editGrade(gradeData)"
+                  class="btnEditGrade"
+                >
+                  <td class="bold">{{ gradeData.grade }}</td>
+                  <td>{{ gradeData.coefficient }}%</td>
+                </tr>
+              </table>
+              <div class="courseAverage">
+                <span>Moyenne : {{ averages[moduleName][0][courseName] }}</span>
+              </div>
+            </div>
+            <div v-else>
+              <span>Aucune note</span>
             </div>
           </div>
-          <div v-else>
-            <span>Aucune note</span>
-          </div>
         </div>
-      </div>
-      <div class="moduleAverage">
-        Moyenne de module : {{ averages[moduleName]["moduleAverage"] }}
+        <div class="moduleAverage">
+          Moyenne de module : {{ averages[moduleName]["moduleAverage"] }}
+        </div>
       </div>
     </div>
   </div>
