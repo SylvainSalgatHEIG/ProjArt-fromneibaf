@@ -506,12 +506,10 @@ label.labelRadio {
 }
 .addButton {
   margin: 50px auto 0 auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  
   align-items: center;
-  gap: 10px;
-  width: 290px;
+
+  width: 250px;
   height: 45px;
   background: #f84e35;
   border-radius: 40px;
