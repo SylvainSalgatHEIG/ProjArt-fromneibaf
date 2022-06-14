@@ -9,6 +9,9 @@ let currentCategory = "";
 const menusCafet = ref(null);
 // const { value: theLinks } = useLocalstorage("links", null);
 
+const { data: connexionStatus } = useFetch("/api/connexion/status");
+
+
 const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
 fetch(menuCafetUrl, {
   method: "GET",
@@ -176,7 +179,7 @@ function addLink() {
 <template>
   <h1>Liens utiles</h1>
   <LinkModal v-show="showModal" @close="showModal = false" />
-  <div @click="addLink()" id="btnAddLink"></div>
+  <div @click="addLink()" id="btnAddLink" v-show="connexionStatus"></div>
 
   <div class="content">
 

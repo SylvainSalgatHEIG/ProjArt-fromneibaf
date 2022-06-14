@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref } from "vue";
 
+import { useFetch } from "./composables/fetch";
+
 import TheNav from "./components/TheNav.vue";
 import eventsVue from "./views/events.vue";
 import gradesVue from "./views/grades.vue";
@@ -10,6 +12,18 @@ import profileVue from "./views/profile.vue";
 import registerVue from "./views/register.vue";
 
 import Modal from "./components/Modal.vue";
+
+const { data: connexionStatus } = useFetch("/api/connexion/status");
+
+
+const redirectProfile = computed(() => {
+  if (connexionStatus.value) {
+    return "#profile"
+  } else {
+    return "/login"
+  }
+});
+
 
 let showModal = ref(false);
 
@@ -64,7 +78,7 @@ const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
-  <a href="#profile">
+  <a :href="redirectProfile" v-if="hash !== '#profile'">
     <div id="login"></div>
   </a>
   <the-nav id="mainMenu" :routes="navRoutes" :curHash="curHash"></the-nav>
@@ -165,7 +179,7 @@ h2 {
   position: absolute;
   margin-left: 82.5%;
   margin-right: 0;
-  margin-top: -4px;
+  margin-top: -2px;
 }
 
 .card {

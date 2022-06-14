@@ -313,7 +313,7 @@ div.modal-header {
 input {
   border: none;
   border-bottom: 1px solid #0c223f;
-  width: 100px;
+  width: 125px;
   margin-bottom: 40px;
 }
 
@@ -335,7 +335,7 @@ input::placeholder {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
 }
 
@@ -363,7 +363,7 @@ select {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 22px;
 }
 

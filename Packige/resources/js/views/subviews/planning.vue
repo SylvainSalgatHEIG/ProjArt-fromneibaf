@@ -369,7 +369,6 @@ const dateRangeCalendar = computed(() => {
 
 <template>
   <div class="content">
-    <!-- <pre>{{schedulesShowable}}</pre> -->
     <div class="inputRow">
       <!-- <div id="listSchedule"> -->
       <select v-model="groupSelected" id="groups">
@@ -378,9 +377,10 @@ const dateRangeCalendar = computed(() => {
         </option>
         <!-- <option v-for="group in groups" :value="group.id">{{group.promotion.name}}-{{group.name}}</option> -->
       </select>
+    <!-- <pre>{{schedulesShowable}}</pre> -->
+    
     </div>
-
-    <label v-if="scheduleType == 'list'" for="showPast">
+      <label v-if="scheduleType == 'list'" for="showPast">
       <input
         v-if="scheduleType == 'list'"
         type="checkbox"
@@ -390,6 +390,8 @@ const dateRangeCalendar = computed(() => {
       Afficher l'historique
       <!-- {{schedulesShowable}} -->
     </label>
+
+    
 
     <div
       v-if="scheduleType == 'list'"
@@ -427,89 +429,89 @@ const dateRangeCalendar = computed(() => {
         </div>
       </div>
     </div>
-  </div>
 
-  <div v-if="scheduleType == 'calendar'" id="weekSelector">
-    <div id="weekIndication">Semaine {{ selectedWeek }}</div>
-    <div
-      id="previousButton"
-      v-on:click="
-        changeWeek('prev');
-        showPast = true;
-      "
-    ></div>
+    <div v-if="scheduleType == 'calendar'" id="weekSelector">
+      <div id="weekIndication">Semaine {{ selectedWeek }}</div>
+      <div
+        id="previousButton"
+        v-on:click="
+          changeWeek('prev');
+          showPast = true;
+        "
+      ></div>
 
-    <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
-    <div id="weekRange">{{ dateRangeCalendar }}</div>
-    <!-- <div v-else id="weekRange"></div> -->
-
-    <div
-      id="nextButton"
-      v-on:click="
-        changeWeek('fut');
-        showPast = true;
-      "
-    ></div>
-  </div>
-
-  <div id="calendar" v-if="scheduleType == 'calendar'">
-    <div v-if="schedulesShowable[selectedWeek]" id="scheduleView">
-      <div id="timeArea">
-        <div id="columnTime">
-          <div class="rowTime"></div>
-          <div class="rowTime">08:30<br />09:15</div>
-          <div class="rowTime">09:15<br />10:00</div>
-          <div class="rowTime">10:00<br />10:45</div>
-          <div class="rowTime">10:45<br />11:30</div>
-          <div class="rowTime">11:30<br />12:15</div>
-          <div class="rowTime">12:15<br />13:00</div>
-          <div class="rowTime">13:00<br />13:45</div>
-          <div class="rowTime">13:45<br />14:30</div>
-          <div class="rowTime">14:30<br />15:15</div>
-          <div class="rowTime">15:15<br />16:00</div>
-          <div class="rowTime">16:00<br />16:45</div>
-        </div>
-      </div>
+      <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
+      <div id="weekRange">{{ dateRangeCalendar }}</div>
+      <!-- <div v-else id="weekRange"></div> -->
 
       <div
-        v-for="course in schedulesShowable[selectedWeek].daysCourse"
-        class="column row columnDate rowDate"
-        id="rowDates"
-        v-bind:class="
-          formatDate(new Date(course.courses[0].date)) ==
-          formatDate(new Date(todayDate))
-            ? 'currentDay'
-            : ''
+        id="nextButton"
+        v-on:click="
+          changeWeek('fut');
+          showPast = true;
         "
-      >
-        {{ course.day }}<br />{{ course.dayTwoDigits }}
-      </div>
+      ></div>
+    </div>
 
-      <div id="planningView">
+    <div id="calendar" v-if="scheduleType == 'calendar'">
+      <div v-if="schedulesShowable[selectedWeek]" id="scheduleView">
+        <div id="timeArea">
+          <div id="columnTime">
+            <div class="rowTime"></div>
+            <div class="rowTime">08:30<br />09:15</div>
+            <div class="rowTime">09:15<br />10:00</div>
+            <div class="rowTime">10:00<br />10:45</div>
+            <div class="rowTime">10:45<br />11:30</div>
+            <div class="rowTime">11:30<br />12:15</div>
+            <div class="rowTime">12:15<br />13:00</div>
+            <div class="rowTime">13:00<br />13:45</div>
+            <div class="rowTime">13:45<br />14:30</div>
+            <div class="rowTime">14:30<br />15:15</div>
+            <div class="rowTime">15:15<br />16:00</div>
+            <div class="rowTime">16:00<br />16:45</div>
+          </div>
+        </div>
+
         <div
           v-for="course in schedulesShowable[selectedWeek].daysCourse"
-          class="column row"
+          class="column row columnDate rowDate"
           id="rowDates"
+          v-bind:class="
+            formatDate(new Date(course.courses[0].date)) ==
+            formatDate(new Date(todayDate))
+              ? 'currentDay'
+              : ''
+          "
         >
+          {{ course.day }}<br />{{ course.dayTwoDigits }}
+        </div>
+
+        <div id="planningView">
           <div
-            :style="{
-              'margin-top': margeEvent(courseOfDay.hours) + 'px',
-              height:
-                courseDurationMarge(courseOfDay.hours, courseOfDay.hours) +
-                'px',
-            }"
-            v-for="(courseOfDay, index) in course.courses"
-            class="courseCalendar"
+            v-for="course in schedulesShowable[selectedWeek].daysCourse"
+            class="column row"
+            id="rowDates"
           >
-            <p class="courseNameVertical">
-              {{ courseOfDay.course }} <b>{{ courseOfDay.room }}</b>
-            </p>
+            <div
+              :style="{
+                'margin-top': margeEvent(courseOfDay.hours) + 'px',
+                height:
+                  courseDurationMarge(courseOfDay.hours, courseOfDay.hours) +
+                  'px',
+              }"
+              v-for="(courseOfDay, index) in course.courses"
+              class="courseCalendar"
+            >
+              <p class="courseNameVertical">
+                {{ courseOfDay.course }} <b>{{ courseOfDay.room }}</b>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div v-else class="noCourseMessage">Aucun cours</div>
+      <div v-else class="noCourseMessage">Aucun cours</div>
+    </div>
   </div>
 </template>
 
@@ -536,12 +538,12 @@ const dateRangeCalendar = computed(() => {
 
 #weekSelector {
   display: block;
-
-  margin-left: 14px;
+  /* margin-left: 14px; */
+  text-align: center;
 }
 
 #weekIndication {
-  width: 190px;
+  width: 100%;
   text-align: center;
   font-weight: 600;
   font-size: 16px;
@@ -652,7 +654,7 @@ const dateRangeCalendar = computed(() => {
 }
 
 #calendar {
-  margin: 0 16% 0 16%;
+  margin: 0 16% 0 10%;
 
   width: 300px;
   padding: 10px;
@@ -771,10 +773,11 @@ const dateRangeCalendar = computed(() => {
   border: 1px solid black;
 } */
 .inputRow {
-  display: flex;
-  align-items: flex-end;
+  /* display: flex;
+  align-items: flex-end; */
   width: 312px;
   margin: auto;
+  text-align: right;
 }
 
 #groups:focus {
@@ -812,9 +815,9 @@ const dateRangeCalendar = computed(() => {
 
   margin-left: auto;
 
-  position: absolute;
-  top: 250px;
-  right: 25px;
+  /* position: absolute; */
+  /* top: 250px; */
+  /* right: 25px; */
 }
 
 #groups option {
