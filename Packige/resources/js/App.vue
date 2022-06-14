@@ -15,15 +15,13 @@ import Modal from "./components/Modal.vue";
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
 
-
 const redirectProfile = computed(() => {
   if (connexionStatus.value) {
-    return "#profile"
+    return "#profile";
   } else {
-    return "/login"
+    return "/login";
   }
 });
-
 
 let showModal = ref(false);
 
@@ -59,7 +57,7 @@ const routes = {
 };
 
 const navRoutes = computed(() => {
-  let baseRoute = ref({...routes});
+  let baseRoute = ref({ ...routes });
   delete baseRoute.value["#profile"];
   return baseRoute.value;
 });
@@ -225,6 +223,14 @@ h2 {
   border: none;
 }
 
+.btn-primary:hover {
+  background: #f84e35;
+}
+
+.btn:hover {
+  background: #f84e35;
+}
+
 .password-forgotten {
   font-size: small;
   font-weight: 300;
@@ -305,10 +311,9 @@ h2 {
   margin: 20px 0;
   background: #0c223f;
   color: rgba(255, 255, 255, 0.6);
-  outline:0px;
+  outline: 0px;
   border-width: 0 0 1px;
   border-color: white;
 }
-
 </style>
 
