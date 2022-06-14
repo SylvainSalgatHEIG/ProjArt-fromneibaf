@@ -42,10 +42,8 @@ const averages = computed(() => {
             gradesAverageTotal += theGradeData.grade * theGradeData.coefficient;
             gradesAverageDivision += theGradeData.coefficient;
           }
-          resultGrade =
-            Math.round((gradesAverageTotal / gradesAverageDivision) * 10) / 10;
-          moduleAverageGradesTotal +=
-            resultGrade * grades.value[moduleName][grade].weighting;
+          resultGrade = Math.round((gradesAverageTotal / gradesAverageDivision) * 10) / 10;
+          moduleAverageGradesTotal += resultGrade * grades.value[moduleName][grade].weighting;
           moduleAverageDivision += grades.value[moduleName][grade].weighting;
         } else {
           moduleAverageGradesTotal = 0;
@@ -56,8 +54,7 @@ const averages = computed(() => {
     }
     allAverages[moduleName].push(gradeAverage);
     if (moduleAverageDivision > 0) {
-      allAverages[moduleName]["moduleAverage"] =
-        moduleAverageGradesTotal / moduleAverageDivision;
+      allAverages[moduleName]["moduleAverage"] = Math.round((moduleAverageGradesTotal / moduleAverageDivision) * 10) / 10;
     } else {
       allAverages[moduleName]["moduleAverage"] = 0;
     }
