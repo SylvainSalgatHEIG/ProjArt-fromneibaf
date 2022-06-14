@@ -369,7 +369,6 @@ const dateRangeCalendar = computed(() => {
 
 <template>
   <div class="content">
-    <!-- <pre>{{schedulesShowable}}</pre> -->
     <div class="inputRow">
       <!-- <div id="listSchedule"> -->
       <select v-model="groupSelected" id="groups">
@@ -378,9 +377,11 @@ const dateRangeCalendar = computed(() => {
         </option>
         <!-- <option v-for="group in groups" :value="group.id">{{group.promotion.name}}-{{group.name}}</option> -->
       </select>
+      <h1></h1>
+    <!-- <pre>{{schedulesShowable}}</pre> -->
+    
     </div>
-
-    <label v-if="scheduleType == 'list'" for="showPast">
+      <label v-if="scheduleType == 'list'" for="showPast">
       <input
         v-if="scheduleType == 'list'"
         type="checkbox"
@@ -390,6 +391,8 @@ const dateRangeCalendar = computed(() => {
       Afficher l'historique
       <!-- {{schedulesShowable}} -->
     </label>
+
+    
 
     <div
       v-if="scheduleType == 'list'"
@@ -541,7 +544,7 @@ const dateRangeCalendar = computed(() => {
 }
 
 #weekIndication {
-  width: 190px;
+  width: 219px;
   text-align: center;
   font-weight: 600;
   font-size: 16px;
@@ -771,8 +774,8 @@ const dateRangeCalendar = computed(() => {
   border: 1px solid black;
 } */
 .inputRow {
-  display: flex;
-  align-items: flex-end;
+  /* display: flex;
+  align-items: flex-end; */
   width: 312px;
   margin: auto;
 }
