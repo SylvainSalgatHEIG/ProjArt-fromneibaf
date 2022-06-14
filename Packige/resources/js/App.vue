@@ -17,7 +17,7 @@ const { data: connexionStatus } = useFetch("/api/connexion/status");
 
 
 const redirectProfile = computed(() => {
-  if (connexionStatus == true) {
+  if (connexionStatus.value) {
     return "#profile"
   } else {
     return "/login"
@@ -78,7 +78,7 @@ const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
-  <a href="#profile">
+  <a :href="redirectProfile" v-if="hash !== '#profile'">
     <div id="login"></div>
   </a>
   <the-nav id="mainMenu" :routes="navRoutes" :curHash="curHash"></the-nav>
