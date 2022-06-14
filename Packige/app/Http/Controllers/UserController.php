@@ -64,7 +64,7 @@ class UserController extends Controller
         if (!$link) {
             return 'FAILED';
         }
-        return 'SUCCESS';
+        return $link->id;
     }
 
     public function editLink(Request $request)
