@@ -335,7 +335,7 @@ function getWeekStartEnd(day) {
 
 const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
 
-let scheduleType = ref('')
+let scheduleType = ref('calendar')
 
 watchEffect(() => {
   // console.log(userInfos);
