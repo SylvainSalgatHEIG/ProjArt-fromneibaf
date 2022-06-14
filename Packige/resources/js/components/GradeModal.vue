@@ -104,9 +104,7 @@ function addOrEditGrade(id = props.id) {
     };
     addGrade(data, courseShortname, moduleName);
   }
-  if (!error.value) {
-    emit("close");
-  }
+  emit("close");
 }
 
 function editGrade(data, courseShortname, moduleName) {
