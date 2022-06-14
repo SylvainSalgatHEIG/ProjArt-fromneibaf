@@ -28,6 +28,16 @@ function getWeekNumber(date) {
     return weekNumber;
 }
 
+function getDatesFromWeekNb(weekNumber, year = todayDate.value.getFullYear()) {
+  let monday = new Date(year, 0, (1 + (weekNumber) * 7));
+    while (monday.getDay() !== 1) {
+        monday.setDate(monday.getDate() - 1);
+    }
+    let friday = new Date(monday);
+    friday.setDate(friday.getDate() + 4);
+    return friday;
+}
+
 /**
  * Format the date to dd.mm.yyyy
  * @param {Date} date
@@ -145,24 +155,26 @@ function formatTwoDigits(date) {
 }
 
 
-function getDateRange({dates, type = 'short'}) {
-  let end = new Date(dates[dates.length - 1]);
+function getDateRange({date, type = 'short'}) {
+  let end = new Date(date);
+  // console.log("The date: " + date)
+  // console.log("Date" + end);
   if (end.getDay() != 5) {
     end.setDate(end.getDate() + (5 - end.getDay()));
   }
-  let start = new Date(dates[dates.length - 1]);
+  let start = new Date(end);
   start.setDate(start.getDate() - 4);
   // start = start.getUTCDate === 0 ? start : new Date(start.getTime() + 24 * 60 * 60 * 1000);
   // end = end.getUTCDate === 6 ? end : new Date(end.getTime() + 24 * 60 * 60 * 1000);
   if (type === 'short') {
     return {
-      start: formatTwoDigits(start.getUTCDate()) + '.' + formatTwoDigits(start.getUTCMonth() + 1),
-      end: formatTwoDigits(end.getUTCDate()) + '.' + formatTwoDigits(end.getUTCMonth() + 1)
+      start: formatTwoDigits(start.getDate()) + '.' + formatTwoDigits(start.getMonth() + 1),
+      end: formatTwoDigits(end.getDate()) + '.' + formatTwoDigits(end.getMonth() + 1)
     };
   }else if(type === 'long') {
     return {
-      start: formatTwoDigits(start.getUTCDate()) + '.' + formatTwoDigits(start.getUTCMonth() + 1) + '.' + start.getUTCFullYear().toString().substr(-2),
-      end: formatTwoDigits(end.getUTCDate()) + '.' + formatTwoDigits(end.getUTCMonth() + 1) + '.' + end.getUTCFullYear().toString().substr(-2)
+      start: formatTwoDigits(start.getDate()) + '.' + formatTwoDigits(start.getMonth() + 1) + '.' + start.getFullYear().toString().substr(-2),
+      end: formatTwoDigits(end.getDate()) + '.' + formatTwoDigits(end.getMonth() + 1) + '.' + end.getFullYear().toString().substr(-2)
     };
   }
 }
@@ -175,8 +187,10 @@ const schedulesShowable = computed(() => {
 
   allWeeks.forEach(week => {
     let weekCourses = schedulesFiltered.value.filter(value => value.weekNumber === week);
-    let dateRange = getDateRange({dates: weekCourses.map(value => value.date)});
-    let dateRangeLong = getDateRange({dates: weekCourses.map(value => value.date), type: 'long'});
+    let dates = weekCourses.map(value => value.date);
+    // console.log(getDateRange(getDatesFromWeekNb(selectedWeek.value));
+    let dateRange = getDateRange({date: dates[dates.length - 1]});
+    let dateRangeLong = getDateRange({date: dates[dates.length - 1], type: 'long'});
     let daysCourse = weekDaysShort.map(day => {
       // console.log(day);
       let hasCourses = true;
@@ -218,17 +232,30 @@ function changeWeek(prevOrFut) {
     // prevent the user to go under week 1. 
     if (selectedWeek.value > 1) {
       selectedWeek.value--;
+    }else if (selectedWeek.value === 1) {
+      selectedWeek.value = 52;
+      currentYear.value -= 1;
     }
   }else if (prevOrFut === 'fut') {
-    // prevent the user to go further than his school last week.
-    if (schedulesShowable.value[selectedWeek.value + 1]) {
+    // VERSION 1 : prevent the user to go over week 52.
+    if (selectedWeek.value < 52) {
       selectedWeek.value++;
+    } else if (selectedWeek.value === 52) {
+      selectedWeek.value = 1;
+      currentYear.value += 1;
     }
+
+    // VERSION 2 : prevent the user to go over his last week of school
+    // issue: if there is a vacation, it won't work. 
+    // prevent the user to go further than his school last week.
+    // if (schedulesShowable.value[selectedWeek.value + 1]) {
+    //   selectedWeek.value++;
+    // }
   }
 }
 
 // PAUL
-console.log(schedulesShowable);
+// console.log(schedulesShowable);
 
 const spacingMarge = 6;
 
@@ -310,12 +337,19 @@ const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
 const {value: scheduleType} = useLocalstorage('scheduleType', 'calendar');
 
 let selectedWeek = ref(24);
+let currentYear = ref(2022);
+const dateRangeCalendar = computed(() => {
+  let dateRangeCal = getDateRange({date: getDatesFromWeekNb(selectedWeek.value, currentYear.value), type: 'long'});
+  return `${dateRangeCal.start}-${dateRangeCal.end}`;
+})
 
 </script>
 
 <template>
   <div  class="content">
     <h1>Horaires</h1>
+    <!-- {{dateRangeCalendar}} -->
+    <!-- {{getDateRange({date: getDatesFromWeekNb(selectedWeek), type: 'long'})}} -->
     <!-- <pre>{{schedulesShowable}}</pre> -->
       <div class="inputRow">
       <!-- <div id="listSchedule"> -->
@@ -359,8 +393,8 @@ let selectedWeek = ref(24);
       <div id="previousButton" v-on:click="changeWeek('prev'); showPast=true"></div>
 
       <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
-      <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ schedulesShowable[selectedWeek].dateRangeLong }}</div>
-      <div v-else id="weekRange"></div>
+      <div id="weekRange">{{dateRangeCalendar}}</div>
+      <!-- <div v-else id="weekRange"></div> -->
 
       <div id="nextButton" v-on:click="changeWeek('fut'); showPast=true"></div>
     </div>
