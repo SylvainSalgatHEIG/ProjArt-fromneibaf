@@ -29,7 +29,7 @@ class UserController extends Controller
             ->join('groups', 'group_user.group_id', 'groups.id')
             ->join('promotions', 'promotions.id', 'groups.promotion_id')
             ->where('users.id', '=', Auth::id())
-            ->select('users.lastname', 'users.firstname', 'users.email', 'promotions.name as promotionName', 'groups.name as groupName')
+            ->select('users.lastname', 'users.firstname', 'users.email', 'users.schedule_type', 'promotions.name as promotionName', 'groups.name as groupName')
             ->get();
 
         $userInfos['fullname'] = $query[0]->firstname . ' ' . $query[0]->lastname;
@@ -37,6 +37,7 @@ class UserController extends Controller
         foreach ($query as $key => $group) {
             $userInfos['groups'][$key] = $group->promotionName . '-' . $group->groupName;
         }
+        $userInfos['schedule_type'] = $query[0]->schedule_type;
         return $userInfos;
     }
 
@@ -77,5 +78,13 @@ class UserController extends Controller
     public function deleteLink(Request $request)
     {
         $deleted = DB::table('links')->where('id', '=', $request->id)->delete();
+    }
+
+    public function changeScheduleView(Request $request){
+        $update = DB::table('users')
+        ->where('id', Auth::id())
+        ->update(['schedule_type' => $request->type]);
+
+        return $update;
     }
 }

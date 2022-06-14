@@ -1,13 +1,29 @@
 <script setup>
-import { computed, ref } from "vue";
-import { useFetch } from "../composables/fetch";
+import { computed, ref, watchEffect } from "vue";
+import { useFetch, usePost } from "../composables/fetch";
 import NotConnected from "../components/NotConnected.vue";
+import { userInfos } from "../stores/userInfos.js";
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
-const { data: userInfos } = useFetch("/api/user/get");
+
+// let view = ref('list');
+let view = ref('');
+// let view = computed('');
+
+watchEffect(() => {
+  if(userInfos.value != null){
+    view.value = userInfos.value.schedule_type
+  }
+})
+
+function save(){
+  console.log(view.value);
+  userInfos.value.schedule_type = view.value
+  usePost({ url: "/api/user/changeScheduleView", data: {type: view.value} })
+}
 
 function logout() {
-	window.location.href = "/logout";
+  window.location.href = "/logout";
 }
 </script>
 
@@ -24,11 +40,29 @@ function logout() {
     <ul v-if="userInfos" v-for="group of userInfos['groups']">
       <li>{{ group }}</li>
     </ul>
-    <button>Ajouter une classe +</button>
     <hr />
     <h2>Préférences</h2>
     Vue du calendrier :
-	<br>
+    <form @submit.prevent="save">
+      <label for="calendarView">Calendrier</label>
+      <input
+        type="radio"
+        id="calendatView"
+        name="view"
+        value="calendar"
+        v-model="view"
+      />
+      <label for="list">Liste</label>
+      <input
+        type="radio"
+        id="listView"
+        name="view"
+        value="list"
+        v-model="view"
+      />
+      <button>Enregistrer</button>
+    </form>
+    <br />
     <button @click="logout">Déconnexion</button>
   </div>
 </template>
