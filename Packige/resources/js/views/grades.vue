@@ -70,10 +70,11 @@ const averages = computed(() => {
 
 <template>
   <h1>Notes</h1>
-  <div id="notConnected" v-if="!connexionStatus">
-    <not-connected></not-connected>
-  </div>
   <div class="content">
+    <div id="notConnected" v-if="!connexionStatus">
+      <not-connected></not-connected>
+    </div>
+
     <div id="connected" v-if="connexionStatus">
       <grade-modal
         v-show="showModal"
@@ -270,5 +271,9 @@ const averages = computed(() => {
   font-weight: 700;
   font-size: 16px;
   line-height: 30px;
+}
+
+a:hover {
+  color: #77B0C5;
 }
 </style>
