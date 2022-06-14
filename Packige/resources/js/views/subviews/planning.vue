@@ -357,9 +357,6 @@ const dateRangeCalendar = computed(() => {
 
 <template>
   <div  class="content">
-    <h1>Horaires</h1>
-    <!-- {{dateRangeCalendar}} -->
-    <!-- {{getDateRange({date: getDatesFromWeekNb(selectedWeek), type: 'long'})}} -->
     <!-- <pre>{{schedulesShowable}}</pre> -->
       <div class="inputRow">
       <!-- <div id="listSchedule"> -->
