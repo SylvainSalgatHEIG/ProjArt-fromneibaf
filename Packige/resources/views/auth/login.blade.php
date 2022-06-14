@@ -126,8 +126,8 @@
 
                 @if (Route::has('password.request'))
                 <div>
-                    <a class="password-forgotten" href="{{ route('password.request') }}">
-                        {{ __('Mot de passe oublié ?') }}
+                    <a class="password-forgotten" href="/register">
+                        {{ __('Créer un compte Packige') }}
                     </a>
                 </div>
                 @endif
