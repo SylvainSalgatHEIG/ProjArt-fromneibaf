@@ -3,6 +3,7 @@ import {computed, ref, watchEffect} from 'vue';
 import { useFetch } from '../../composables/fetch';
 import { useLocalstorage } from '../../composables/localstorage';
 import { apiSchedules} from '../../config/apiUrls.js';
+import { userInfos } from "../../stores/userInfos.js";
 
 
 const {data: schedules} = useFetch(apiSchedules);
@@ -334,7 +335,16 @@ function getWeekStartEnd(day) {
 
 const {value: groupSelected} = useLocalstorage('groupSelected', 'IM49-2');
 
-const {value: scheduleType} = useLocalstorage('scheduleType', 'calendar');
+let scheduleType = ref('')
+
+watchEffect(() => {
+  // console.log(userInfos);
+  if (userInfos.value != null) {
+    console.log(userInfos.value);
+    scheduleType.value = userInfos.value.schedule_type;
+  }
+});
+
 
 let selectedWeek = ref(24);
 let currentYear = ref(2022);
