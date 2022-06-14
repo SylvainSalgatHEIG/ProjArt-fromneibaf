@@ -70,7 +70,7 @@ class GradeController extends Controller
                     ->get();
 
                 foreach ($grades as $grade) {
-                    array_push($gradesArray[$module->name][$course->shortname]['grades'], ['id' => $grade->id, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
+                    array_push($gradesArray[$module->name][$course->shortname]['grades'], ['id' => $grade->id, 'name' => $grade->name, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
                 }
                 // $gradesArray[$module->name][$course->shortname]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->shortname]);
             }
@@ -129,6 +129,7 @@ class GradeController extends Controller
 
         $grade = new Grade;
 
+        $grade->name = $request->name;
         $grade->coefficient = $request->coefficient;
         $grade->grade = $request->grade;
         $grade->user_id = Auth::id();
@@ -144,7 +145,7 @@ class GradeController extends Controller
     {
         $update = DB::table('grades')
             ->where('id', $request->id)
-            ->update(['grade' => $request->grade, 'coefficient' => $request->coefficient]);
+            ->update(['name' => $request->name, 'grade' => $request->grade, 'coefficient' => $request->coefficient]);
         if ($update) {
             return 'success';
         } else {
