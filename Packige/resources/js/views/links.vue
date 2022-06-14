@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useFetch } from "../composables/fetch";
+import LinkModal from "../components/LinkModal.vue";
 import { useLocalstorage } from "../composables/localstorage";
 import { apiUserLinks } from "../config/apiUrls.js";
 
@@ -27,6 +28,7 @@ fetch(menuCafetUrl, {
   });
 
 const { data: userLinks } = useFetch(apiUserLinks);
+
 
 const mainLinks = ref([
   {
@@ -160,11 +162,24 @@ const menusFormatted = computed(() => {
   });
   return cafeteria;
 });
+
+let linkId = ref(null);
+let showModal = ref(false);
+
+function addLink() {
+  linkId.value = null;
+  showModal.value = true;
+}
+
 </script>
 
 <template>
   <h1>Liens utiles</h1>
+  <LinkModal v-show="showModal" @close="showModal = false" />
+  <div @click="addLink()" id="btnAddLink"></div>
+
   <div class="content">
+
     <div v-for="link in links" class="link">
       <h2 v-if="link.category != currentCategory">
         {{ (currentCategory = link.category) }}
@@ -205,6 +220,28 @@ const menusFormatted = computed(() => {
   </div>
 </template>
 <style>
+
+#btnAddLink {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 50%;
+    background-color: #FF3820;
+
+    position: fixed;
+
+    bottom: 100px;
+
+    right: 5%;
+    
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1V15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1 8H15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px;
+
+    cursor: pointer;
+  }
+
 .content {
   margin-left: auto;
   margin-right: auto;
