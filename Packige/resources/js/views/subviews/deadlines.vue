@@ -175,7 +175,7 @@ function addDeadline() {
 			<div v-for="(week) of dealinesArray">
 				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week.week)">{{week.weekRange}}</h2>
 					<div v-for="(deadline, index) of week.deadlines">
-						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline" @click="editDeadline(deadline)">
+						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">
 							
 							<div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
 								{{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
