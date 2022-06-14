@@ -211,6 +211,22 @@ const schedulesShowable = computed(() => {
   return myArray;
 });
 
+// EMILE
+
+function changeWeek(prevOrFut) {
+  if (prevOrFut === 'prev') {
+    // prevent the user to go under week 1. 
+    if (selectedWeek.value > 1) {
+      selectedWeek.value--;
+    }
+  }else if (prevOrFut === 'fut') {
+    // prevent the user to go further than his school last week.
+    if (schedulesShowable.value[selectedWeek.value + 1]) {
+      selectedWeek.value++;
+    }
+  }
+}
+
 // PAUL
 console.log(schedulesShowable);
 
@@ -340,13 +356,13 @@ let selectedWeek = ref(24);
   <div v-if="scheduleType == 'calendar'" id="weekSelector">
       
       <div id="weekIndication">Semaine {{selectedWeek}}</div>
-      <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
+      <div id="previousButton" v-on:click="changeWeek('prev'); showPast=true"></div>
 
       <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
       <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ schedulesShowable[selectedWeek].dateRangeLong }}</div>
       <div v-else id="weekRange"></div>
 
-      <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
+      <div id="nextButton" v-on:click="changeWeek('fut'); showPast=true"></div>
     </div>
 
 
