@@ -145,7 +145,7 @@ function formatTwoDigits(date) {
 }
 
 
-function getDateRange(dates) {
+function getDateRange({dates, type = 'short'}) {
   let end = new Date(dates[dates.length - 1]);
   if (end.getDay() != 5) {
     end.setDate(end.getDate() + (5 - end.getDay()));
@@ -154,10 +154,17 @@ function getDateRange(dates) {
   start.setDate(start.getDate() - 4);
   // start = start.getUTCDate === 0 ? start : new Date(start.getTime() + 24 * 60 * 60 * 1000);
   // end = end.getUTCDate === 6 ? end : new Date(end.getTime() + 24 * 60 * 60 * 1000);
-  return {
-    start: formatTwoDigits(start.getUTCDate()) + '.' + formatTwoDigits(start.getUTCMonth() + 1),
-    end: formatTwoDigits(end.getUTCDate()) + '.' + formatTwoDigits(end.getUTCMonth() + 1)
-  };
+  if (type === 'short') {
+    return {
+      start: formatTwoDigits(start.getUTCDate()) + '.' + formatTwoDigits(start.getUTCMonth() + 1),
+      end: formatTwoDigits(end.getUTCDate()) + '.' + formatTwoDigits(end.getUTCMonth() + 1)
+    };
+  }else if(type === 'long') {
+    return {
+      start: formatTwoDigits(start.getUTCDate()) + '.' + formatTwoDigits(start.getUTCMonth() + 1) + '.' + start.getUTCFullYear().toString().substr(-2),
+      end: formatTwoDigits(end.getUTCDate()) + '.' + formatTwoDigits(end.getUTCMonth() + 1) + '.' + end.getUTCFullYear().toString().substr(-2)
+    };
+  }
 }
 
 const schedulesShowable = computed(() => {
@@ -168,7 +175,8 @@ const schedulesShowable = computed(() => {
 
   allWeeks.forEach(week => {
     let weekCourses = schedulesFiltered.value.filter(value => value.weekNumber === week);
-    let dateRange = getDateRange(weekCourses.map(value => value.date));
+    let dateRange = getDateRange({dates: weekCourses.map(value => value.date)});
+    let dateRangeLong = getDateRange({dates: weekCourses.map(value => value.date), type: 'long'});
     let daysCourse = weekDaysShort.map(day => {
       // console.log(day);
       let hasCourses = true;
@@ -195,40 +203,11 @@ const schedulesShowable = computed(() => {
     });
 
     myArray[week] = {
-      dates: `${dateRange.start}-${dateRange.end} `,
+      dateRangeLong: `${dateRangeLong.start}-${dateRangeLong.end}`,
+      dates: `${dateRange.start}-${dateRange.end}`,
       daysCourse
     };
   });
-
-// const schedulesShowable = computed(() => {
-//   if (!schedulesFiltered.value) return [];
-//   console.log(schedulesFiltered.value);
-//   let allWeeks = [... new Set(schedulesFiltered.value.map(value => value.weekNumber))];
-//   let myArray = {};
-
-//   allWeeks.forEach(week => {
-//     let weekCourses = schedulesFiltered.value.filter(value => value.weekNumber === week);
-//     let dateRange = getDateRange(weekCourses.map(value => value.date));
-//     let daysCourse = daysShort.map(day => {
-//       let dayNb = daysShort.indexOf(day) -1;
-//       if (dayNb == -1) dayNb = 6;
-//       let dayTwoDigits = 'test';
-//       let courses = schedulesFiltered.value.filter(course => {
-        
-//         if (typeof(weekCourses[dayNb]) !== 'undefined') {
-//           dayTwoDigits = formatTwoDigits(new Date(weekCourses[dayNb].date).getUTCDate());
-//         }
-//         // course.dateTwoDigits = formatTwoDigits(course.),
-//         return course.weekNumber === week && course.day === day
-//         });
-//       return { day,courses, dayTwoDigits: dayTwoDigits}
-//     });
-
-//     myArray[week] = {
-//       dates: `${dateRange.start}-${dateRange.end} `,
-//       daysCourse
-//     };
-//   });
   return myArray;
 });
 
@@ -363,7 +342,8 @@ let selectedWeek = ref(24);
       <div id="weekIndication">Semaine {{selectedWeek}}</div>
       <div id="previousButton" v-on:click="selectedWeek -= 1; showPast=true"></div>
 
-      <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div>
+      <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
+      <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ schedulesShowable[selectedWeek].dateRangeLong }}</div>
       <div v-else id="weekRange"></div>
 
       <div id="nextButton" v-on:click="selectedWeek += 1; showPast=true"></div>
