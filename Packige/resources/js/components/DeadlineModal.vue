@@ -232,7 +232,7 @@ function deleteDeadline(data, courseFullName, moduleName) {
                   placeholder="Décris la tâche..."
                 ></textarea>
 
-                <label for="deadline">Rendu</label>
+                <label :class="btnText == 'Ajouter' ? '' : 'selectInactive'" for="deadline">Rendu</label>
                 <input
                   type="radio"
                   id="deadline"
@@ -241,7 +241,7 @@ function deleteDeadline(data, courseFullName, moduleName) {
                   v-model="type"
                   :disabled="disabledSelect"
                 />
-                <label for="exam">Examen</label>
+                <label :class="btnText == 'Ajouter' ? '' : 'selectInactive'" for="exam">Examen</label>
                 <input
                   type="radio"
                   id="exam"
@@ -591,5 +591,9 @@ div.modal-footer {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.selectInactive {
+  color: rgba(12, 34, 63, 0.6);
 }
 </style>
