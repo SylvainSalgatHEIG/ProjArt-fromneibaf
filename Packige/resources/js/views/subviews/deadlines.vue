@@ -119,6 +119,25 @@ function getWeekStartEnd(day) {
   return week;
 }
 
+function checkIfUpcoming(date) {
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+
+  date = new Date(date.split(' ')[0]);
+
+  return date > today;
+}
+
+function checkIfWeekPassed(weekNbr) {
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+
+  let startYear = new Date(new Date().getFullYear(), 0, 1);
+  let endWeek = new Date(startYear.setDate(startYear.getDate() + weekNbr * 7));
+
+  return endWeek > today;
+}
+
 let deadlineId = ref(null);
 let showModal = ref(false);
 
@@ -154,9 +173,9 @@ function addDeadline() {
 		</div>
 		<div class="content">
 			<div v-for="(week) of dealinesArray">
-				<h2 v-if="week.deadlines[0].group_id == groupSelected">{{week.weekRange}}</h2>
+				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week.week)">{{week.weekRange}}</h2>
 					<div v-for="(deadline, index) of week.deadlines">
-						<div v-if="deadline.group_id == groupSelected" class="deadline" @click="editDeadline(deadline)">
+						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">
 							
 							<div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
 								{{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}

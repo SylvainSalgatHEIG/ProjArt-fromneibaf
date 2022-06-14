@@ -61,6 +61,7 @@ Route::get('/api/user/links', [UserController::class,'getLinks']);
 Route::post('/api/user/link/add', [UserController::class,'addLink']);
 Route::post('/api/user/link/edit', [UserController::class,'editLink']);
 Route::post('/api/user/link/delete', [UserController::class,'deleteLink']);
+Route::post('/api/user/changeScheduleView', [UserController::class,'changeScheduleView']);
 
 Route::get('/api/connexion/status', [ConnexionController::class, 'getConnexionStatus']);
 
