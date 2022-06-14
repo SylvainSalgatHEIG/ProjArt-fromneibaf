@@ -123,7 +123,6 @@ function getCurrentDayIndex() {
  return today.getDay()-1;
 }
 
-getCurrentDayIndex();
 
 const menusFormatted = computed(() => {
   if (!menusCafet.value) return [];
@@ -170,6 +169,7 @@ function addLink() {
   linkId.value = null;
   showModal.value = true;
 }
+
 
 </script>
 
