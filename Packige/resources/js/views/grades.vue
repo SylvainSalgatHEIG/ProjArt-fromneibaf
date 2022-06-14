@@ -217,7 +217,7 @@ const averages = computed(() => {
   margin-right: auto;
   margin-bottom: 40px;
 
-  width: 90%;
+  width: 100%;
 
   border-radius: 25px;
   border: 3px solid transparent;
@@ -250,7 +250,6 @@ const averages = computed(() => {
 
   display: inline-block;
 
-  margin-left: 5px;
 }
 
 .module .courseWeighting {
