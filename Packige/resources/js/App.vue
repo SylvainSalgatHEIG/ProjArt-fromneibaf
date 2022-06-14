@@ -64,8 +64,7 @@ const curComponent = computed(() => routes[curHash.value].component);
 </script>
 
 <template>
-  <a href="#profile" v-if="hash != '#profile'">
-    
+  <a href="#profile">
     <div id="login"></div>
   </a>
   <the-nav id="mainMenu" :routes="navRoutes" :curHash="curHash"></the-nav>
@@ -166,6 +165,7 @@ h2 {
   position: absolute;
   margin-left: 82.5%;
   margin-right: 0;
+  margin-top: -4px;
 }
 
 .card {
