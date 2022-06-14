@@ -3,6 +3,7 @@ import { computed, ref, watchEffect } from "vue";
 import { useFetch, usePost } from "../composables/fetch";
 import NotConnected from "../components/NotConnected.vue";
 import { userInfos } from "../stores/userInfos.js";
+import { useLocalstorage } from '../composables/localstorage';
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
 
@@ -22,6 +23,11 @@ function save(){
   usePost({ url: "/api/user/changeScheduleView", data: {type: view.value} })
 }
 
+function changeViewPlanning(event) {
+  const typeView = event.target.value;
+
+}
+
 function logout() {
   window.location.href = "/logout";
 }
@@ -33,38 +39,179 @@ function logout() {
     <not-connected></not-connected>
   </div>
   <div id="connected" v-if="connexionStatus">
+
+    <h1 v-if="userInfos" id="userFullname">{{ userInfos.fullname }}</h1>
+    <div class="content">
     <h2>Infos</h2>
     <h3>Email</h3>
-    <p v-if="userInfos">{{ userInfos.email }}</p>
+    <p class="userInfoOpacity" v-if="userInfos">{{ userInfos.email }}</p>
     <h3>Classe</h3>
-    <ul v-if="userInfos" v-for="group of userInfos['groups']">
-      <li>{{ group }}</li>
+    <ul v-if="userInfos">
+      <li class="userInfoOpacity" v-for="group of userInfos['groups']">{{ group }}</li>
     </ul>
     <hr />
     <h2>Préférences</h2>
-    Vue du calendrier :
-    <form @submit.prevent="save">
-      <label for="calendarView">Calendrier</label>
-      <input
-        type="radio"
-        id="calendatView"
-        name="view"
-        value="calendar"
-        v-model="view"
-      />
-      <label for="list">Liste</label>
-      <input
-        type="radio"
-        id="listView"
-        name="view"
-        value="list"
-        v-model="view"
-      />
-      <button>Enregistrer</button>
-    </form>
+    <div class="left">
+      <p>Vue du calendrier : </p>
+    </div>
+    <div class="right">
+      <form @submit.prevent="save">
+        <label for="calendarView">Calendrier</label>
+        <input 
+          @change="changeViewPlanning($event)"
+          type="radio"
+          id="calendatView"
+          name="view"
+          value="calendar"
+          v-model="view"
+        />
+        <br />
+        <br />
+        <label for="list">Liste</label>
+        <input
+          @change="changeViewPlanning($event)"
+          type="radio"
+          id="listView"
+          name="view"
+          value="list"
+          v-model="view"
+        />
+      </form>
+    </div>
     <br />
-    <button @click="logout">Déconnexion</button>
+    <br />
+    <button @click="logout" id="logoutBtn">Déconnexion</button>
   </div>
+</div>
 </template>
-<style>
+
+<style scoped>
+  #userFullname {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    margin-top: 14px;
+  }
+
+  h2 {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 36px;
+
+    letter-spacing: -0.02em;
+    font-feature-settings: 'calt' off;
+  }
+
+  h3 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+
+    letter-spacing: -0.02em;
+    font-feature-settings: 'calt' off;
+
+    margin-top: 30px;
+  }
+
+  h3:first-of-type {
+    margin-top: 14px;
+  }
+
+  .userInfoOpacity {
+    color: rgb(255, 255, 255, 0.6);
+  }
+
+  ul {
+    padding: 0;
+  }
+
+  ul li{
+    display: inline;
+  }
+
+  ul li:after {
+    content: " | ";
+  }
+
+  ul li:last-child:after {
+    content: "";
+  }
+
+  .left, .right {
+    width: 50%;
+    height: 80px;
+  }
+
+  .left {
+    float: left;
+  }
+
+  .right {
+    float: right;
+  }
+
+
+  input[type="radio"] {
+    height: 25px;
+    width: 25px;
+    appearance: none;
+    background-color: #0C223F;
+    margin: 0;
+    color: #0c223f;
+    border: 0.15em solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    margin: 0 0px -6px 15px;
+
+    float: right;
+    margin-right: 35px;
+  }
+  input[type="radio"]:first {
+    margin-right: 35px;
+  }
+
+  input[type="radio"]:checked {
+    border: 2px solid #77B0C5;
+    background-color: #77B0C5;
+    box-shadow: 0px 0px 0px 4px #0C223F inset;
+  }
+  .container input:checked .checkmark {
+    background-color: #2196f3;
+  }
+
+
+  #logoutBtn {
+    width: 177px;
+    height: 45px;
+    
+    align-self: center;
+
+    background: #F84E35;
+    border-radius: 40px;
+
+    border: none;
+
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 25px;
+
+    color: #FFFFFF;
+
+    display: grid;
+    margin: 70px auto 0 auto;
+
+    padding-top: 8px;
+  }
+
 </style>
