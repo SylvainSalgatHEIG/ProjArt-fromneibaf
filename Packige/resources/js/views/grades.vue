@@ -249,7 +249,6 @@ const averages = computed(() => {
 
   display: inline-block;
 
-  margin-left: 5px;
 }
 
 .module .courseWeighting {
