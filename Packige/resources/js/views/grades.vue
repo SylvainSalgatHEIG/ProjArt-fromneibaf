@@ -42,8 +42,10 @@ const averages = computed(() => {
             gradesAverageTotal += theGradeData.grade * theGradeData.coefficient;
             gradesAverageDivision += theGradeData.coefficient;
           }
-          resultGrade = Math.round((gradesAverageTotal / gradesAverageDivision) * 10) / 10;
-          moduleAverageGradesTotal += resultGrade * grades.value[moduleName][grade].weighting;
+          resultGrade =
+            Math.round((gradesAverageTotal / gradesAverageDivision) * 10) / 10;
+          moduleAverageGradesTotal +=
+            resultGrade * grades.value[moduleName][grade].weighting;
           moduleAverageDivision += grades.value[moduleName][grade].weighting;
         } else {
           moduleAverageGradesTotal = 0;
@@ -54,7 +56,9 @@ const averages = computed(() => {
     }
     allAverages[moduleName].push(gradeAverage);
     if (moduleAverageDivision > 0) {
-      allAverages[moduleName]["moduleAverage"] = Math.round((moduleAverageGradesTotal / moduleAverageDivision) * 10) / 10;
+      allAverages[moduleName]["moduleAverage"] =
+        Math.round((moduleAverageGradesTotal / moduleAverageDivision) * 10) /
+        10;
     } else {
       allAverages[moduleName]["moduleAverage"] = 0;
     }
@@ -69,6 +73,7 @@ const averages = computed(() => {
   <div id="notConnected" v-if="!connexionStatus">
     <not-connected></not-connected>
   </div>
+  <div class="content"></div>
   <div id="connected" v-if="connexionStatus">
     <grade-modal v-show="showModal" @close="showModal = false" :id="gradeId" />
     <div @click="addGrade()" id="btnAddGrade"></div>
@@ -88,13 +93,17 @@ const averages = computed(() => {
             Note : {{ gradeData.grade }} | Pondération :
             {{ gradeData.coefficient }}
           </div> -->
-          <div  v-if="courseData.grades.length != 0">
+          <div v-if="courseData.grades.length != 0">
             <table class="tb-grades">
               <tr>
                 <th>Note</th>
                 <th>Pondération</th>
               </tr>
-              <tr v-for="gradeData in courseData.grades" @click="editGrade(gradeData)" class="btnEditGrade">
+              <tr
+                v-for="gradeData in courseData.grades"
+                @click="editGrade(gradeData)"
+                class="btnEditGrade"
+              >
                 <td class="bold">{{ gradeData.grade }}</td>
                 <td>{{ gradeData.coefficient }}%</td>
               </tr>
@@ -116,67 +125,66 @@ const averages = computed(() => {
 </template>
 
 <style scoped>
+#connected {
+  margin-top: 27px;
+}
 
-    #connected {
-      margin-top:27px;
-    }
+.courseAverage {
+  width: 50%;
+  min-width: 280px;
+  margin: auto;
+  text-align: right;
+}
 
-  .courseAverage {
-    width: 50%;
-    min-width: 280px;
-    margin: auto;
-    text-align: right;
-  }
+.bold {
+  font-weight: bold;
+}
 
-  .bold {
-    font-weight: bold;
-  }
+.tb-grades {
+  width: 50%;
+  min-width: 280px;
+  border-collapse: separate;
+  border-spacing: 0 5px;
+  text-align: center;
+  margin: 0 auto;
+}
 
-  .tb-grades {
-    width: 50%;
-    min-width: 280px;
-    border-collapse: separate;
-    border-spacing: 0 5px;
-    text-align: center;
-    margin: 0 auto;
-  }
+.tb-grades th {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 30px;
+  /* or 188% */
 
-  .tb-grades th {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 30px;
-    /* or 188% */
+  letter-spacing: -0.02em;
+  font-feature-settings: "calt" off;
 
-    letter-spacing: -0.02em;
-    font-feature-settings: 'calt' off;
+  /* Second elements */
 
-    /* Second elements */
+  color: rgba(255, 255, 255, 0.6);
+}
 
-    color: rgba(255, 255, 255, 0.6);
-  }
+.tb-grades .btnEditGrade td:first-child {
+  border-radius: 4px 0 0 4px;
+  width: 60%;
+}
 
-  .tb-grades .btnEditGrade td:first-child {
-    border-radius: 4px 0 0 4px;
-    width:60%;
-  }
+.tb-grades .btnEditGrade td:last-child {
+  border-radius: 0 4px 4px 0;
+}
 
-  .tb-grades .btnEditGrade td:last-child {
-    border-radius: 0 4px 4px 0;
-  }
+.tb-grades .btnEditGrade {
+  background-color: #77b0c5;
+  color: white;
+  padding: 10px;
+  margin: 5px;
+}
 
-  .tb-grades .btnEditGrade {
-    background-color: #77B0C5;
-    color: white;
-    padding: 10px;
-    margin: 5px;
-  }
-
-  .tb-grades .btnEditGrade:hover {
-    background-color: #5C9FB0;
-    cursor: pointer;
-  }
+.tb-grades .btnEditGrade:hover {
+  background-color: #5c9fb0;
+  cursor: pointer;
+}
 
 #btnAddGrade {
   width: 58px;
