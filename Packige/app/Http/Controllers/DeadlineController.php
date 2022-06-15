@@ -96,7 +96,16 @@ class DeadlineController extends Controller
 
         $deadlineToAdd->save();
 
-        $deadlineToAdd->users()->attach(Auth::id(), ['isChecked' => false]);
+        $usersGroupId = DB::table('users')
+            ->join('group_user', 'group_user.user_id', '=', 'users.id')
+            ->join('groups', 'groups.id', '=', 'group_user.group_id')
+            ->select('users.id')
+            ->where('groups.id', '=', $request->groupId)
+            ->get();
+        // dd($usersGroup);
+        foreach($usersGroupId as $userId) {
+            $deadlineToAdd->users()->attach($userId, ['isChecked' => false]);
+        }
 
         return $deadlineToAdd->id;
     }

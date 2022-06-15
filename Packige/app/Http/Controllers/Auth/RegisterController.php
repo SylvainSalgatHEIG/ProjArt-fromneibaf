@@ -95,6 +95,18 @@ class RegisterController extends Controller
             'group_id' => $data['groupName'],
             'user_id' => $user['id'],
         ]);
+
+        $deadlinesGroupId = DB::table('deadlines')
+            ->join('groups', 'groups.id', '=', 'deadlines.group_id')
+            ->join('group_user', 'group_user.group_id', '=', 'groups.id')
+            ->join('users', 'users.id', '=', 'group_user.user_id')
+            ->select('deadlines.id')
+            ->where('users.id', '=', $user['id'])
+            ->get();
+        // dd($usersGroup);
+        foreach($deadlinesGroupId as $deadlineId) {
+            $user->deadlines()->attach($deadlineId, ['isChecked' => false]);
+        }
         if ($groupUser) {
             return $user;
         }else {
