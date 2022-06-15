@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { useFetch } from "../composables/fetch";
 import LinkModal from "../components/LinkModal.vue";
 import { useLocalstorage } from "../composables/localstorage";
-import { apiUserLinks } from "../config/apiUrls.js";
+import { userLinks } from "../stores/links.js";
 
 let currentCategory = "";
 const menusCafet = ref(null);
@@ -29,8 +29,6 @@ fetch(menuCafetUrl, {
   .catch(function (error) {
     console.log(error);
   });
-
-const { data: userLinks } = useFetch(apiUserLinks);
 
 
 const mainLinks = ref([

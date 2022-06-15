@@ -2,10 +2,10 @@
 import { useFetch, usePost } from "../composables/fetch";
 import { computed, ref, watch, watchEffect } from "vue";
 import { apiUserLinks, apiUserLinkAdd } from "../config/apiUrls.js";
+import { userLinks } from "../stores/links.js";
 
-const { data: links } = useFetch(apiUserLinks);
 
-console.log(links);
+console.log(userLinks);
 
 const emit = defineEmits(["close"]);
 const props = defineProps({
@@ -56,11 +56,13 @@ function addLink(data) {
   let added = false;
   watchEffect(() => {
     if (typeof newLinkId.value == 'object' && !added) {
-      links.value.push({
+      userLinks.value.push({
         name: name.value,
         link: url.value,
       });
       added = true;
+      url.value = "";
+      name.value = "";
       // actionDone.value = true;
       error.value = false;
       errorMsg.value = "";
