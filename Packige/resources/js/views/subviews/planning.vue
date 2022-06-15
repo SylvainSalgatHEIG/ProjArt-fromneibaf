@@ -298,8 +298,8 @@ function courseDurationMarge(startTime, endTime) {
   startTime = startTime.split("-")[0];
   endTime = endTime.split("-")[1];
 
-  startTime = new Date("November 22 1963 " + startTime);
-  endTime = new Date("November 22 1963 " + endTime);
+  startTime = new Date("January 01 2000 " + startTime);
+  endTime = new Date("January 01 2000 " + endTime);
 
   let diff = (endTime.getTime() - startTime.getTime()) / 1000;
   diff /= 60;
