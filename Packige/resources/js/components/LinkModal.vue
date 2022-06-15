@@ -29,11 +29,15 @@ function deleteBtnClicked() {
 function addOrEditLink(id = props.id) {
   
 
-    console.log("add");
+    if (! url.value.startsWith("http")){
+      url.value = "https://" + url.value;
+    }
+
     const data = {
       name: name.value,
       link: url.value,
     };
+
     addLink(data);
 
   if (!error.value) {
