@@ -220,15 +220,7 @@ const averages = computed(() => {
   width: 100%;
 
   border-radius: 25px;
-  border: 3px solid transparent;
-  border-image: linear-gradient(
-      28.82deg,
-      #c8d7f4 -39.19%,
-      #f84e35 3.81%,
-      #77b0c5 52.2%,
-      #0c223f 116.48%
-    )
-    1;
+  border: 3px #416982 solid;
 }
 
 .module h2 {
