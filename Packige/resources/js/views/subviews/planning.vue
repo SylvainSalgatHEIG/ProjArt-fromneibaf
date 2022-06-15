@@ -354,7 +354,12 @@ watchEffect(() => {
       scheduleType.value = userInfos.value.schedule_type;
     }
   }
+  
 });
+
+
+
+console.log(scheduleType)
 
 let selectedWeek = ref(24);
 let currentYear = ref(2022);
@@ -516,6 +521,10 @@ const dateRangeCalendar = computed(() => {
 </template>
 
 <style scoped>
+
+#calendar:has(.noCourseMessage) {
+  margin: auto;
+}
 .noCourseMessage {
   margin-top: 20px;
 
@@ -523,6 +532,8 @@ const dateRangeCalendar = computed(() => {
   height: 100%;
 
   text-align: center;
+
+  padding-bottom: 480px;
 }
 
 #weekRange {

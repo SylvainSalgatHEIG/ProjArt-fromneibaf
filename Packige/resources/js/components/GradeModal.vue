@@ -265,6 +265,32 @@ div.modal-wrapper {
   vertical-align: bottom;
 
   max-width: 500px;
+
+  animation: enterSlide 0.5s ease 0s 1 normal forwards;
+}
+
+@keyframes enterSlide {
+	0% {
+		opacity: 0;
+		transform: translateY(250px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes exitSlide {
+	0% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateY(250px);
+	}
 }
 
 div.modal-block {
@@ -461,13 +487,8 @@ div.modal-footer {
   opacity: 0;
 }
 
-.modal-leave-active {
+.modal-leave-active .modal-wrapper {
+  animation: exitSlide 0.5s ease 0s 1 normal forwards;
   opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
 }
 </style>
