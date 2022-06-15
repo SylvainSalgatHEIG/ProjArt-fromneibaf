@@ -491,4 +491,8 @@ div.modal-footer {
   animation: exitSlide 0.5s ease 0s 1 normal forwards;
   opacity: 0;
 }
+
+#name {
+  width: 140px;
+}
 </style>
