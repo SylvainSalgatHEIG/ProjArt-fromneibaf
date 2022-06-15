@@ -481,7 +481,7 @@ textarea {
 }
 input#startTime {
   float: right;
-  margin-top: 5px;
+  margin-top: 10px;
   width: 70px;
   padding: 2px;
   border: 2px #77b0c5 solid;
@@ -494,7 +494,7 @@ label[for="startTime"] {
 }
 input#endTime {
   float: right;
-  margin-top: 5px;
+  margin-top: 10px;
   width: 70px;
   padding: 2px;
   border: 2px #77b0c5 solid;
