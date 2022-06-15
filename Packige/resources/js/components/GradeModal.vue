@@ -492,7 +492,7 @@ div.modal-footer {
   opacity: 0;
 }
 
-#name {
-  width: 140px;
+input#name {
+  width: 160px;
 }
 </style>
