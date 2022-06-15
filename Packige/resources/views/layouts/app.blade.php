@@ -75,9 +75,12 @@
             </div>
         </nav> -->
         <!-- <div class="back-button"><a href="/login">Back</a></div> -->
-        <a href="/" class="back">
-            <div></div>
-        </a>
+        @if (!Auth::check()  && Route::currentRouteName() !== "home")
+            <a href="/" class="back">
+                <div></div>
+            </a>
+        @endif
+            
 
 
         <main class="py-4">

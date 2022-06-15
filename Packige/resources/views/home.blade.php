@@ -15,6 +15,8 @@
                     @endif
 
                     {{ __('Vous êtes maintenant connecté à l\'application Packige !') }}
+                    <br/>
+                    <a href="/#schedule#planning">Retourner au menu principal</a>
                 </div>
             </div>
         </div>
