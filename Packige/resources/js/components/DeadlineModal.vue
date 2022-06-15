@@ -95,6 +95,9 @@ function addOrEditDeadline(id = props.deadlineId) {
     editDeadline(data);
   } else {
     console.log("add");
+    if(description.value == ""){
+      description.value = "-"
+    }
     const data = {
       name: name.value,
       description: description.value,
@@ -229,7 +232,6 @@ function deleteDeadline(data, courseFullName, moduleName) {
                   id="description"
                   rows="6"
                   cols="25"
-                  required
                   placeholder="Décris la tâche..."
                 ></textarea>
 
