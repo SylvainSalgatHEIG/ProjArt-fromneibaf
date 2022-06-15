@@ -11,7 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class GradeController extends Controller
 {
-
+    /**
+     * Get an array containing every grades from the connected user.
+     * The array is sorted by module then by course.
+     * The grades are from the current semester
+     * 
+     * @return array [moduleName1[id, [courseShortName1[id, weighting, grades[1[id, name, coefficient, grade], ...]]]courseShortName2[...]] moduleName2[...]]
+     */
     public function getGrades()
     {
         if (Auth::id() == null) {
@@ -23,9 +29,9 @@ class GradeController extends Controller
             ->join('promotions', 'promotions.id', 'groups.promotion_id')
             ->where('user_id', Auth::id())->get();
 
+        // get all modules from the right semester
         $modules = [];
 
-        // get all modules from the right semester
         foreach ($groupsUsers as $group) {
 
             $semester = (date('Y') - date('Y', strtotime($group->start_year))) * 2;
@@ -43,11 +49,13 @@ class GradeController extends Controller
                 ->where('modules.semester', '=', $semester)
                 ->where('groups.id', '=', $group->group_id)
                 ->get();
+
             foreach ($modulesQuery as $module) {
                 array_push($modules, $module);
             }
         }
 
+        // get all the grades for each modules and courses
         $gradesArray = [];
         foreach ($modules as $module) {
             $gradesArray[$module->name] = [];
@@ -72,60 +80,21 @@ class GradeController extends Controller
                 foreach ($grades as $grade) {
                     array_push($gradesArray[$module->name][$course->shortname]['grades'], ['id' => $grade->id, 'name' => $grade->name, 'grade' => $grade->grade, 'coefficient' => $grade->coefficient]);
                 }
-                // $gradesArray[$module->name][$course->shortname]['average'] = $this->getCourseAverage($gradesArray[$module->name][$course->shortname]);
             }
-            // $gradesArray[$module->name]['average'] = $this->getModuleAverage($gradesArray[$module->name]);
             $gradesArray[$module->name]['id'] = $module->id;
         }
 
         return $gradesArray;
     }
 
-    // public function getCourseAverage($courseGrades)
-    // {
-    //     if (empty($courseGrades['grades'])) {
-    //         return 0;
-    //     }
-    //     $sum = 0;
-    //     $gradeCounter = 0;
-    //     foreach ($courseGrades['grades'] as $grade) {
-    //         $sum += $grade['grade'] * $grade['coefficient'];
-    //         $gradeCounter += $grade['coefficient'];
-    //     }
-    //     $average = $sum / $gradeCounter;
-    //     return round($average, 1);
-    // }
-
-    // public function getModuleAverage($moduleData)
-    // {
-    //     $sum = 0;
-    //     $gradeCounter = 0;
-    //     foreach ($moduleData as $course) {
-    //         $sum += $course['average'] * $course['weighting'];
-    //         $gradeCounter += $course['weighting'];
-    //     }
-    //     if ($gradeCounter == 0) {
-    //         return 0;
-    //     }
-    //     $average = $sum / $gradeCounter;
-    //     return round($average * 2) / 2;
-    // }
-
+    /**
+     * Add a new grade to the database for the connected user
+     *
+     * @param Request $request data given by the add form (name, grade, coefficient, course)
+     * @return int added grade id
+     */
     public function addGrade(Request $request)
     {
-
-        // dd($request->course);
-
-        // $courseId = DB::table('courses')
-        //     ->join('modules', 'modules.id', '=', 'courses.module_id')
-        //     ->join('promotions', 'promotions.id', '=', 'modules.promotion_id')
-        //     ->join('groups', 'groups.promotion_id', '=', 'promotions.id')
-        //     ->join('group_user', 'group_user.group_id', '=', 'groups.id')
-        //     ->join('users', 'users.id', '=', 'group_user.user_id')
-        //     ->select('courses.id')
-        //     ->where('users.id', '=', Auth::id())
-        //     ->where('courses.shortname', '=', $request->course)
-        //     ->first();
 
         $grade = new Grade;
 
@@ -141,6 +110,12 @@ class GradeController extends Controller
         return $grade->id;
     }
 
+    /**
+     * Edit a grade from the connected user
+     *
+     * @param Request $request data given by the edit form (id, name, grade, coefficient)
+     * @return string success or error
+     */
     public function editGrade(Request $request)
     {
         $update = DB::table('grades')
@@ -153,6 +128,12 @@ class GradeController extends Controller
         }
     }
 
+    /**
+     * Delete a grade from the database for the connected user
+     *
+     * @param Request $request data given by the form (id)
+     * @return string success
+     */
     public function deleteGrade(Request $request)
     {
         $deleted = DB::table('grades')->where('id', '=', $request->id)->delete();

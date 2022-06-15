@@ -10,15 +10,10 @@ use App\Models\Link;
 class UserController extends Controller
 {
     /**
-     * Create a new controller instance.
+     * Get currently connected user from the database
      *
-     * @return void
+     * @return array [fullname, email, groups[name, id], schedule_type]
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
     public function getUser()
     {
         if (Auth::id() == null) {
@@ -37,12 +32,16 @@ class UserController extends Controller
         foreach ($query as $key => $group) {
             $userInfos['groups'][$key]['name'] = $group->promotionName . '-' . $group->groupName;
             $userInfos['groups'][$key]['id'] = $group->groupId;
-            // $userInfos['groupIds'][$key] = $group->groupId;
         }
         $userInfos['schedule_type'] = $query[0]->schedule_type;
         return $userInfos;
     }
 
+    /**
+     * Get users own custom links from database
+     *
+     * @return array
+     */
     public function getLinks()
     {
         if (Auth::id() == null) {
@@ -55,9 +54,14 @@ class UserController extends Controller
         return $userLinks;
     }
 
+    /**
+     * Add a new custom link for the connected user
+     *
+     * @param Request $request data given by the form (url, name)
+     * @return int id of the new link
+     */
     public function addLink(Request $request)
     {
-        // A REVOIR
         $link = new Link;
 
         $link->name = $request->name;
@@ -70,18 +74,12 @@ class UserController extends Controller
         return $link->id;
     }
 
-    public function editLink(Request $request)
-    {
-        $update = DB::table('links')
-            ->where('id', $request->id)
-            ->update(['link' => $request->link, 'name' => $request->name]);
-    }
-
-    public function deleteLink(Request $request)
-    {
-        $deleted = DB::table('links')->where('id', '=', $request->id)->delete();
-    }
-
+    /**
+     * Update the prefered display for the schedule
+     *
+     * @param Request $request data given by the form (type)
+     * @return Objet new schedule_type value
+     */
     public function changeScheduleView(Request $request){
         $update = DB::table('users')
         ->where('id', Auth::id())
