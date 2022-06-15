@@ -208,6 +208,7 @@ function deleteDeadline(data, courseFullName, moduleName) {
                   type="text"
                   v-model="name"
                   id="name"
+                  maxlength="12"
                   required
                   placeholder="Nom de la tâche"
                 />
