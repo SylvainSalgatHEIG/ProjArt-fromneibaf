@@ -237,6 +237,7 @@ const averages = computed(() => {
   font-weight: 700;
   font-size: 24px;
   line-height: 30px;
+
 }
 
 .module h3 {
