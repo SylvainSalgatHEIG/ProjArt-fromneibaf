@@ -34,6 +34,7 @@ watchEffect(() => {
   }
 });
 
+
 const deadlinesArray = computed(() => {
     console.log(deadlines.value);
     if (!deadlines.value) return [];
@@ -78,6 +79,10 @@ const deadlinesArray = computed(() => {
     return deadlineArray;
 })
 
+/**
+ * Calculate the week number of a date 
+ * @param {*} date 
+ */
 function getWeekNumber(date) {
   let currentDate = new Date(date.split(" ")[0]);
   let startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -88,6 +93,11 @@ function getWeekNumber(date) {
   return weekNumber;
 }
 
+/**
+ * Check or uncheck a deadline
+ * @param {*} event event a clicked checkbox
+ * @param {*} deadlineId id of the deadline clicked
+ */
 function checkEvent(event, deadlineId) {
 
   //let deadlineId = event.target.value;
@@ -104,6 +114,10 @@ function checkEvent(event, deadlineId) {
   }
 }
 
+/**
+ * Format date to dd.mm
+ * @param {*} date 
+ */
 function formatDateShort(date) {
   let day = date.toLocaleDateString("en-US").split("/")[1].padStart(2, "0");
   let month = date.toLocaleDateString("en-US").split("/")[0].padStart(2, "0");
@@ -113,6 +127,10 @@ function formatDateShort(date) {
   return dateFormated;
 }
 
+/**
+ * Get first and last of the week based on a day
+ * @param {*} day 
+ */
 function getWeekStartEnd(day) {
   day = Date.parse(day.split(" ")[0]);
 
@@ -132,6 +150,10 @@ function getWeekStartEnd(day) {
   return week;
 }
 
+/**
+ * Check if a date is upcoming or passed
+ * @param {*} date 
+ */
 function checkIfUpcoming(date) {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
@@ -141,6 +163,10 @@ function checkIfUpcoming(date) {
   return date > today;
 }
 
+/**
+ * Check if a week 
+ * @param {*} weekNbr 
+ */
 function checkIfWeekPassed(weekNbr) {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);

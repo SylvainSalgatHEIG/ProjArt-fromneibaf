@@ -349,7 +349,7 @@ watchEffect(() => {
 
   if (userInfos.value != null) {
     if (userInfos.value.length == 0) {
-      scheduleType.value = "calendar";
+      scheduleType.value = "list";
     }else{
       scheduleType.value = userInfos.value.schedule_type;
       if (scheduleType.value == "calendar") {
