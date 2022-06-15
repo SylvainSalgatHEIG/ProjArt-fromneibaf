@@ -276,7 +276,11 @@ a:hover {
   color: #77B0C5;
 }
 
-.content {
-  width: 95%;
+@media (max-width: 450px) {
+  .content {
+    width: 95%;
+  }
 }
+
+
 </style>
