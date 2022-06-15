@@ -261,6 +261,7 @@ function deleteDeadline(data, courseFullName, moduleName) {
                   v-model="date"
                   required
                 />
+                <br />
                 <label for="startTime">{{ startTimeText }}</label>
                 <input
                   type="time"
@@ -268,6 +269,7 @@ function deleteDeadline(data, courseFullName, moduleName) {
                   id="startTime"
                   v-model="startTime"
                 />
+                <br />
                 <label for="endTime" v-if="displayEndTime">Heure de Fin</label>
                 <input
                   type="time"
