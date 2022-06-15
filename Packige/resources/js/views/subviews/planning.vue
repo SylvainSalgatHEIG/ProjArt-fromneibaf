@@ -558,6 +558,9 @@ const dateRangeCalendar = computed(() => {
   text-align: center;
   font-weight: 600;
   font-size: 16px;
+
+  font-family: 'Inter';
+  font-style: normal;
 }
 
 #previousButton {

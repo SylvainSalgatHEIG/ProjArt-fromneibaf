@@ -275,4 +275,8 @@ const averages = computed(() => {
 a:hover {
   color: #77B0C5;
 }
+
+.content {
+  width: 95%;
+}
 </style>
