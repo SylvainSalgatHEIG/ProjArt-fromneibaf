@@ -2,6 +2,7 @@
 import { computed, ref, watchEffect } from "vue";
 import { useFetch, usePost } from "../../composables/fetch";
 import { deadlines } from "../../stores/deadlines.js";
+import { userInfos } from "../../stores/userInfos.js";
 
 import DeadlineModal from "../../components/DeadlineModal.vue";
 import NotConnected from "../../components/NotConnected.vue";
@@ -14,14 +15,26 @@ const { data: userGroups } = useFetch("/api/usergroups/");
 
 const daysShort = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
-let groupSelected = ref(1);
+let groupSelected = ref();
 
 let currentWeek = ref("");
 let currentDay = ref("");
 
 const todayDate = new Date(Date.now()).toISOString().split("T")[0];
 
-const dealinesArray = computed(() => {
+watchEffect(() => {
+  // console.log(userInfos);
+  if (userInfos.value != null) {
+    if (userInfos.value.length == 0) {
+      groupSelected.value = 1;
+    }else{
+      console.log(userInfos.value);
+      groupSelected.value = userInfos.value.groups[0].id;
+    }
+  }
+});
+
+const deadlinesArray = computed(() => {
     console.log(deadlines.value);
     if (!deadlines.value) return [];
     if (deadlines.value.length == 0) return [];
@@ -167,12 +180,12 @@ function addDeadline() {
 		<div class="inputRow">
 		<select name="groups" id="groups" v-model="groupSelected">
 			<option v-for="(group, index) in userGroups" :value="group[0].id">
-			{{ group[0].promotion.name }}-{{ group[0].id }}
+			{{ group[0].promotion.name }}-{{ group[0].name }}
 			</option>
 		</select>
 		</div>
 		<div class="content">
-			<div v-for="(week) of dealinesArray">
+			<div v-for="(week) of deadlinesArray">
 				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week.week)">{{week.weekRange}}</h2>
 					<div v-for="(deadline, index) of week.deadlines">
 						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">

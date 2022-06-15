@@ -29,13 +29,15 @@ class UserController extends Controller
             ->join('groups', 'group_user.group_id', 'groups.id')
             ->join('promotions', 'promotions.id', 'groups.promotion_id')
             ->where('users.id', '=', Auth::id())
-            ->select('users.lastname', 'users.firstname', 'users.email', 'users.schedule_type', 'promotions.name as promotionName', 'groups.name as groupName')
+            ->select('users.lastname', 'users.firstname', 'users.email', 'users.schedule_type', 'promotions.name as promotionName', 'groups.name as groupName', 'groups.id as groupId')
             ->get();
 
         $userInfos['fullname'] = $query[0]->firstname . ' ' . $query[0]->lastname;
         $userInfos['email'] = $query[0]->email;
         foreach ($query as $key => $group) {
-            $userInfos['groups'][$key] = $group->promotionName . '-' . $group->groupName;
+            $userInfos['groups'][$key]['name'] = $group->promotionName . '-' . $group->groupName;
+            $userInfos['groups'][$key]['id'] = $group->groupId;
+            // $userInfos['groupIds'][$key] = $group->groupId;
         }
         $userInfos['schedule_type'] = $query[0]->schedule_type;
         return $userInfos;

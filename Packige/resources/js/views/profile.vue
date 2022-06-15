@@ -47,7 +47,7 @@ function logout() {
       <h3>Classe</h3>
       <ul v-if="userInfos">
         <li class="userInfoOpacity" v-for="group of userInfos['groups']">
-          {{ group }}
+          {{ group.name }}
         </li>
       </ul>
       <hr />
