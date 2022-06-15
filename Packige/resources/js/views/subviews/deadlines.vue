@@ -164,7 +164,7 @@ function checkIfUpcoming(date) {
 }
 
 /**
- * Check if a week 
+ * Check if a week is passed based on its number
  * @param {*} weekNbr 
  */
 function checkIfWeekPassed(weekNbr) {
@@ -180,11 +180,19 @@ function checkIfWeekPassed(weekNbr) {
 let deadlineId = ref(null);
 let showModal = ref(false);
 
+/**
+ * Open modal for editing deadline
+ * @param {*} deadline deadline selected
+ */
 function editDeadline(deadline) {
   deadlineId.value = deadline.id;
   showModal.value = true;
 }
 
+/**
+ * Open modal for adding deadline
+ * @param {*} deadline deadline selected
+ */
 function addDeadline() {
   deadlineId.value = null;
   showModal.value = true;
@@ -224,25 +232,23 @@ function addDeadline() {
 							<div v-else class="date hidden"></div>
 	
 							<div class="info" v-bind:class = "(deadline.type == 'rendu')?'rendu':'examen'" :class="deadline['check'][0].isChecked ? 'checked' : ''">
-                        <div @click="editDeadline(deadline)" class="name"> {{deadline.name}} </div>
+                <div @click="editDeadline(deadline)" class="name"> {{deadline.name}} </div>
 
-                        <!-- Same date = 1 hour -->
-                        <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date == deadline.end_date">
-                            {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
-                        </div>
+                <!-- Same date = 1 hour -->
+                <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date == deadline.end_date">
+                    {{deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                </div>
 
-                        <!-- Different dates = Range of hours -->
-                        <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date != deadline.end_date">
-                            {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
-                            {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
-                        </div>
-                        
-                        <div class="check" v-show="deadline.type == 'rendu'">
-                            <div @click="checkEvent($event, deadline.id)" :value="deadline.id" class="checkbox" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"></div>
-                        </div>
-
-                    </div>
-	
+                <!-- Different dates = Range of hours -->
+                <div @click="editDeadline(deadline)" class="time" v-if="deadline.start_date != deadline.end_date">
+                    {{deadline.start_date.split(' ')[1].split(':')[0] + ':' + deadline.start_date.split(' ')[1].split(':')[1]}}
+                    {{'à ' + deadline.end_date.split(' ')[1].split(':')[0] + ':' + deadline.end_date.split(' ')[1].split(':')[1]}}
+                </div>
+                
+                <div class="check" v-show="deadline.type == 'rendu'">
+                    <div @click="checkEvent($event, deadline.id)" :value="deadline.id" class="checkbox" v-bind:class = "(deadline['check'][0].isChecked)?'checked':''"></div>
+                </div>
+              </div>
 						</div>
 					</div>
 	

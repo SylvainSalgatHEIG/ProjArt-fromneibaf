@@ -4,9 +4,6 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { apiUserLinks, apiUserLinkAdd } from "../config/apiUrls.js";
 import { userLinks } from "../stores/links.js";
 
-
-console.log(userLinks);
-
 const emit = defineEmits(["close"]);
 const props = defineProps({
   id: {},
@@ -26,9 +23,13 @@ function deleteBtnClicked() {
   deleBtnPressed.value = true;
 }
 
+/**
+ * Add or edit a link (! Edit not already supported)
+ * @param {*} id id of the link selected
+ */
 function addOrEditLink(id = props.id) {
   
-
+    // Adding https:// if user forgets it -> for external redirection
     if (! url.value.startsWith("http")){
       url.value = "https://" + url.value;
     }
@@ -46,7 +47,10 @@ function addOrEditLink(id = props.id) {
   
 }
 
-
+/**
+ * Add link to the database
+ * @param {*} data Data of the link from form
+ */
 function addLink(data) {
   const { results: newLinkId } = usePost({
     url: apiUserLinkAdd,
@@ -63,11 +67,9 @@ function addLink(data) {
       added = true;
       url.value = "";
       name.value = "";
-      // actionDone.value = true;
       error.value = false;
       errorMsg.value = "";
     } else if (!added) {
-      // actionDone.value = true;
       errorMsg.value = "Une erreur est survenue lors de l'ajout du lien.";
       error.value = true;
       console.error('Erreur dans l\'ajout du lien');
@@ -163,6 +165,7 @@ div.modal-wrapper {
   
 }
 
+/* Animation for slide in modal */
 @keyframes enterSlide {
 	0% {
 		opacity: 0;
@@ -175,6 +178,7 @@ div.modal-wrapper {
 	}
 }
 
+/* Animation for slide out modal */
 @keyframes exitSlide {
 	0% {
 		opacity: 1;

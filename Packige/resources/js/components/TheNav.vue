@@ -47,7 +47,6 @@
     opacity: 1 !important;
     color: #F84E35;
   }
-
   .icon.active {
     opacity: 1;
     filter: invert(57%) sepia(81%) saturate(5663%) hue-rotate(342deg) brightness(101%) contrast(94%);

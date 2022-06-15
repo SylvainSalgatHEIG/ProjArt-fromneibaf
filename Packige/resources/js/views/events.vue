@@ -1,13 +1,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useFetch } from "../composables/fetch";
-// import { useLocalstorage } from "../composables/localstorage";
 import { apiEvents } from "../config/apiUrls.js";
 
 const { data: events } = useFetch(apiEvents);
 const year = ref(new Date().getFullYear());
 
-// const { value: theEvents } = useLocalstorage("events", events.value);
 const months = [
   "janvier",
   "février",
@@ -40,10 +38,6 @@ function formatTwoDigits(date) {
 
 const allEvents = computed(() => {
   if (!events.value) return [];
-  // if (!theEvents.value) {
-  //   theEvents.value = events.value;
-  //   return [];
-  // }
 
   events.value.forEach((value, index, array) => {
     value.date = getFormattedDate(
@@ -62,14 +56,9 @@ const allEvents = computed(() => {
     <div v-for="event in allEvents" class="event-card">
       <a :href="event.link" target="_blank">
         <p><img class="img" :src="event.imageLink" :alt="event.name" /></p>
-
-        <!-- <span class="date">{{ event.date }}</span> -->
         <div class="description">
           <h2 class="title">{{ event.name }}</h2>
-          <!-- <p class="event-link"> -->
-          <!-- <a class="link" :href="event.link">Lien vers l'événement</a> -->
           <span class="date">{{ event.date }}</span>
-          <!-- </p> -->
         </div>
       </a>
     </div>

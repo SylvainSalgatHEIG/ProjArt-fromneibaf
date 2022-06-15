@@ -19,12 +19,14 @@ let date = ref("");
 let startTime = ref("");
 let endTime = ref("");
 let course = ref("");
+
 let endTimeComputed = computed(() => {
   if (!displayEndTime.value) {
     return startTime.value;
   }
   return endTime.value;
 });
+
 let displayEndTime = computed(() => {
   if (type.value == "examen") {
     return true;
@@ -32,6 +34,7 @@ let displayEndTime = computed(() => {
   endTime.value = "";
   return false;
 });
+
 let startTimeText = computed(() => {
   if (displayEndTime.value) {
     return "Heure de début";
@@ -59,7 +62,7 @@ watchEffect(() => {
     if (!pass) {
       name.value = "";
       description.value = "";
-	  course.value = "";
+	    course.value = "";
       type.value = "rendu";
       date.value = "";
       startTime.value = "";
@@ -70,19 +73,25 @@ watchEffect(() => {
   }
 });
 
+
 function deleteBtnClicked() {
   deleBtnPressed.value = true;
 }
 
+/**
+ * Add, delete or edit a deadline
+ * @param {*} id id of the deadline selected
+ */
 function addOrEditDeadline(id = props.deadlineId) {
+  // Delete deadline
   if (id && deleBtnPressed.value) {
-    console.log("delete");
     const data = {
       id: id,
     };
     deleteDeadline(data);
+
+    // Edit deadline
   } else if (id) {
-    console.log("edit");
     const data = {
       name: name.value,
       description: description.value,
@@ -93,8 +102,9 @@ function addOrEditDeadline(id = props.deadlineId) {
       deadlineId: id,
     };
     editDeadline(data);
+
+    // Add deadline
   } else {
-    console.log("add");
     if(description.value == ""){
       description.value = "-"
     }
@@ -113,6 +123,10 @@ function addOrEditDeadline(id = props.deadlineId) {
   emit("close");
 }
 
+/**
+ * Add deadline to the database
+ * @param {*} data Data of the dealine from form
+ */
 function addDeadline(data) {
   const { results: newDeadLineId } = usePost({
     data: data,
@@ -144,6 +158,10 @@ function addDeadline(data) {
   });
 }
 
+/**
+ * Edit deadline to the database
+ * @param {*} data Data of the dealine from form
+ */
 function editDeadline(data) {
   const { results: editedDeadLineId } = usePost({
     data: data,
@@ -167,7 +185,11 @@ function editDeadline(data) {
   });
 }
 
-function deleteDeadline(data, courseFullName, moduleName) {
+/**
+ * Delete deadline to the database
+ * @param {*} data Data of the dealine from form
+ */
+function deleteDeadline(data) {
   // Supprimer la note de la base
   const { results: deletedDeadLineId } = usePost({
     data: data,
@@ -177,12 +199,12 @@ function deleteDeadline(data, courseFullName, moduleName) {
   let deleted = false;
   watchEffect(() => {
     if (deletedDeadLineId.value != null && !deleted) {
-		console.log(deadlines.value.length)
-		for(let i = 0; i < deadlines.value.length; i ++){
-			if(deadlines.value[i].id == deletedDeadLineId.value){
-				deadlines.value.splice(i, 1);
-			}
-		}
+    
+      for(let i = 0; i < deadlines.value.length; i ++){
+        if(deadlines.value[i].id == deletedDeadLineId.value){
+          deadlines.value.splice(i, 1);
+        }
+      }
       deleted = true;
     }
   })

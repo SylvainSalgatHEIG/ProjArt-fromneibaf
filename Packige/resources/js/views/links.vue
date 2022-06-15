@@ -7,11 +7,10 @@ import { userLinks } from "../stores/links.js";
 
 let currentCategory = "";
 const menusCafet = ref(null);
-// const { value: theLinks } = useLocalstorage("links", null);
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
 
-
+/* Fetch data for cafeteria menu */
 const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
 fetch(menuCafetUrl, {
   method: "GET",
@@ -30,7 +29,7 @@ fetch(menuCafetUrl, {
     console.log(error);
   });
 
-
+/* Array with main links (common to all users) */
 const mainLinks = ref([
   {
     name: "Attestation d'études",
@@ -74,10 +73,8 @@ const mainLinks = ref([
   },
 ]);
 
+// Get users personal links
 const links = computed(() => {
-  // if (!theLinks.value) {
-  //   theLinks.value = mainLinks.value;
-  // }
   if (!userLinks.value) return mainLinks.value;
   // let links = mainLinks.value;
   userLinks.value.forEach((link, index, array) => {
@@ -104,6 +101,10 @@ function formatTwoDigits(date) {
   else return date;
 }
 
+/**
+ * Format date with FR format
+ * @param {*} date 
+ */
 function formatDateFr(date) {
   let day = formatTwoDigits(new Date(date).getUTCDate());
   let month = formatTwoDigits(new Date(date).getUTCMonth() + 1);
@@ -111,19 +112,25 @@ function formatDateFr(date) {
   return day + "." + month + "." + year;
 }
 
+/**
+ * Get day of the week in french
+ * @param {*} date 
+ */
 function getDayFr(date) {
   const dayFr = new Date(date).toLocaleDateString("fr-FR", { weekday: "long" });
   // first letter uppercase
   return dayFr.charAt(0).toUpperCase() + dayFr.slice(1);
 }
 
+/**
+ * Get index of current day (Exemple : monday = 1)
+ */
 function getCurrentDayIndex() {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
 
  return today.getDay()-1;
 }
-
 
 const menusFormatted = computed(() => {
   if (!menusCafet.value) return [];
@@ -166,6 +173,9 @@ const menusFormatted = computed(() => {
 let linkId = ref(null);
 let showModal = ref(false);
 
+/**
+ * Open modal for adding link
+ */
 function addLink() {
   linkId.value = null;
   showModal.value = true;

@@ -4,25 +4,22 @@ import TheNav from '../components/TheNav.vue';
 import deadlinesVue from './subviews/deadlines.vue';
 import planningVue from './subviews/planning.vue';
 
-const msg = ref('');
-
- const subRoutes = {
-    '#schedule#planning': {
-      label: 'Horaire',
-      component: planningVue,
-    },
-    '#schedule#deadlines': {
-      label: 'Tâches',
-      component: deadlinesVue,
-    }
-};
+/* Subroutes for schedule page  */
+const subRoutes = {
+  '#schedule#planning': {
+    label: 'Horaire',
+    component: planningVue,
+  },
+  '#schedule#deadlines': {
+    label: 'Tâches',
+    component: deadlinesVue,
+  }
+}
 
 const hash = ref(window.location.hash);
-
-  window.addEventListener('hashchange', () => hash.value = window.location.hash);
-
-  const curHash = computed(() => subRoutes[hash.value] ? hash.value : Object.keys(subRoutes)[0]);
-  const curComponent = computed(() => subRoutes[curHash.value].component);
+window.addEventListener('hashchange', () => hash.value = window.location.hash);
+const curHash = computed(() => subRoutes[hash.value] ? hash.value : Object.keys(subRoutes)[0]);
+const curComponent = computed(() => subRoutes[curHash.value].component);
 
 </script>
 

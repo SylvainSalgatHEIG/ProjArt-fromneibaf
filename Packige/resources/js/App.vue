@@ -11,10 +11,10 @@ import scheduleVue from "./views/schedule.vue";
 import profileVue from "./views/profile.vue";
 import registerVue from "./views/register.vue";
 
-import Modal from "./components/Modal.vue";
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
 
+// Redirection to profile if user is connected otherwise redirect him to login page
 const redirectProfile = computed(() => {
   if (connexionStatus.value) {
     return "#profile";
@@ -28,6 +28,7 @@ let showModal = ref(false);
 const msg = ref("");
 let data = ref();
 
+// Main routes
 const routes = {
   "#schedule": {
     label: "Planification",
@@ -56,6 +57,7 @@ const routes = {
   },
 };
 
+// Routes for the nav without profile
 const navRoutes = computed(() => {
   let baseRoute = ref({ ...routes });
   delete baseRoute.value["#profile"];
@@ -64,6 +66,7 @@ const navRoutes = computed(() => {
 
 const hash = ref(window.location.hash);
 
+// Change hash based on windows location
 window.addEventListener(
   "hashchange",
   () => (hash.value = window.location.hash)
@@ -73,6 +76,7 @@ const curHash = computed(() =>
   routes[hash.value] ? hash.value : Object.keys(routes)[0]
 );
 const curComponent = computed(() => routes[curHash.value].component);
+
 </script>
 
 <template>
@@ -83,7 +87,6 @@ const curComponent = computed(() => routes[curHash.value].component);
   <the-nav id="mainMenu" :routes="navRoutes" :curHash="curHash"></the-nav>
   <main>
     <template v-for="(route, hash) of routes">
-      <!-- v-if: recharge le composant lors du changement de page -->
       <div v-show="hash == curHash">
         <component :is="route.component" />
       </div>
