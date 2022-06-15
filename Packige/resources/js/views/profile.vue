@@ -207,7 +207,7 @@ input[type="radio"]:checked {
   color: #ffffff;
 
   display: grid;
-  margin: 70px auto 0 auto;
+  margin: 70px auto 20px auto;
 
   padding-top: 8px;
 }
