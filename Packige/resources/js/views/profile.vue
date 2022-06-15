@@ -60,14 +60,14 @@ function logout() {
         <input
           @change="changeViewPlanning($event)"
           type="radio"
-          id="calendatView"
+          id="calendarView"
           name="view"
           value="calendar"
           v-model="view"
         />
         <br />
         <br />
-        <label for="list">Liste</label>
+        <label for="listView">Liste</label>
         <input
           @change="changeViewPlanning($event)"
           type="radio"

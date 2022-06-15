@@ -352,6 +352,9 @@ watchEffect(() => {
       scheduleType.value = "calendar";
     }else{
       scheduleType.value = userInfos.value.schedule_type;
+      if (scheduleType.value == "calendar") {
+          showPast.value = true;
+      }
     }
   }
   
@@ -439,11 +442,7 @@ const dateRangeCalendar = computed(() => {
       <div id="weekIndication">Semaine {{ selectedWeek }}</div>
       <div
         id="previousButton"
-        v-on:click="
-          changeWeek('prev');
-          showPast = true;
-        "
-      ></div>
+        v-on:click="changeWeek('prev');"></div>
 
       <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
       <div id="weekRange">{{ dateRangeCalendar }}</div>
