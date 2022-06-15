@@ -84,16 +84,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        dd($data);
         $user = User::create([
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-
-        // user id: $user['id']);
-        $group = Group::find($data['groupName']);
+        
+        $groupUser = DB::table('group_user')->insert([
+            'group_id' => $data['groupName'],
+            'user_id' => $user['id'],
+        ]);
+        if ($groupUser) {
+            return $user;
+        }else {
+            return "Une erreur s'est produite lors de l'ajout de la classe à l'utilisateur";
+        }
     }
 
     public function showRegistrationForm()
