@@ -402,6 +402,7 @@ input#date {
   float: right;
   margin-bottom: 0;
   width: 120px;
+  height: 25px;
 }
 /*
 input#date {
@@ -428,12 +429,14 @@ input::placeholder {
   font-weight: 400;
   font-size: 16px;
   line-height: 22px;
+  
 }
 
 input {
   -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 25px;
 }
 
 select {
