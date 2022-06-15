@@ -354,6 +354,8 @@ watchEffect(() => {
       scheduleType.value = userInfos.value.schedule_type;
       if (scheduleType.value == "calendar") {
           showPast.value = true;
+      }else if (scheduleType.value == "list"){
+          showPast.value = false;
       }
     }
   }
