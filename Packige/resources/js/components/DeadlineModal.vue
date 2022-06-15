@@ -401,6 +401,7 @@ input#date {
   border: none;
   float: right;
   margin-bottom: 0;
+  width: 120px;
 }
 /*
 input#date {
@@ -428,6 +429,13 @@ input::placeholder {
   font-size: 16px;
   line-height: 22px;
 }
+
+input {
+  -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 select {
   -webkit-tap-highlight-color: transparent;
 
@@ -469,7 +477,7 @@ textarea {
 input#startTime {
   float: right;
   margin-top: 5px;
-  width: 60px;
+  width: 70px;
   padding: 2px;
   border: 2px #77b0c5 solid;
   border-radius: 34px;
@@ -482,7 +490,7 @@ label[for="startTime"] {
 input#endTime {
   float: right;
   margin-top: 5px;
-  width: 60px;
+  width: 70px;
   padding: 2px;
   border: 2px #77b0c5 solid;
   border-radius: 34px;
