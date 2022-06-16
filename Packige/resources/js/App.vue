@@ -220,13 +220,13 @@ h2 {
 .btn-primary {
   padding: 16px 50px;
   gap: 10px;
-  position: absolute;
+  /* position: absolute; */
   width: 330px;
-  bottom: 30px;
+  /* bottom: 30px; */
   background: #f84e35;
   border-radius: 40px;
 
-  margin: 50px auto 0 auto;
+  margin: 30px auto 0 auto;
 
   font-family: "Outfit";
   font-style: normal;
