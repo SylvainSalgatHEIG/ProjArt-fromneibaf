@@ -73,6 +73,6 @@ class GroupPwd implements Rule, DataAwareRule
      */
     public function message()
     {
-        return 'The group password is incorrect.';
+        return 'Le code de classe est incorrect.';
     }
 }

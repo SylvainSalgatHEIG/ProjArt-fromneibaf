@@ -73,7 +73,7 @@
                         <div>
 
                             <div>
-                                <input id="groupPwd" type="text" class="form-login @error('groupPwd') is-invalid @enderror" name="groupPwd" value="{{ old('groupPwd') }}" required autocomplete="groupPwd" placeholder="ID Classe" autofocus>
+                                <input id="groupPwd" type="text" class="form-login @error('groupPwd') is-invalid @enderror" name="groupPwd" value="{{ old('groupPwd') }}" required autocomplete="groupPwd" placeholder="Code de classe" autofocus>
 
                                 @error('groupPwd')
                                 <span class="invalid-feedback" role="alert">
