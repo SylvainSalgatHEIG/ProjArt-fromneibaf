@@ -18,7 +18,6 @@ watchEffect(() => {
 });
 
 function save() {
-  console.log(view.value);
   userInfos.value.schedule_type = view.value;
   usePost({ url: "/api/user/changeScheduleView", data: { type: view.value } });
 }

@@ -6,7 +6,6 @@ import { apiSchedules } from "../../config/apiUrls.js";
 import { userInfos } from "../../stores/userInfos.js";
 
 const { data: schedules } = useFetch(apiSchedules);
-// const {value: theSchedule} = useLocalstorage('schedules', schedules.value);
 const todayDate = ref(new Date(Date.now()));
 
 const showPast = ref(false);
@@ -85,7 +84,7 @@ const makeReadable = (event) => {
   let dateEnd = new Date(event.end);
   let hoursStart = dateToHours(dateStart);
   let hoursEnd = dateToHours(dateEnd);
-  //    let course = event.label.split("-").slice(0, -2).join("-");
+
   let course = event.label;
   let room = event.room.split(",").slice(0, 1).join("");
   return {
@@ -149,8 +148,6 @@ function formatTwoDigits(date) {
 
 function getDateRange({ date, type = "short" }) {
   let end = new Date(date);
-  // console.log("The date: " + date)
-  // console.log("Date" + end);
   if (end.getDay() != 5) {
     end.setDate(end.getDate() + (5 - end.getDay()));
   }
@@ -189,7 +186,6 @@ function getDateRange({ date, type = "short" }) {
 
 const schedulesShowable = computed(() => {
   if (!schedulesFiltered.value) return [];
-  // console.log(schedulesFiltered.value);
   let allWeeks = [
     ...new Set(schedulesFiltered.value.map((value) => value.weekNumber)),
   ];
@@ -200,14 +196,12 @@ const schedulesShowable = computed(() => {
       (value) => value.weekNumber === week
     );
     let dates = weekCourses.map((value) => value.date);
-    // console.log(getDateRange(getDatesFromWeekNb(selectedWeek.value));
     let dateRange = getDateRange({ date: dates[dates.length - 1] });
     let dateRangeLong = getDateRange({
       date: dates[dates.length - 1],
       type: "long",
     });
     let daysCourse = weekDaysShort.map((day) => {
-      // console.log(day);
       let hasCourses = true;
       // let dayNb = daysShort.indexOf(day) -1;
       // if (dayNb == -1) dayNb = 6;
@@ -223,8 +217,6 @@ const schedulesShowable = computed(() => {
         courses = "Il n'y a pas de cours aujourd'hui";
         hasCourses = false;
       } else {
-        // console.log(formatTwoDigits(new Date(courses[0].date).getUTCDate()))
-        // console.log(courses[0].date);
         dayTwoDigits = formatTwoDigits(new Date(courses[0].date).getUTCDate());
       }
       return { day, courses, hasCourses, dayTwoDigits: dayTwoDigits };
@@ -238,8 +230,6 @@ const schedulesShowable = computed(() => {
   });
   return myArray;
 });
-
-// EMILE
 
 function changeWeek(prevOrFut) {
   if (prevOrFut === "prev") {
@@ -268,11 +258,13 @@ function changeWeek(prevOrFut) {
   }
 }
 
-// PAUL
-// console.log(schedulesShowable);
-
+// Spacing for design purpose
 const spacingMarge = 6;
 
+/**
+ * Get marge of course and positionning it
+ * @param {*} time 
+ */
 function margeEvent(time) {
   if (typeof time == "undefined") {
     return 0;
@@ -290,6 +282,11 @@ function margeEvent(time) {
   return Math.abs(Math.round(diff)) * 0.88 + 2 * spacingMarge;
 }
 
+/**
+ * Get duration of a course and scale it based on that
+ * @param {*} startTime 
+ * @param {*} endTime 
+ */
 function courseDurationMarge(startTime, endTime) {
   if (typeof startTime == "undefined" || typeof endTime == "undefined") {
     return 0;
@@ -345,7 +342,6 @@ const { value: groupSelected } = useLocalstorage("groupSelected", "IM49-2");
 let scheduleType = ref("");
 
 watchEffect(() => {
-  // console.log(userInfos);
 
   if (userInfos.value != null) {
     if (userInfos.value.length == 0) {
@@ -362,9 +358,6 @@ watchEffect(() => {
   
 });
 
-
-
-console.log(scheduleType)
 
 let selectedWeek = ref(24);
 let currentYear = ref(2022);
@@ -385,9 +378,8 @@ const dateRangeCalendar = computed(() => {
         <option v-for="groupName in groupNames" :value="groupName">
           {{ groupName }}
         </option>
-        <!-- <option v-for="group in groups" :value="group.id">{{group.promotion.name}}-{{group.name}}</option> -->
       </select>
-    <!-- <pre>{{schedulesShowable}}</pre> -->
+
     
     </div>
       <label v-if="scheduleType == 'list'" for="showPast">
@@ -398,7 +390,6 @@ const dateRangeCalendar = computed(() => {
         id="showPast"
       />
       Afficher l'historique
-      <!-- {{schedulesShowable}} -->
     </label>
 
     

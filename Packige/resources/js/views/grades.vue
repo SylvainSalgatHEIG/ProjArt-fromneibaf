@@ -9,7 +9,6 @@ const { data: connexionStatus } = useFetch("/api/connexion/status");
 let gradeId = ref(null);
 
 function editGrade(gradeToEdit) {
-  // console.log(gradeToEdit.id);
   gradeId.value = gradeToEdit.id;
   showModal.value = true;
 }
@@ -25,7 +24,6 @@ const averages = computed(() => {
   if (!grades.value) return [];
   let allAverages = [];
   for (const moduleName in grades.value) {
-    // console.log(grades.value[moduleName]);
     // format: { "moduleName": "moduleAverage": 3.4, 0: ["gradeName1": 2.3, "gradeName2": 3.4] }
     let moduleAverageGradesTotal = 0;
     let moduleAverageDivision = 0;
@@ -63,7 +61,6 @@ const averages = computed(() => {
       allAverages[moduleName]["moduleAverage"] = 0;
     }
   }
-  // console.log(allAverages);
   return allAverages;
 });
 </script>

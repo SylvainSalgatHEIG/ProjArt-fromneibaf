@@ -42,11 +42,6 @@
 	// .then(students => data.value = students );
 
     const regexEmail = /^[\w\-\.]+@heig-vd.ch$/i;
-//   watchEffect(() => {
-//       console.log(students);
-//   });
-// const showRegister = ref(true);
-// console.log(showRegister);
 const firstnameError = ref(false);
 
 function register(event) {
@@ -57,8 +52,7 @@ function register(event) {
         groupId: groupId.value,
         groupPin: groupPin.value
     };
-    console.log(data)
-    // const {data: testApi} = useFetch('/api/register/validator');
+
 
     fetch('/api/register/validator', {
         method: 'POST',

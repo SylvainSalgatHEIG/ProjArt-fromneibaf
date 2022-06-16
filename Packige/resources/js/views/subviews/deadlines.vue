@@ -23,12 +23,11 @@ let currentDay = ref("");
 const todayDate = new Date(Date.now()).toISOString().split("T")[0];
 
 watchEffect(() => {
-  // console.log(userInfos);
+
   if (userInfos.value != null) {
     if (userInfos.value.length == 0) {
       groupSelected.value = 1;
-    }else{
-      console.log(userInfos.value);
+    }else {
       groupSelected.value = userInfos.value.groups[0].id;
     }
   }
@@ -36,7 +35,6 @@ watchEffect(() => {
 
 
 const deadlinesArray = computed(() => {
-    console.log(deadlines.value);
     if (!deadlines.value) return [];
     if (deadlines.value.length == 0) return [];
 
