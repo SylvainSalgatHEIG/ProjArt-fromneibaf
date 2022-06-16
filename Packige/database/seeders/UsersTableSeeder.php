@@ -11,7 +11,7 @@ use App\Models\Group;
 class UsersTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for users.
      *
      * @return void
      */

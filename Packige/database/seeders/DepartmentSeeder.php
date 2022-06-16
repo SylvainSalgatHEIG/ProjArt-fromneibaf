@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class DepartmentSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for departments.
      *
      * @return void
      */

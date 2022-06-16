@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class GroupUserTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for groups and users join table.
      *
      * @return void
      */

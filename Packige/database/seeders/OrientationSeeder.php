@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class OrientationSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for orientations.
      *
      * @return void
      */

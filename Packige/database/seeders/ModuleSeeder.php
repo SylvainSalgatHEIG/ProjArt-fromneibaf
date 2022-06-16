@@ -23,6 +23,9 @@ class ModuleSeeder extends Seeder
         return substr($string, $ini, $len);
     }
 
+    /**
+     * Scrap data from GAPS to get modules and courses
+     */
     public function getData($class) {
         
         $classes = ["M50" => 672, "M49" => 645, "M48" => 604];

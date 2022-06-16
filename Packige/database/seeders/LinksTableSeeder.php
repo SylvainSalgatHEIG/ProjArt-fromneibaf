@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class LinksTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for personals user's links.
      *
      * @return void
      */

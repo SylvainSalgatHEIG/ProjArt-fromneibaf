@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class DeadlineUserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for deadlines and users join table.
      *
      * @return void
      */

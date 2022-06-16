@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class GroupsTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for groups.
      *
      * @return void
      */
