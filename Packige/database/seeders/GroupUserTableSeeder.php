@@ -14,7 +14,27 @@ class GroupUserTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    {   
+        /**
+         * Attach users test to IM groups
+         */
+
+        DB::table('group_user')->insert([
+            'group_id' => "3",
+            'user_id' => "1",
+        ]);
+
+        DB::table('group_user')->insert([
+            'group_id' => "5",
+            'user_id' => "1",
+        ]);
+
+        DB::table('group_user')->insert([
+            'group_id' => "3",
+            'user_id' => "2",
+        ]);
+        
+        /*
         DB::table('group_user')->insert([
             'group_id' => "1",
             'user_id' => "1",
@@ -40,5 +60,6 @@ class GroupUserTableSeeder extends Seeder
             'group_id' => "4",
             'user_id' => "3",
         ]);
+        */
     }
 }
