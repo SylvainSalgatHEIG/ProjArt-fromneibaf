@@ -30,8 +30,8 @@ class ModuleSeeder extends Seeder
         
         $classes = ["M50" => 672, "M49" => 645, "M48" => 604];
         $wsCourses = "https://gaps.heig-vd.ch/consultation/programmes/index.php?id=" . $classes[$class] . "&idmodeequ=0";
-        $login = "paul.mairot";
-        $password = "hegsU5-juhjyf-soqbyx";
+        $login = env('GAPS_USERNAME');
+        $password = env('GAPS_PASSWORD');
         
         
         $context = stream_context_create(['http' => [
