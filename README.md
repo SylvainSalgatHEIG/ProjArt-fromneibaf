@@ -54,7 +54,7 @@ Le seeding de la base de données y ajoute 2 utilisateurs de test :
 - Classes :     M49-2 & M50-2
 
 ### Classes
-La création d'un nouvel utilisateur nécéssite un ID de classe.  Les ID sont les suivants
+La création d'un nouvel utilisateur nécessite un ID de classe. Les ID sont les suivants
 - M48 :       123456
 - M49-1 :     123456
 - M49-2 :     123456
