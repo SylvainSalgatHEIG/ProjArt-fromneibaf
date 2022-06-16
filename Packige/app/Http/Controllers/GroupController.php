@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
+    /**
+     * Get all groups
+     *
+     * @return array Groups
+     */
     public function getGroups()
     {
         if (Auth::id() == null) {
@@ -19,6 +24,11 @@ class GroupController extends Controller
         return $groups;
     }
 
+    /**
+     * Get all groups in which logged user belong
+     *
+     * @return array User's Groups
+     */
     public function getUserGroups()
     {
         if (Auth::id() == null) {

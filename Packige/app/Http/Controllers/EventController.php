@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 class EventController extends Controller
 {
 
-	
-
+	/**
+     * Get all events from the api
+     *
+     * @return array Events list
+     */
 	public function getEvents() {
 		$wsEvents = "https://age.heig-vd.ch/activites/";
 
-		// $string = file_get_contents($wsEvents);
-		// die($string);
+
 		function file_get_contents_curl($url) {
 			$ch = curl_init();
 		
@@ -30,10 +32,7 @@ class EventController extends Controller
 			return $data;
 		}
 		$string = file_get_contents_curl($wsEvents);
-		// $stream = fopen($wsEvents, 'r');
-		// dd(tidy_repair_string($stream));
-		// $string = stream_get_contents($stream);
-		// dd($string);
+		
 		// the backslash is to escape the DOMDocument so it doesn't think it's a controller.
 		$d = new \DOMDocument();
 

@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\DB;
 class DeadlineController extends Controller
 {
 
+    /**
+     * Get all deadlines based on logged user
+     *
+     * @return array Deadlines
+     */
     public function getDeadlines()
     {
         if (Auth::id() == null) {
@@ -62,6 +67,12 @@ class DeadlineController extends Controller
     }
 
 
+    /**
+     * Add a new deadline to the database for the connected user
+     *
+     * @param Request $request data given by the add form (name, course, description, type, date, start_time, end_time)
+     * @return int added deadline id
+     */
     public function addDeadline(Request $request)
     {
         $deadlineToAdd = new Deadline;
@@ -102,7 +113,7 @@ class DeadlineController extends Controller
             ->select('users.id')
             ->where('groups.id', '=', $request->groupId)
             ->get();
-        // dd($usersGroup);
+
         foreach($usersGroupId as $userId) {
             $deadlineToAdd->users()->attach($userId, ['isChecked' => false]);
         }
@@ -110,6 +121,13 @@ class DeadlineController extends Controller
         return $deadlineToAdd->id;
     }
 
+
+     /**
+     * Edit a deadline from the connected user
+     *
+     * @param Request $request data given by the edit form (name, course, description, type, date, start_time, end_time)
+     * @return string id of the deadline
+     */
     public function editDeadline(Request $request)
     {
 
@@ -133,6 +151,12 @@ class DeadlineController extends Controller
         return $request->deadlineId;
     }
 
+    /**
+     * Delete a deadline from the database for the connected user
+     *
+     * @param Request $request data given by the form (id)
+     * @return string id of the deadline
+     */
     public function deleteDeadline(Request $request)
     {
         $deleted = DB::table('deadline_user')
@@ -145,6 +169,13 @@ class DeadlineController extends Controller
         return $request->id;
     }
 
+    /**
+     * Check or uncheck a deadline for the connected user
+     *
+     * @param int $deadlineId id of the deadline to check/uncheck
+     * @param string $action action to do (check or uncheck)
+     * @return string success or fail
+     */
     public function checkDeadline($deadlineId, $action)
     {
         if ($action == "check") {
@@ -164,7 +195,12 @@ class DeadlineController extends Controller
         return ["success"];
     }
 
-
+    /**
+     * Filter the deadlines based on the class
+     *
+     * @param Request $request data given by the form (groupName)
+     * @return view view with content
+     */
     public function filter(Request $request)
     {
 

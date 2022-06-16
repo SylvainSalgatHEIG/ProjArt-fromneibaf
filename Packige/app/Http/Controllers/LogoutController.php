@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 class LogoutController extends Controller
 {
     /**
-     * Log out account user.
+     * Log out account user and redirect to schedule
      *
      * @return \Illuminate\Routing\Redirector
      */

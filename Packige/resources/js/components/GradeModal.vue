@@ -24,19 +24,16 @@ let errorMsg = ref("");
 
 watchEffect(() => {
   if (grades.value != null && coursesArray.value != null) {
-    // console.log(coursesArray);
     let pass = false;
     for (const courseData of coursesArray.value) {
-      // console.log(courseData);
-      // console.log(grades.value[courseData.moduleName][courseData.courseShortName].grades);
+
       for (const gradeData of grades.value[courseData.moduleName][
         courseData.courseShortName
       ].grades) {
-        // console.log(props.id + "props")
 
         // WHEN EDITING. props.id is the gradeId. Not null when editing a grade.
         if (gradeData.id === props.id) {
-          // console.log(gradeData);
+
           name.value = gradeData.name;
           coefficient.value = gradeData.coefficient;
           grade.value = gradeData.grade;
@@ -69,7 +66,6 @@ function addOrEditGrade(id = props.id) {
   let courseShortname = "";
 
   for (const courseData of coursesArray.value) {
-    // console.log(courseId.value + "vvv");
     if (courseData.courseId === courseId.value) {
       moduleName = courseData.moduleName;
       courseShortname = courseData.courseShortName;
@@ -78,14 +74,14 @@ function addOrEditGrade(id = props.id) {
 
   // WHEN DELETING A GRADE.
   if (id && deleBtnPressed.value) {
-    console.log("delete");
+
     const data = {
       id: id,
     };
     deleteGrade(data, courseShortname, moduleName);
     // WHEN EDITING A GRADE
   } else if (id) {
-    console.log("edit");
+
     const data = {
       grade: grade.value,
       coefficient: coefficient.value,
@@ -95,7 +91,7 @@ function addOrEditGrade(id = props.id) {
     editGrade(data, courseShortname, moduleName);
     // WHEN ADDING A GRADE
   } else {
-    console.log("add");
+
     const data = {
       grade: grade.value,
       coefficient: coefficient.value,
@@ -140,7 +136,7 @@ function addGrade(data, courseShortname, moduleName) {
 }
 
 function deleteGrade(data, courseShortname, moduleName) {
-  // Supprimer la note de la base
+  // Delete grade from DB
   usePost({ url: "/api/grades/delete", data: data });
   // Supprimer la note du tableau
   for (

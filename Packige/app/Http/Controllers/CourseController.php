@@ -10,7 +10,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
-{
+{   
+    /**
+     * Get all courses based on logged user
+     *
+     * @return array Courses
+     */
     public function getCourses()
     {
         if(Auth::id() == null){
@@ -45,7 +50,6 @@ class CourseController extends Controller
                 array_push($courses, $course);	
             }
         }
-        // dd($courses);
         
         return $courses;
     }
