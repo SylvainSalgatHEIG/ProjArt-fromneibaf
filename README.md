@@ -3,7 +3,7 @@ Projet du groupe N°5 fromneibaf pour le module ProjArt de la classe M49-2 de la
 
 Le site a été dévelopée dans une optique **Mobile First**, il est donc coneillé d'y accéder via un smartphone et même si possible de le télécharger pour accéder à sa version PWA.
 
-Le projet est disponible ici : [Packige](https://fromneibaf-pingouin.heig-vd.ch/){:target="\_blank"}.
+Le projet est disponible ici : [Packige](https://fromneibaf-pingouin.heig-vd.ch/).
 
 
 ## Concept
