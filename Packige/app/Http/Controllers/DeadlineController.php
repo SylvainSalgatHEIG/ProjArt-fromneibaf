@@ -161,7 +161,6 @@ class DeadlineController extends Controller
     {
         $deleted = DB::table('deadline_user')
             ->where('deadline_id', '=', $request->id)
-            ->where('user_id', '=', Auth::id())
             ->delete();
 
         $deleted = DB::table('deadlines')->where('id', '=', $request->id)->delete();
