@@ -67,6 +67,12 @@ const allEvents = computed(() => {
 </template>
 
 <style scoped>
+
+.no-event-msg {
+    text-align: center;
+    margin-top: 60px;
+}
+
 #events-cards {
   display: flex;
   flex-wrap: wrap;
