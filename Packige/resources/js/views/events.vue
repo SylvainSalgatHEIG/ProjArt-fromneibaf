@@ -52,7 +52,7 @@ const allEvents = computed(() => {
 
 <template>
   <h1>Actus</h1>
-  <div id="events-cards">
+  <div id="events-cards" v-if="allEvents.length > 0">
     <div v-for="event in allEvents" class="event-card">
       <a :href="event.link" target="_blank">
         <p><img class="img" :src="event.imageLink" :alt="event.name" /></p>
@@ -63,6 +63,7 @@ const allEvents = computed(() => {
       </a>
     </div>
   </div>
+  <div v-else class="no-event-msg">Aucun événement à venir</div>
 </template>
 
 <style scoped>
