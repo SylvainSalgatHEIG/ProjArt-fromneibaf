@@ -184,7 +184,7 @@ function getDateRange({ date, type = "short" }) {
   }
 }
 
-const schedulesShowable = computed(() => {
+const schedulesShowableWeekNb = computed(() => {
   if (!schedulesFiltered.value) return [];
   let allWeeks = [
     ...new Set(schedulesFiltered.value.map((value) => value.weekNumber)),
@@ -208,7 +208,7 @@ const schedulesShowable = computed(() => {
       let dayTwoDigits = "";
       let courses = schedulesFiltered.value.filter((course) => {
         // if (typeof(weekCourses[dayNb]) !== 'undefined') {
-        //   dayTwoDigits = formatTwoDigits(new Date(weekCourses[dayNb].date).getUTCDate());
+          //   dayTwoDigits = formatTwoDigits(new Date(weekCourses[dayNb].date).getUTCDate());
         // }
         // course.dateTwoDigits = formatTwoDigits(course.),
         return course.weekNumber === week && course.day === day;
@@ -227,6 +227,56 @@ const schedulesShowable = computed(() => {
       dates: `${dateRange.start}-${dateRange.end}`,
       daysCourse,
     };
+  });
+  return myArray;
+});
+
+
+const schedulesShowableNoWeekNb = computed(() => {
+  if (!schedulesFiltered.value) return [];
+  let allWeeks = [
+    ...new Set(schedulesFiltered.value.map((value) => value.weekNumber)),
+  ];
+  let myArray = {};
+  
+  let indexArray = 0;
+  allWeeks.forEach((week) => {
+    let weekCourses = schedulesFiltered.value.filter(
+      (value) => value.weekNumber === week
+    );
+    let dates = weekCourses.map((value) => value.date);
+    let dateRange = getDateRange({ date: dates[dates.length - 1] });
+    let dateRangeLong = getDateRange({
+      date: dates[dates.length - 1],
+      type: "long",
+    });
+    let daysCourse = weekDaysShort.map((day) => {
+      let hasCourses = true;
+      // let dayNb = daysShort.indexOf(day) -1;
+      // if (dayNb == -1) dayNb = 6;
+      let dayTwoDigits = "";
+      let courses = schedulesFiltered.value.filter((course) => {
+        // if (typeof(weekCourses[dayNb]) !== 'undefined') {
+          //   dayTwoDigits = formatTwoDigits(new Date(weekCourses[dayNb].date).getUTCDate());
+        // }
+        // course.dateTwoDigits = formatTwoDigits(course.),
+        return course.weekNumber === week && course.day === day;
+      });
+      if (courses.length == 0) {
+        courses = "Il n'y a pas de cours aujourd'hui";
+        hasCourses = false;
+      } else {
+        dayTwoDigits = formatTwoDigits(new Date(courses[0].date).getUTCDate());
+      }
+      return { day, courses, hasCourses, dayTwoDigits: dayTwoDigits };
+    });
+
+    myArray[indexArray] = {
+      dateRangeLong: `${dateRangeLong.start}-${dateRangeLong.end}`,
+      dates: `${dateRange.start}-${dateRange.end}`,
+      daysCourse,
+    };
+    indexArray++;
   });
   return myArray;
 });
@@ -318,6 +368,15 @@ function formatDateShort(date) {
   return dateFormated;
 }
 
+function getCurrentWeekNumber () {
+  const currentDate = new Date();
+    const startDate = new Date(currentDate.getFullYear(), 0, 1);
+    let days = Math.floor((currentDate - startDate) /
+        (24 * 60 * 60 * 1000));
+         
+    return Math.ceil(days / 7);
+}
+
 function getWeekStartEnd(day) {
   day = new Date(day);
 
@@ -359,7 +418,7 @@ watchEffect(() => {
 });
 
 
-let selectedWeek = ref(24);
+let selectedWeek = ref(getCurrentWeekNumber());
 let currentYear = ref(2022);
 const dateRangeCalendar = computed(() => {
   let dateRangeCal = getDateRange({
@@ -396,7 +455,7 @@ const dateRangeCalendar = computed(() => {
 
     <div
       v-if="scheduleType == 'list'"
-      v-for="(schedule, weekNb) of schedulesShowable"
+      v-for="(schedule, index) of schedulesShowableNoWeekNb"
     >
       <h2>
         <span>{{ schedule.dates }}</span>
@@ -451,7 +510,7 @@ const dateRangeCalendar = computed(() => {
     </div>
 
     <div id="calendar" v-if="scheduleType == 'calendar'">
-      <div v-if="schedulesShowable[selectedWeek]" id="scheduleView">
+      <div v-if="schedulesShowableWeekNb[selectedWeek]" id="scheduleView">
         <div id="timeArea">
           <div id="columnTime">
             <div class="rowTime"></div>
@@ -470,7 +529,7 @@ const dateRangeCalendar = computed(() => {
         </div>
 
         <div
-          v-for="course in schedulesShowable[selectedWeek].daysCourse"
+          v-for="course in schedulesShowableWeekNb[selectedWeek].daysCourse"
           class="column row columnDate rowDate"
           id="rowDates"
           v-bind:class="
@@ -485,7 +544,7 @@ const dateRangeCalendar = computed(() => {
 
         <div id="planningView">
           <div
-            v-for="course in schedulesShowable[selectedWeek].daysCourse"
+            v-for="course in schedulesShowableWeekNb[selectedWeek].daysCourse"
             class="column row"
             id="rowDates"
           >
