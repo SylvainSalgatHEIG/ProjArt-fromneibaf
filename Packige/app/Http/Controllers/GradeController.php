@@ -35,7 +35,9 @@ class GradeController extends Controller
         foreach ($groupsUsers as $group) {
 
             $semester = (date('Y') - date('Y', strtotime($group->start_year))) * 2;
-            if (intval(date('m')) >= 9 || intval(date('m')) < 3) {
+            if (intval(date('m')) >= 9) {
+                $semester += 1;
+            } else if (intval(date('m')) < 2) {
                 $semester -= 1;
             }
 
