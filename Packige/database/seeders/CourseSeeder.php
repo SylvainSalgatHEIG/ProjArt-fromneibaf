@@ -28,7 +28,7 @@ class CourseSeeder extends Seeder
      */
     public function getData($class) {
         
-        $classes = ["M50" => 672, "M49" => 645, "M48" => 604];
+        $classes = ["M51" => 725, "M50" => 672, "M49" => 645, "M48" => 604];
         $wsCourses = "https://gaps.heig-vd.ch/consultation/programmes/index.php?id=" . $classes[$class] . "&idmodeequ=0";
         $login = env('GAPS_USERNAME');
         $password = env('GAPS_PASSWORD');
