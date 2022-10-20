@@ -251,6 +251,25 @@ class CourseSeeder extends Seeder
                 ]);
             }
         }
+
+        $promotion = "M51";
+
+        $program = $this->getData($promotion);
+        $promotion_id = Promotion::where('name', $promotion)->first()->id;
+
+        foreach($program as $module){
+
+            $module_id = Module::where('name', $module->name)->where('promotion_id', $promotion_id)->first()->id;
+
+            foreach ($module->units as $unit) {
+                DB::table('courses')->insert([
+                    'name' => $unit->name,
+                    'shortname' => $unit->shortname,
+                    'weighting' => $unit->weighting,
+                    'module_id' => $module_id
+                ]);
+            }
+        }
         
     }
 }
