@@ -175,6 +175,13 @@ function checkIfWeekPassed(weekNbr) {
   return endWeek > today;
 }
 
+function getRealDay(day) {
+  if (day == 0) {
+    return 6
+  }
+  return day -1 ;
+}
+
 let deadlineId = ref(null);
 let showModal = ref(false);
 
@@ -223,7 +230,7 @@ function addDeadline() {
 						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">
 							
 							<div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
-								{{daysShort[new Date(deadline.end_date.split(' ')[0]).getDay()-1]}}
+								{{daysShort[getRealDay(new Date(deadline.end_date.split(' ')[0]).getDay())]}}
 								{{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
 							</div>
 	
