@@ -35,6 +35,12 @@ class PromotionSeeder extends Seeder
             'end_year' => "2024-07-01",
             'orientation_id' => 1
         ]);
+        DB::table('promotions')->insert([
+            'name' => "M51",
+            'start_year' => "2022-09-01",
+            'end_year' => "2025-07-01",
+            'orientation_id' => 1
+        ]);
         
     }
 }

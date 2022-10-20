@@ -52,5 +52,23 @@ class GroupsTableSeeder extends Seeder
             'password' => Hash::make('123456'),
             'promotion_id' => '3'
         ]);
+
+        DB::table('groups')->insert([
+            'name' => '1',
+            'password' => Hash::make('123456'),
+            'promotion_id' => '4'
+        ]);
+
+        DB::table('groups')->insert([
+            'name' => '2',
+            'password' => Hash::make('123456'),
+            'promotion_id' => '4'
+        ]);
+
+        DB::table('groups')->insert([
+            'name' => '3',
+            'password' => Hash::make('123456'),
+            'promotion_id' => '4'
+        ]);
     }
 }
