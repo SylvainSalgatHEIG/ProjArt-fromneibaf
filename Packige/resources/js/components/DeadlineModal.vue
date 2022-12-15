@@ -233,7 +233,7 @@ function deleteDeadline(data) {
                   type="text"
                   v-model="name"
                   id="name"
-                  maxlength="12"
+                  maxlength="15"
                   required
                   placeholder="Nom de la tâche"
                 />

@@ -39,13 +39,16 @@ const deadlinesArray = computed(() => {
     if (deadlines.value.length == 0) return [];
 
     let array = deadlines.value;
+    // console.log(array);
     let currentWeek = getWeekNumber(array[0].start_date);
-    let weekRange = getWeekStartEnd(array[0].start_date);
+    let currentYear = getYearTwoDigits(array[0].start_date);
+    let weekRange = getWeekStartEnd(array[0].start_date) + "." + currentYear;;
 
     let deadlineArray = [];
     
 
     let deadlineElement = {
+        'year': currentYear,
         'week': currentWeek,
         'weekRange': weekRange,
         'deadlines': []
@@ -53,15 +56,17 @@ const deadlinesArray = computed(() => {
 
     array.forEach(deadline => {
 
-        if (currentWeek == getWeekNumber(deadline.start_date)) {
+        if (currentWeek == getWeekNumber(deadline.start_date) && currentYear == getYearTwoDigits(deadline.start_date)) {
             deadlineElement.deadlines.push(deadline);
         } else {
-            deadlineArray.push(deadlineElement);
-
+          
+          deadlineArray.push(deadlineElement);
             currentWeek = getWeekNumber(deadline.start_date);
-            weekRange = getWeekStartEnd(deadline.start_date);
+            currentYear = getYearTwoDigits(deadline.start_date);
+            weekRange = getWeekStartEnd(deadline.start_date) + "." + currentYear;
 
             deadlineElement = {
+                'year': currentYear,
                 'week': currentWeek,
                 'weekRange': weekRange,
                 'deadlines': []
@@ -74,8 +79,10 @@ const deadlinesArray = computed(() => {
 
     deadlineArray.push(deadlineElement);
 
+    // console.log(deadlineArray);
     return deadlineArray;
 })
+
 
 /**
  * Calculate the week number of a date 
@@ -89,6 +96,10 @@ function getWeekNumber(date) {
   let weekNumber = Math.ceil(days / 7);
 
   return weekNumber;
+}
+
+function getYearTwoDigits(date){
+  return new Date(date).getYear()-100;
 }
 
 /**
@@ -157,22 +168,32 @@ function checkIfUpcoming(date) {
   const today = new Date(timeElapsed);
 
   date = new Date(date.split(' ')[0]);
-
-  return date > today;
+  // console.log(new Date(today).getDate())
+  return new Date(date).getDate() >= new Date(today).getDate();
 }
 
 /**
  * Check if a week is passed based on its number
  * @param {*} weekNbr 
  */
-function checkIfWeekPassed(weekNbr) {
-  const timeElapsed = Date.now();
-  const today = new Date(timeElapsed);
-
+function checkIfWeekPassed(week) {
+  if (week.year < new Date().getYear()-100) {
+    return false;
+  }
+  // console.log(week)
+  const today = new Date(Date.now());
+  // const today = new Date(timeElapsed);
+  
   let startYear = new Date(new Date().getFullYear(), 0, 1);
-  let endWeek = new Date(startYear.setDate(startYear.getDate() + weekNbr * 7));
-
-  return endWeek > today;
+  let endWeek = new Date(startYear.setDate(startYear.getDate() + week.week * 7));
+  
+  if (week.year == new Date().getYear()-100) {
+    return endWeek >= today
+  } else {
+    return week.year > new Date().getYear()-100;
+  }
+  // return endWeek > today;
+  return true;
 }
 
 function getRealDay(day) {
@@ -225,10 +246,9 @@ function addDeadline() {
 		</div>
 		<div class="content">
 			<div v-for="(week) of deadlinesArray">
-				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week.week)">{{week.weekRange}}</h2>
+				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week)">{{week.weekRange}}</h2>
 					<div v-for="(deadline, index) of week.deadlines">
 						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">
-							
 							<div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
 								{{daysShort[getRealDay(new Date(deadline.end_date.split(' ')[0]).getDay())]}}
 								{{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
@@ -285,6 +305,7 @@ function addDeadline() {
     background-size: 24px;
 
     cursor: pointer;
+    z-index: 1;
   }
 
 .inputRow {
@@ -296,7 +317,8 @@ function addDeadline() {
 
 .deadline .name {
   display: inline-block;
-  width: 90px;
+  /* width: 90px; */
+  width: 130px;
   height: 35px;
 }
 
@@ -483,6 +505,8 @@ h2:not(:first-of-type) {
 
 .deadline .info.checked {
   text-decoration: line-through;
+  opacity: 0.5;
+  /* color: gray; */
 }
 
 .hidden {
