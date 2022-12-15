@@ -505,8 +505,9 @@ h2:not(:first-of-type) {
 
 .deadline .info.checked {
   text-decoration: line-through;
-  opacity: 0.5;
-  /* color: gray; */
+  /* opacity: 0.5; */
+  background-color: #416982;
+  color: gray;
 }
 
 .hidden {
