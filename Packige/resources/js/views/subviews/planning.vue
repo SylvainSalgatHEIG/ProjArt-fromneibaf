@@ -216,6 +216,7 @@ const schedulesShowableWeekNb = computed(() => {
       if (courses.length == 0) {
         courses = "Il n'y a pas de cours aujourd'hui";
         hasCourses = false;
+        day = " ";
       } else {
         dayTwoDigits = formatTwoDigits(new Date(courses[0].date).getUTCDate());
       }
@@ -371,10 +372,13 @@ function formatDateShort(date) {
 function getCurrentWeekNumber () {
   const currentDate = new Date();
     const startDate = new Date(currentDate.getFullYear(), 0, 1);
-    let days = Math.floor((currentDate - startDate) /
-        (24 * 60 * 60 * 1000));
-         
-    return Math.ceil(days / 7);
+    let days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+    let dayOfWeek = currentDate.getDay();
+      // console.log(dayOfWeek)
+    let weekNbr = Math.ceil(days/7);
+    if (dayOfWeek == 0 || dayOfWeek == 6) 
+      return weekNbr + 1
+    return weekNbr;
 }
 
 function getWeekStartEnd(day) {
@@ -491,22 +495,16 @@ const dateRangeCalendar = computed(() => {
     </div>
 
     <div v-if="scheduleType == 'calendar'" id="weekSelector">
-      <div id="weekIndication">Semaine {{ selectedWeek }}</div>
-      <div
-        id="previousButton"
-        v-on:click="changeWeek('prev');"></div>
+      <div id="previousButton" v-on:click="changeWeek('prev');"></div>
+      <div v-on:click="selectedWeek=getCurrentWeekNumber()" id="weekInfos">
+        <div id="weekIndication">Semaine {{ selectedWeek }}</div>
+        <div id="weekRange">{{ dateRangeCalendar }}</div>
+      </div>
+      <div id="nextButton" v-on:click="changeWeek('fut'); showPast = true;"></div>
+      
 
       <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
-      <div id="weekRange">{{ dateRangeCalendar }}</div>
       <!-- <div v-else id="weekRange"></div> -->
-
-      <div
-        id="nextButton"
-        v-on:click="
-          changeWeek('fut');
-          showPast = true;
-        "
-      ></div>
     </div>
 
     <div id="calendar" v-if="scheduleType == 'calendar'">
@@ -534,11 +532,7 @@ const dateRangeCalendar = computed(() => {
           id="rowDates"
           v-bind:class="
             formatDate(new Date(course.courses[0].date)) ==
-            formatDate(new Date(todayDate))
-              ? 'currentDay'
-              : ''
-          "
-        >
+            formatDate(new Date(todayDate)) ? 'currentDay' : ''">
           {{ course.day }}<br />{{ course.dayTwoDigits }}
         </div>
 
@@ -598,10 +592,14 @@ const dateRangeCalendar = computed(() => {
   padding-top: 5px;
 }
 
+#weekInfos:hover {
+  cursor: pointer;
+}
+
 #weekSelector {
-  display: block;
+  display: flex;
   /* margin-left: 14px; */
-  text-align: center;
+  justify-content: center
 }
 
 #weekIndication {
@@ -615,33 +613,39 @@ const dateRangeCalendar = computed(() => {
 }
 
 #previousButton {
-  height: 44px;
   width: 44px;
 
-  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-image: url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat;
   background-position: center;
 
   display: inline-block;
 
-  margin-right: 2px;
+  margin-right: 5px;
 
   vertical-align: middle;
 }
 
+#previousButton:hover {
+  cursor: pointer;
+}
+
 #nextButton {
-  height: 44px;
   width: 44px;
 
-  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-image: url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat;
   background-position: center;
 
   display: inline-block;
 
-  margin-left: 2px;
+  margin-left: 5px;
 
   vertical-align: middle;
+}
+
+#nextButton:hover {
+  cursor: pointer;
 }
 
 .rowTime {
