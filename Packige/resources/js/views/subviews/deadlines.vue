@@ -163,13 +163,20 @@ function getWeekStartEnd(day) {
  * Check if a date is upcoming or passed
  * @param {*} date 
  */
-function checkIfUpcoming(date) {
+function checkIfUpcoming(deadline) {
+  // console.log(deadline)
+  let thisYear = new Date().getYear()-100;
+  let deadlineYear = new Date(deadline.end_date).getYear()-100; 
+  // console.log(deadlineYear < thisYear)
+  if (deadlineYear < thisYear) {
+    return false;
+  }
   const timeElapsed = Date.now();
-  const today = new Date(timeElapsed);
+  const today = new Date().toLocaleDateString("en-US");
 
-  date = new Date(date.split(' ')[0]);
-  // console.log(new Date(today).getDate())
-  return new Date(date).getDate() >= new Date(today).getDate();
+  let date = new Date(deadline.end_date).toLocaleDateString("en-US");
+  // return true;
+  return new Date(date) >= new Date(today);
 }
 
 /**
@@ -177,8 +184,9 @@ function checkIfUpcoming(date) {
  * @param {*} weekNbr 
  */
 function checkIfWeekPassed(week) {
+  let thisYear = new Date().getYear()-100;
   if (week.year < new Date().getYear()-100) {
-    return false;
+    return true;
   }
   // console.log(week)
   const today = new Date(Date.now());
@@ -188,9 +196,12 @@ function checkIfWeekPassed(week) {
   let endWeek = new Date(startYear.setDate(startYear.getDate() + week.week * 7));
   
   if (week.year == new Date().getYear()-100) {
-    return endWeek >= today
+    // console.log(today);
+    // console.log(endWeek);
+    // console.log(endWeek >= today);
+    return endWeek <= today
   } else {
-    return week.year > new Date().getYear()-100;
+    return week.year < new Date().getYear()-100;
   }
   // return endWeek > today;
   return true;
@@ -246,9 +257,9 @@ function addDeadline() {
 		</div>
 		<div class="content">
 			<div v-for="(week) of deadlinesArray">
-				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week)">{{week.weekRange}}</h2>
+				<h2 v-if="week.deadlines[0].group_id == groupSelected && !checkIfWeekPassed(week)">{{week.weekRange}}</h2>
 					<div v-for="(deadline, index) of week.deadlines">
-						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">
+						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline)" class="deadline">
 							<div v-if="deadline.end_date.split(' ')[0] != week.deadlines[(index+week.deadlines.length-1)%week.deadlines.length].end_date.split(' ')[0] || week.deadlines.length == 1" class="date" v-bind:class="todayDate == new Date(deadline.end_date.split(' ')[0]).toISOString().split('T')[0] ? 'currentDay':''">
 								{{daysShort[getRealDay(new Date(deadline.end_date.split(' ')[0]).getDay())]}}
 								{{String(new Date(deadline.end_date.split(' ')[0]).getDate()).padStart(2, '0')}}
