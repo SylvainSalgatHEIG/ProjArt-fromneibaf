@@ -148,9 +148,9 @@ h2 {
   width: 100%;
   bottom: 0;
 
-  background: linear-gradient(#112a4a 22.56%, #f84e35 331.81%);
-  backdrop-filter: blur(30px);
-
+  /* background: linear-gradient(#112a4a 22.56%, #f84e35 331.81%); */
+  backdrop-filter: blur(92px);
+  background-color: rgba(20, 49, 87, 0.8);
   z-index: 100;
 }
 
