@@ -13,7 +13,7 @@ class EventController extends Controller
      * @return array Events list
      */
 	public function getEvents() {
-		$wsEvents = "https://age.heig-vd.ch/activites/";
+		$wsEvents = "https://age.heig-vd.ch/activite/";
 
 
 		function file_get_contents_curl($url) {
@@ -42,10 +42,10 @@ class EventController extends Controller
 		$xpath = new \DOMXPath($d);
 
 		// Get data all events
-		$eventsDayList = $xpath->query("//*[@class='event-day']");
-		$eventsMonthList = $xpath->query("//*[@class='event-month']");
+		$eventsDayList = $xpath->query("//*[@class='ect-list-post']");
+		$eventsMonthList = $xpath->query("//*[@class='ect-list-post']");
 
-		$events = $xpath->query("//*[@class='activities']");
+		$events = $xpath->query("//*[@class='ect-list-post']");
 
 		$eventsNamesList = array();
 		$eventsLinkList = array();

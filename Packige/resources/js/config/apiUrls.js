@@ -13,4 +13,6 @@ export const apiUserLinkEdit = BASE_URL + 'api/user/link/edit';
 export const apiUserLinkDelete = BASE_URL + 'api/user/link/delete';
 
 const CHABLOZ_URL = "https://chabloz.eu/";
-export const apiSchedules = CHABLOZ_URL + 'files/horaires/all.json';
+// link to the local storage folder on storage/app/public
+export const STORAGE_URL = BASE_URL + 'storage/';
+export const apiSchedules = STORAGE_URL + 'horaires.json';

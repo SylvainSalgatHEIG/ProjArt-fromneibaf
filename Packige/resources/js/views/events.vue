@@ -2,8 +2,8 @@
 import { ref, computed } from "vue";
 import { useFetch } from "../composables/fetch";
 import { apiEvents } from "../config/apiUrls.js";
+import { STORAGE_URL } from "../config/apiUrls.js";
 
-const { data: events } = useFetch(apiEvents);
 const year = ref(new Date().getFullYear());
 
 const months = [
@@ -21,8 +21,47 @@ const months = [
   "décembre",
 ];
 
+// const { data: events } = useFetch(apiEvents);
+const threeDaysLater = new Date();
+threeDaysLater.setDate(threeDaysLater.getDate() + 3);
+
+const oneMonthAndHalfLater = new Date();
+oneMonthAndHalfLater.setDate(oneMonthAndHalfLater.getDate() + 45);
+const events = [
+  {
+    // get day of the month 3 days later than today 
+    day : threeDaysLater.getDate(),
+    // get month number 
+    month: months[threeDaysLater.getMonth() + 1],
+    // get year 
+    year: threeDaysLater.getFullYear(),
+    name: "Assemblée générale de l'association",
+    imageLink: STORAGE_URL + "event-1.png",
+  },
+  // an event 1 month later
+  {
+    day : new Date().getDate(),
+    month: months[new Date().getMonth() + 2],
+    year: new Date().getFullYear(),
+    name: "Soirée au club - DJ Yuzu en live",
+    imageLink: STORAGE_URL + "event-2.jpg",
+  },
+  // an event 1 month and a half later
+  {
+    day : oneMonthAndHalfLater.getDate(),
+    month: months[oneMonthAndHalfLater.getMonth() + 1],
+    year: oneMonthAndHalfLater.getFullYear(),
+    name: "Olympiades au campus de l'école !",
+    imageLink: STORAGE_URL + "event-3.jpg",
+  },
+]
+
 function getFormattedDate(day, month, year) {
-  return day + "." + formatTwoDigits(months.indexOf(month)) + "." + year;
+  console.log (day)
+  console.log (month)
+  console.log (year)
+  if (months.indexOf(month) === -1) return formatTwoDigits(day) + ".mm." + year;
+  return formatTwoDigits(day) + "." + formatTwoDigits(months.indexOf(month)) + "." + year;
 }
 
 /**
@@ -37,16 +76,18 @@ function formatTwoDigits(date) {
 }
 
 const allEvents = computed(() => {
-  if (!events.value) return [];
+  console.log(events)
+  // if (!events.value) return [];
+  if (!events) return [];
 
-  events.value.forEach((value, index, array) => {
+  events.forEach((value, index, array) => {
     value.date = getFormattedDate(
       value.day,
       value.month,
       new Date().getFullYear()
     );
   });
-  return events.value;
+  return events;
 });
 </script>
 
