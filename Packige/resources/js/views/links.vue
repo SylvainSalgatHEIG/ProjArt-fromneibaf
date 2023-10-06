@@ -6,7 +6,48 @@ import { useLocalstorage } from "../composables/localstorage";
 import { userLinks } from "../stores/links.js";
 
 let currentCategory = "";
-const menusCafet = ref(null);
+// const menusCafet = ref(null);
+const currentDate = new Date();
+const startDate = new Date(currentDate.getFullYear(), 0, 1);
+var numberOfDays = Math.floor((currentDate - startDate) /
+    (24 * 60 * 60 * 1000));
+ 
+var weekNumber = Math.ceil(numberOfDays / 7);
+
+function getMondayDate(date) {
+  const day = date.getDay() || 7;
+  if (day !== 1) date.setHours(-24 * (day - 1));
+  return date;
+}
+
+function getFridayDate(date) {
+  const day = date.getDay() || 7;
+  if (day !== 5) date.setHours(24 * (5 - day));
+  return date;
+}
+
+
+const menusCafet = ref({
+  week: weekNumber,
+  // date of monday and friday the current week
+  monday: getMondayDate(currentDate),
+  friday: getFridayDate(currentDate),
+  days: [
+    {
+      day: currentDate.getDay(),
+      date: currentDate,
+      menus: [
+        {
+          index: 0,
+          starter: "Canapés de légumes",
+          mainCourse: ["Adobo au porc*", "Poisson", "Pâtes", "Riz"],
+          dessert: "Yaourt aux fruits",
+          containsPork: true,
+        },
+      ],
+    },
+  ],
+});
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
 
