@@ -10,65 +10,168 @@ let currentCategory = "";
 const currentDate = new Date();
 const startDate = new Date(currentDate.getFullYear(), 0, 1);
 var numberOfDays = Math.floor((currentDate - startDate) /
-    (24 * 60 * 60 * 1000));
- 
+  (24 * 60 * 60 * 1000));
+
 var weekNumber = Math.ceil(numberOfDays / 7);
 
-function getMondayDate(date) {
-  const day = date.getDay() || 7;
-  if (day !== 1) date.setHours(-24 * (day - 1));
-  return date;
+function getDayFromNb(dayNb, date) {
+  if (dayNb < 1 || dayNb > 7) {
+    throw new Error('dayNb should be between 1 and 7');
+  }
+
+  const currentDay = date.getDay(); // Sunday - 0, Monday - 1, etc.
+  const difference = dayNb - currentDay + (currentDay === 0 ? 1 : 0); // Adjusting if today is Sunday
+  const targetDate = new Date(date);
+  targetDate.setDate(date.getDate() + difference);
+
+  return targetDate;
 }
 
-function getFridayDate(date) {
-  const day = date.getDay() || 7;
-  if (day !== 5) date.setHours(24 * (5 - day));
-  return date;
-}
+// Example usage:
+// console.log("getDayFunction", getDayFromNb(1, new Date()));
 
 
 const menusCafet = ref({
   week: weekNumber,
   // date of monday and friday the current week
-  monday: getMondayDate(currentDate),
-  friday: getFridayDate(currentDate),
+  monday: getDayFromNb(1, currentDate),
+  friday: getDayFromNb(5, currentDate),
   days: [
     {
-      day: currentDate.getDay(),
-      date: currentDate,
+      day: getDayFromNb(1, currentDate),
       menus: [
         {
           index: 0,
-          starter: "Canapés de légumes",
-          mainCourse: ["Adobo au porc*", "Poisson", "Pâtes", "Riz"],
-          dessert: "Yaourt aux fruits",
+          starter: "Potage Garbure",
+          mainCourse: ["Grillade de saucisses (CH)*", "Sauce chimichurri", "Epinards à la crème", "Boulgour aux poivrons"],
+          dessert: "Trilogie de pommes (CH) ",
           containsPork: true,
+          isVeggie: false,
+        },
+        {
+          index: 0,
+          starter: "Potage Garbure",
+          mainCourse: ["Moussaka de lentilles", "Aubergines et tofu", "Bouquet de salade"],
+          dessert: "Trilogie de pommes (CH) ",
+          containsPork: false,
+          isVeggie: true,
         },
       ],
     },
+    {
+      day: getDayFromNb(2, currentDate),
+      menus: [
+        {
+          index: 0,
+          starter: "Samoussas de Chèvre frais aux fines Herbes",
+          mainCourse: ["Poulet 'Label rouge' rôti", "Gratin dauphinois", "Salade de Tomates 'Coeur de Boeuf'"],
+          dessert: "Cheesecake aux Oranges",
+          containsPork: false,
+          isVeggie: false,
+        },
+      ],
+    },
+    {
+      day: getDayFromNb(3, currentDate),
+      menus: [
+        {
+          index: 0,
+          starter: "Carottes râpées",
+          mainCourse: ["Filet mignon*", "Haricots verts", "Patates vapeur"],
+          dessert: "Coeur coulant au Chocolat",
+          containsPork: true,
+          isVeggie: false,
+        },
+      ],
+    },
+    {
+      day: getDayFromNb(4, currentDate),
+      menus: [
+        {
+          index: 0,
+          starter: "Soupe aux légumes",
+          mainCourse: ["Poisson en papillote", "Epinards", "Pâtes", "Riz"],
+          dessert: "Crème anglaise et chantilly",
+          containsPork: false,
+          isVeggie: false,
+        },
+        {
+          index: 0,
+          starter: "Soupe aux légumes",
+          mainCourse: ["Semoule au pois chiches", "Epinards", "Pâtes", "Riz"],
+          dessert: "Crème anglaise et chantilly",
+          containsPork: false,
+          isVeggie: true,
+        },
+      ],
+    },
+    {
+      day: getDayFromNb(5, currentDate),
+      menus: [
+        {
+          index: 0,
+          starter: "Bouillon",
+          mainCourse: ["Betteraves", "Escalopes de dinde", "Pâtes", "Champignons"],
+          dessert: "Tartare d'Ananas",
+          containsPork: false,
+          isVeggie: false,
+        },
+        {
+          index: 0,
+          starter: "Soupe au butternut",
+          mainCourse: ["Chou fleur vinaigrette", "Riz aux petits légumes"],
+          dessert: "Yaourt aux fruits",
+          containsPork: false,
+          isVeggie: true,
+        },
+      ],
+    },
+    // {
+    //   day: getDayFromNb(6, currentDate),
+    //   date: currentDate,
+    //   menus: [
+    //     {
+    //       index: 0,
+    //       starter: "Soupe au butternut",
+    //       mainCourse: ["Rôti de porc*", "Riz aux petits légumes"],
+    //       dessert: "Yaourt aux fruits",
+    //       containsPork: true,
+    //       isVeggie: false,
+    //     },
+    //     {
+    //       index: 0,
+    //       starter: "Soupe au butternut",
+    //       mainCourse: ["Chou fleur vinaigrette", "Riz aux petits légumes"],
+    //       dessert: "Yaourt aux fruits",
+    //       containsPork: false,
+    //       isVeggie: true,
+    //     },
+    //   ],
+    // },
   ],
 });
+// console.log(menusCafet.value);
 
 const { data: connexionStatus } = useFetch("/api/connexion/status");
 
 /* Fetch data for cafeteria menu */
-const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
-fetch(menuCafetUrl, {
-  method: "GET",
-  withCredentials: true,
-  headers: {
-    "x-api-key":
-      "xY79sN6FDiN6PXucrsBiQBeWkasTLCEn9hcD@dGBcH2Q22f*zs9LHzsfdshT_JBV.Td_ZRdCqQdm4RNFY8JTE!tLK@.GA!2YLNoo",
-    "Content-Type": "application/json",
-  },
-})
-  .then((resp) => resp.json())
-  .then(function (data) {
-    menusCafet.value = data;
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+// const menuCafetUrl = "https://top-chef-intra-api.blacktree.io/weeks/current";
+// fetch(menuCafetUrl, {
+//   method: "GET",
+//   withCredentials: true,
+//   headers: {
+//     "x-api-key":
+//       "xY79sN6FDiN6PXucrsBiQBeWkasTLCEn9hcD@dGBcH2Q22f*zs9LHzsfdshT_JBV.Td_ZRdCqQdm4RNFY8JTE!tLK@.GA!2YLNoo",
+//     "Content-Type": "application/json",
+//   },
+// })
+//   .then((resp) => resp.json())
+//   .then(function (data) {
+//     menusCafet.value = data;
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 /* Array with main links (common to all users) */
 const mainLinks = ref([
@@ -147,6 +250,7 @@ function formatTwoDigits(date) {
  * @param {*} date 
  */
 function formatDateFr(date) {
+  // console.log("date", date)
   let day = formatTwoDigits(new Date(date).getUTCDate());
   let month = formatTwoDigits(new Date(date).getUTCMonth() + 1);
   let year = new Date(date).getFullYear();
@@ -170,7 +274,7 @@ function getCurrentDayIndex() {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
 
- return today.getDay()-1;
+  return today.getDay() - 1;
 }
 
 const menusFormatted = computed(() => {
@@ -208,6 +312,7 @@ const menusFormatted = computed(() => {
     }
     cafeteria.days.push(days);
   });
+  // console.log("cafet", cafeteria)
   return cafeteria;
 });
 
@@ -242,13 +347,13 @@ function addLink() {
 
   <div class="menu-cafeteria">
     <h1>Cafétéria - Semaine {{ menusFormatted.week }}</h1>
-    <div class="menu-day" v-for="(menu, index) of menusFormatted.days" >
+    <div class="menu-day" v-for="(menu, index) of menusFormatted.days">
       <div v-if="index >= getCurrentDayIndex()">
         <div class="big-line"></div>
         <h2>{{ menu.dayFr }} : {{ menu.date }}</h2>
         <p v-show="!menu.hasMeals">Pas de menu aujourd'hui</p>
         <div v-for="meal of menu.menus" v-show="menu.hasMeals">
-          <h3>| Menu {{ meal.index }} |</h3>
+          <h3>| Menu {{ meal.index }} <span v-if="meal.isVeggie">- Végétarien</span> |</h3>
           <h4>Entrée</h4>
           <p>{{ meal.starter }}</p>
           <div class="smallline"></div>
@@ -272,37 +377,38 @@ function addLink() {
   </div>
 </template>
 <style>
-
 #btnAddLink {
-    width: 58px;
-    height: 58px;
+  width: 58px;
+  height: 58px;
 
-    border-radius: 50%;
-    background-color: #FF3820;
+  border-radius: 50%;
+  background-color: #FF3820;
 
-    position: fixed;
+  position: fixed;
 
-    bottom: 100px;
+  bottom: 100px;
 
-    right: 5%;
-    
-    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1V15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1 8H15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 24px;
+  right: 5%;
 
-    cursor: pointer;
-  }
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1V15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M1 8H15' stroke='%230C223F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px;
+
+  cursor: pointer;
+}
 
 .content {
   margin-left: auto;
   margin-right: auto;
   width: 312px;
 }
+
 .porc {
   font-style: italic;
   color: #f84e35;
 }
+
 .smallline {
   opacity: 50%;
   width: 60px;
@@ -310,12 +416,14 @@ function addLink() {
   border-bottom: 1px solid rgb(255, 255, 255);
   display: inline-block;
 }
+
 .big-line {
   width: 224px;
   height: 47px;
   border-bottom: 1px solid rgb(255, 255, 255);
   display: inline-block;
 }
+
 h2 {
   margin-top: 20px;
 }

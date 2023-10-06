@@ -57,9 +57,6 @@ const events = [
 ]
 
 function getFormattedDate(day, month, year) {
-  console.log (day)
-  console.log (month)
-  console.log (year)
   if (months.indexOf(month) === -1) return formatTwoDigits(day) + ".mm." + year;
   return formatTwoDigits(day) + "." + formatTwoDigits(months.indexOf(month)) + "." + year;
 }
@@ -76,7 +73,6 @@ function formatTwoDigits(date) {
 }
 
 const allEvents = computed(() => {
-  console.log(events)
   // if (!events.value) return [];
   if (!events) return [];
 

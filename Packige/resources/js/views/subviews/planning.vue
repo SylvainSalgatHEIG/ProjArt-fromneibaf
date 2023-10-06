@@ -18,6 +18,7 @@ const weekDaysShort = ["Lun", "Mar", "Mer", "Jeu", "Ven"];
  * @returns {integer} week number
  */
 function getWeekNumber(date) {
+  console.log("date", date)
   let currentDate = new Date(date.split(" ")[0]);
   let startDate = new Date(currentDate.getFullYear(), 0, 1);
   let days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
@@ -109,6 +110,16 @@ const groupNames = computed(() => {
   // return schedules.value.map(schedule => schedule.class);
 });
 
+function formatDateToISOString(date) {
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed in JS
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+}
 // const schedulesFutur
 const schedulesFiltered = computed(() => {
   if (!schedules.value) return [];
@@ -255,6 +266,11 @@ function changeWeek(prevOrFut) {
     // if (schedulesShowable.value[selectedWeek.value + 1]) {
     //   selectedWeek.value++;
     // }
+  }else if (prevOrFut === "now") {
+    // VERSION 1 : prevent the user to go over week 52.
+    selectedWeek.value = getWeekNumber(formatDateToISOString(new Date()))
+      // selectedWeek.value = 1;
+      currentYear.value  = new Date().getFullYear()
   }
 }
 
@@ -360,7 +376,7 @@ watchEffect(() => {
 
 
 let selectedWeek = ref(24);
-let currentYear = ref(2022);
+let currentYear = ref(2023);
 const dateRangeCalendar = computed(() => {
   let dateRangeCal = getDateRange({
     date: getDatesFromWeekNb(selectedWeek.value, currentYear.value),
@@ -432,15 +448,17 @@ const dateRangeCalendar = computed(() => {
     </div>
 
     <div v-if="scheduleType == 'calendar'" id="weekSelector">
-      <div id="weekIndication">Semaine {{ selectedWeek }}</div>
       <div
         id="previousButton"
         v-on:click="changeWeek('prev');"></div>
+      <div v-on:click="changeWeek('now')">
+        <div id="weekIndication">Semaine {{ selectedWeek }}</div>
 
-      <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
-      <div id="weekRange">{{ dateRangeCalendar }}</div>
-      <!-- <div v-else id="weekRange"></div> -->
+          <!-- <div v-if="schedulesShowable[selectedWeek]" id="weekRange">{{ getWeekStartEnd(schedulesShowable[selectedWeek].daysCourse[0].courses[0].date) }}</div> -->
+        <div id="weekRange">{{ dateRangeCalendar }}</div>
+        <!-- <div v-else id="weekRange"></div> -->
 
+      </div>
       <div
         id="nextButton"
         v-on:click="
@@ -540,9 +558,11 @@ const dateRangeCalendar = computed(() => {
 }
 
 #weekSelector {
-  display: block;
+  display: flex;
   /* margin-left: 14px; */
   text-align: center;
+  justify-content: center;
+  align-items: center
 }
 
 #weekIndication {
@@ -559,7 +579,7 @@ const dateRangeCalendar = computed(() => {
   height: 44px;
   width: 44px;
 
-  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.75 22.5L11.25 15L18.75 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat;
   background-position: center;
 
@@ -574,7 +594,7 @@ const dateRangeCalendar = computed(() => {
   height: 44px;
   width: 44px;
 
-  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.25 22.5L18.75 15L11.25 7.5' stroke='%2377B0C5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat;
   background-position: center;
 

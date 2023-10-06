@@ -148,7 +148,7 @@ h2 {
   width: 100%;
   bottom: 0;
 
-  background: linear-gradient(#112a4a 22.56%, #f84e35 331.81%);
+  background: #112a4a83;
   backdrop-filter: blur(30px);
 
   z-index: 100;

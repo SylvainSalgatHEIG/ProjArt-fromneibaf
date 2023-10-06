@@ -64,6 +64,7 @@ const deadlinesArray = computed(() => {
             deadlineElement = {
                 'week': currentWeek,
                 'weekRange': weekRange,
+                'date' : deadline.end_date,
                 'deadlines': []
             }
 
@@ -165,14 +166,14 @@ function checkIfUpcoming(date) {
  * Check if a week is passed based on its number
  * @param {*} weekNbr 
  */
-function checkIfWeekPassed(weekNbr) {
+function checkIfWeekPassed(weekNbr, date) {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
 
   let startYear = new Date(new Date().getFullYear(), 0, 1);
   let endWeek = new Date(startYear.setDate(startYear.getDate() + weekNbr * 7));
 
-  return endWeek > today;
+  return endWeek > today && date < new Date();
 }
 
 let deadlineId = ref(null);
@@ -217,8 +218,10 @@ function addDeadline() {
 		</select>
 		</div>
 		<div class="content">
+      <!-- {{ deadlinesArray }} -->
 			<div v-for="(week) of deadlinesArray">
-				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week.week)">{{week.weekRange}}</h2>
+        <!-- {{ week }} -->
+				<h2 v-if="week.deadlines[0].group_id == groupSelected && checkIfWeekPassed(week.week, week.date)">{{week.weekRange}}</h2>
 					<div v-for="(deadline, index) of week.deadlines">
 						<div v-if="deadline.group_id == groupSelected  && checkIfUpcoming(deadline.end_date)" class="deadline">
 							
@@ -476,6 +479,7 @@ h2:not(:first-of-type) {
 
 .deadline .info.checked {
   text-decoration: line-through;
+  opacity: 0.8;
 }
 
 .hidden {
