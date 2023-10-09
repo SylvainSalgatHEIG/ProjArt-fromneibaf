@@ -2,7 +2,7 @@ let BASE_URL = "";
 if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
     BASE_URL = "http://" + window.location.host + "/";
 } else {
-    BASE_URL = "http://" + window.location.hostname + "/";
+    BASE_URL = "https://" + window.location.hostname + "/";
 }
 export const apiCourses = BASE_URL + 'api/courses';
 export const apiGroups = BASE_URL + 'api/groups';
